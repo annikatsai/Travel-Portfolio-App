@@ -2,10 +2,14 @@ package annikatsai.portfolioapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -31,25 +35,34 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.login_button);
 
-        // Create callback to handle results of login and register callbackManager
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // Launch TimelineActivity
-                Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
-                startActivity(i);
-            }
+        AccessToken token;
+        token = AccessToken.getCurrentAccessToken();
 
-            @Override
-            public void onCancel() {
-                Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT);
-            }
+        if (token == null) {
+            //Means user is not logged in
+            // Create callback to handle results of login and register callbackManager
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    // Launch TimelineActivity
+                    Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+                    startActivity(i);
+                }
 
-            @Override
-            public void onError(FacebookException exception) {
-                Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT);
-            }
-        });
+                @Override
+                public void onCancel() {
+                    Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT);
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT);
+                }
+            });
+        } else {
+            Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+            startActivity(i);
+        }
     }
 
     // Handles return from login
@@ -67,6 +80,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

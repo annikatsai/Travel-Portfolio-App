@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/goldengate"
     tools:context=".LoginActivity">
 
     <com.facebook.login.widget.LoginButton
@@ -14,10 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="95dp"
+        android:layout_marginBottom="74dp"
+        android:onClick="onClick"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClick"/>
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,7 +26,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/title"
         android:id="@+id/tvTitle"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="165dp" />
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="158dp"
+        android:layout_above="@+id/login_button"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
