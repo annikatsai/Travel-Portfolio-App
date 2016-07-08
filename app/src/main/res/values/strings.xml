@@ -3,4 +3,9 @@
     <string name="facebook_app_id">1548302398812375</string>
     <string name="title">App Name</string>
     <string name="fb_login_protocol_scheme">fb1548302398812375</string>
+    <string name="welcome">Welcome to</string>
+    <string name="begin">Begin</string>
+    <string name="titleHint">Enter a title.</string>
+    <string name="bodyHint">What\'s your story?</string>
+    <string name="dateHint">When did this happen?</string>
 </resources>

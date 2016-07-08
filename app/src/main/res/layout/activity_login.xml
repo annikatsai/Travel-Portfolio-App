@@ -15,10 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="74dp"
         android:onClick="onClick"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/tvTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="81dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +27,28 @@
         android:text="@string/title"
         android:id="@+id/tvTitle"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="158dp"
-        android:layout_above="@+id/login_button"
+        android:textSize="40sp"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome"
+        android:id="@+id/tvWelcome"
+        android:textColor="#FFFFFF"
+        android:layout_above="@+id/tvTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:textSize="20sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/begin"
+        android:id="@+id/btnBegin"
+        android:textAllCaps="false"
+        android:layout_alignBottom="@+id/login_button"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

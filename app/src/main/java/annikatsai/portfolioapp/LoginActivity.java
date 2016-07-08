@@ -1,15 +1,21 @@
 package annikatsai.portfolioapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -35,6 +41,28 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.login_button);
 
+        // Initial button that prompts user to begin and disappears upon being clicked
+        final Button btnBegin = (Button) findViewById(R.id.btnBegin);
+        loginButton.setVisibility(View.INVISIBLE);
+
+        btnBegin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                ObjectAnimator fadeAway = ObjectAnimator.ofFloat(view, "alpha", 0.0f);
+                fadeAway.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+//                        Animation fadeIn = new AlphaAnimation(0, 1);
+//                        fadeIn.setInterpolator(new AccelerateInterpolator());
+//                        fadeIn.setDuration(1000);
+                        loginButton.setVisibility(View.VISIBLE);
+                    }
+                });
+                fadeAway.start();
+            }
+        });
+
+        // Checks if user is already logged in
         AccessToken token;
         token = AccessToken.getCurrentAccessToken();
 
@@ -47,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Launch TimelineActivity
                     Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
                     startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
 
                 @Override
