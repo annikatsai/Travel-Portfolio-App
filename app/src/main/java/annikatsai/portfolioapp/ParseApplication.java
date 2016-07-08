@@ -17,10 +17,8 @@ public class ParseApplication extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
-        // Add your initialization code here
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, YOUR_APPLICATION_ID, YOUR_CLIENT_KEY);
 
-        // ...
     }
 }
