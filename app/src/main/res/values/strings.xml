@@ -8,4 +8,7 @@
     <string name="titleHint">Enter a title.</string>
     <string name="bodyHint">What\'s your story?</string>
     <string name="dateHint">When did this happen?</string>
+    <string name="title_of_story">Title of story</string>
+    <string name="preview_of_story">Preview of story</string>
+    <string name="profile">Profile</string>
 </resources>

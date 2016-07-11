@@ -2,28 +2,23 @@ package annikatsai.portfolioapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
+
+import annikatsai.portfolioapp.Models.Post;
 
 public class TimelineActivity extends AppCompatActivity {
 
+    ArrayList<Post> posts;
+    PostsArrayAdapter postAdapter;
     ListView lvPosts;
 
     @Override
@@ -31,7 +26,11 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        // Sets up array list, adapter, and list view
+        posts = new ArrayList<>();
+        postAdapter = new PostsArrayAdapter(this, posts);
         lvPosts = (ListView) findViewById(R.id.lvPosts);
+        lvPosts.setAdapter(postAdapter);
     }
 
     @Override
