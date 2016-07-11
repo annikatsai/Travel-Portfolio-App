@@ -3,6 +3,7 @@ package annikatsai.portfolioapp.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+//@Parcel -> code is complaining
 public class Post implements Parcelable {
 
     // the attributes
@@ -10,6 +11,7 @@ public class Post implements Parcelable {
     public String body;
     public String date; // have to figure out how to incorporate this; it is not called in PostsArrayAdapter
     //public String createdAt;
+    //public String imagePath;
 
     // getters:
     public String getTitle() {
@@ -26,6 +28,11 @@ public class Post implements Parcelable {
 
     /*public String getCreatedAt() {
         return createdAt;
+    }*/
+
+    /* Camera roll - figure how to set it up
+    public String getImagePath(){
+        return String.format("https://%s", imagePath);
     }*/
 
     // setters:
@@ -45,6 +52,10 @@ public class Post implements Parcelable {
         this.createdAt = createdAt;
     }*/
 
+    /*public void setImagePath(String imagePath){
+        this.imagePath = imagePath;
+    }*/
+
     // handle parcelable
     @Override
     public int describeContents() {
@@ -57,6 +68,7 @@ public class Post implements Parcelable {
         dest.writeString(this.body);
         dest.writeString(this.date);
         //dest.writeString(this.createdAt);
+        //dest.writeString(this.imagePath);
     }
 
     public Post() {
@@ -67,6 +79,7 @@ public class Post implements Parcelable {
         this.body = in.readString();
         this.date = in.readString();
         //this.createdAt = in.readString();
+        //this.imagePath = in.readString();
     }
 
     public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
