@@ -14,6 +14,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import annikatsai.portfolioapp.Models.Post;
+import android.widget.ListView;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -41,7 +42,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     public void onProfileView(MenuItem mi) {
         // Launch Profile
-        Intent i = new Intent(this, PostActivity.class);
+        Intent i = new Intent(this, ProfileActivity.class);
         startActivity(i);
     }
 

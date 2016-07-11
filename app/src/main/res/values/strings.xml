@@ -11,4 +11,6 @@
     <string name="title_of_story">Title of story</string>
     <string name="preview_of_story">Preview of story</string>
     <string name="profile">Profile</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="launchMap">Launch Map</string>
 </resources>

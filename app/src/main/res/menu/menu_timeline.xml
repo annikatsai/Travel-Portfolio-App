@@ -7,5 +7,9 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_profile"
         android:title="@string/profile"
+        app:showAsAction="collapseActionView"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Profile"
         android:onClick="onProfileView"/>
+
 </menu>
