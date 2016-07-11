@@ -1,7 +1,7 @@
 package annikatsai.portfolioapp;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,4 +43,89 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+//    @Override
+//    public void onMapLongClick(final LatLng point) {
+//        Toast.makeText(this, "Long Press", Toast.LENGTH_LONG).show();
+//        // Custom code here...
+//        showAlertDialogForPoint(point);
+//    }
+//
+//    // Display the alert that adds the marker
+//    private void showAlertDialogForPoint(final LatLng point) {
+//        // inflate message_item.xml view
+//        View messageView = LayoutInflater.from(MapsActivity.this).
+//                inflate(R.layout.message_item, null);
+//        // Create alert dialog builder
+//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+//        // set message_item.xml to AlertDialog builder
+//        alertDialogBuilder.setView(messageView);
+//
+//        // Create alert dialog
+//        final AlertDialog alertDialog = alertDialogBuilder.create();
+//
+//        // Configure dialog button (OK)
+//        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // Define color of marker icon
+//						BitmapDescriptor defaultMarker =
+//								BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+//                        // Extract content from alert dialog
+//                        String title = ((EditText) alertDialog.findViewById(R.id.etTitle)).
+//                                getText().toString();
+//                        String snippet = ((EditText) alertDialog.findViewById(R.id.etSnippet)).
+//                                getText().toString();
+//                        // Creates and adds marker to the map
+//                        Marker marker = map.addMarker(new MarkerOptions()
+//                                .position(point)
+//                                .title(title)
+//                                .snippet(snippet)
+//                                .icon(customMarker));
+//                        dropPinEffect(marker);
+//                    }
+//                });
+//
+//        // Configure dialog button (Cancel)
+//        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
+//                });
+//
+//        // Display the dialog
+//        alertDialog.show();
+//    }
+//
+//    private void dropPinEffect(final Marker marker) {
+//        // Handler allows us to repeat a code block after a specified delay
+//        final android.os.Handler handler = new android.os.Handler();
+//        final long start = SystemClock.uptimeMillis();
+//        final long duration = 1500;
+//
+//        // Use the bounce interpolator
+//        final android.view.animation.Interpolator interpolator =
+//                new BounceInterpolator();
+//
+//        // Animate marker with a bounce updating its position every 15ms
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                long elapsed = SystemClock.uptimeMillis() - start;
+//                // Calculate t for bounce based on elapsed time
+//                float t = Math.max(
+//                        1 - interpolator.getInterpolation((float) elapsed
+//                                / duration), 0);
+//                // Set the anchor
+//                marker.setAnchor(0.5f, 1.0f + 14 * t);
+//
+//                if (t > 0.0) {
+//                    // Post this event again 15ms from now.
+//                    handler.postDelayed(this, 15);
+//                } else { // done elapsing, show window
+//                    marker.showInfoWindow();
+//                }
+//            }
+//        });
+//    }
 }

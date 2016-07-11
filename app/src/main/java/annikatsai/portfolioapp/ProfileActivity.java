@@ -20,13 +20,21 @@ import annikatsai.portfolioapp.Models.User;
 public class ProfileActivity extends AppCompatActivity {
 
     User user;
+    Integer numPosts = 0;       // CHANGE THIS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // Access Token needed for getting user info
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
+        // Clear the action bar
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Loads user info from Facebook Graph API with necessary parameters and parsing JSON
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -55,11 +63,13 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     // problems with email and cover photo
+    // Loading TextViews and ImageViews
     private void populateProfileInfo(User user) {
         ImageView ivProfilePicture = (ImageView) findViewById(R.id.ivProfilePicture);
         ImageView ivCoverPhoto = (ImageView) findViewById(R.id.ivCoverPhoto);
         ivCoverPhoto.setAlpha(0.5F);
         TextView tvName = (TextView) findViewById(R.id.tvName);
+        TextView tvNumPosts = (TextView) findViewById(R.id.tvNumPosts);
         TextView tvEmail = (TextView) findViewById(R.id.tvEmail);
 
         if (user.getEmail() != null) {
@@ -67,6 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             tvEmail.setText("No email available");
         }
+        tvNumPosts.setText(numPosts.toString() + " Posts");
         tvName.setText(user.getName());
         Picasso.with(this).load(user.getCoverPhotoUrl()).into(ivCoverPhoto);
         Picasso.with(this).load("https://graph.facebook.com/" + user.getId() + "/picture?type=large").into(ivProfilePicture);

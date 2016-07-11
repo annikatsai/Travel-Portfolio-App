@@ -6,14 +6,25 @@
     tools:context="annikatsai.portfolioapp.ProfileActivity">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="130dp"
         android:id="@+id/ivProfilePicture"
-        android:translationZ="10dp"
-        android:layout_alignTop="@+id/ivCoverPhoto"
-        android:layout_toRightOf="@+id/btnLaunchMap"
-        android:layout_toEndOf="@+id/btnLaunchMap"
-        android:layout_marginTop="46dp" />
+        android:layout_marginTop="33dp"
+        android:layout_width="125dp"
+        android:layout_height="180dp"
+        android:background="@android:color/white"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:layout_centerHorizontal="true"
+        android:translationZ="10dp" />
+
+    <ImageView
+        android:id="@+id/ivCoverPhoto"
+        android:layout_width="360dp"
+        android:layout_height="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,9 +32,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/tvName"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/btnLaunchMap"
-        android:layout_alignStart="@+id/btnLaunchMap" />
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/ivCoverPhoto"
+        android:layout_toLeftOf="@+id/ivProfilePicture"
+        android:layout_toStartOf="@+id/ivProfilePicture" />
 
     <Button
         android:layout_width="wrap_content"
@@ -47,13 +59,13 @@
         android:layout_alignLeft="@+id/tvName"
         android:layout_alignStart="@+id/tvName" />
 
-    <ImageView
-        android:layout_width="360dp"
-        android:layout_height="230dp"
-        android:id="@+id/ivCoverPhoto"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvNumPosts"
+        android:layout_below="@+id/tvEmail"
+        android:layout_alignLeft="@+id/tvEmail"
+        android:layout_alignStart="@+id/tvEmail" />
 
 </RelativeLayout>
