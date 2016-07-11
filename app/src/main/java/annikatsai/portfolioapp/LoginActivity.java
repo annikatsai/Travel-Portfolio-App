@@ -27,7 +27,6 @@ import com.facebook.login.widget.LoginButton;
 import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
-
     LoginButton loginButton;
     CallbackManager callbackManager;
 

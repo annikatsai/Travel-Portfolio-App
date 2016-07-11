@@ -5,7 +5,7 @@
     <item
         android:id="@+id/miProfile"
         app:showAsAction="ifRoom"
-        android:icon="@mipmap/ic_launcher"
-        android:title="Profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile"
         android:onClick="onProfileView"/>
 </menu>

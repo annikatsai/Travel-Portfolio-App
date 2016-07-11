@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/ivImage"
+        android:background="#58bfe6"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_of_story"
+        android:id="@+id/tvTitle"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/ivImage"
+        android:layout_toStartOf="@+id/ivImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/preview_of_story"
+        android:id="@+id/tvPreviewStory"
+        android:layout_alignBottom="@+id/ivImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvTitle"
+        android:layout_toLeftOf="@+id/ivImage"
+        android:layout_toStartOf="@+id/ivImage" />
+
+</RelativeLayout>
+
+<!--
+This is for displaying time:
+<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5h"
+        android:id="@+id/tvTime"
+        android:layout_above="@+id/tvPreviewStory"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+-->
