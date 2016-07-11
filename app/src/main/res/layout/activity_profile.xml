@@ -29,4 +29,17 @@
         android:layout_alignLeft="@+id/ivProfilePicture"
         android:layout_alignStart="@+id/ivProfilePicture" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/launchMap"
+        android:id="@+id/btnLaunchMap"
+        android:layout_below="@+id/tvName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="launchMap"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="67dp" />
+
 </RelativeLayout>
