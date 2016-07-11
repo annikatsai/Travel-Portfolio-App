@@ -3,20 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="annikatsai.portfolioapp.ProfileActivity">
 
     <ImageView
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@mipmap/ic_launcher"
+        android:layout_height="130dp"
         android:id="@+id/ivProfilePicture"
-        android:layout_marginTop="46dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:translationZ="10dp"
+        android:layout_alignTop="@+id/ivCoverPhoto"
+        android:layout_toRightOf="@+id/btnLaunchMap"
+        android:layout_toEndOf="@+id/btnLaunchMap"
+        android:layout_marginTop="46dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,10 +21,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/tvName"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/ivProfilePicture"
-        android:layout_alignLeft="@+id/ivProfilePicture"
-        android:layout_alignStart="@+id/ivProfilePicture" />
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/btnLaunchMap"
+        android:layout_alignStart="@+id/btnLaunchMap" />
 
     <Button
         android:layout_width="wrap_content"
@@ -41,5 +37,23 @@
         android:layout_marginLeft="18dp"
         android:layout_marginStart="18dp"
         android:layout_marginTop="67dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvEmail"
+        android:layout_below="@+id/tvName"
+        android:layout_alignLeft="@+id/tvName"
+        android:layout_alignStart="@+id/tvName" />
+
+    <ImageView
+        android:layout_width="360dp"
+        android:layout_height="230dp"
+        android:id="@+id/ivCoverPhoto"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

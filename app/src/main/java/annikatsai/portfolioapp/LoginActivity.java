@@ -2,16 +2,11 @@ package annikatsai.portfolioapp;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -26,9 +21,12 @@ import com.facebook.login.widget.LoginButton;
 
 import java.util.Arrays;
 
+import annikatsai.portfolioapp.Models.User;
+
 public class LoginActivity extends AppCompatActivity {
     LoginButton loginButton;
     CallbackManager callbackManager;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+                //"public_profile", "email", "user_birthday", "user_friends"));
 
         // Initial button that prompts user to begin and disappears upon being clicked
         final Button btnBegin = (Button) findViewById(R.id.btnBegin);
