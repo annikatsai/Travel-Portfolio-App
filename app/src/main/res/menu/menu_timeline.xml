@@ -4,9 +4,14 @@
 
     <item
         android:id="@+id/miProfile"
-        android:icon="@drawable/ic_profile"
         android:title="@string/profile"
         app:showAsAction="collapseActionView"
         android:onClick="onProfileView"/>
+
+    <item
+        android:id="@+id/miPost"
+        android:title="@string/post"
+        app:showAsAction="collapseActionView"
+        android:onClick="onPostView"/>
 
 </menu>
