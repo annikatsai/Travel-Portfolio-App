@@ -2,10 +2,10 @@ package annikatsai.portfolioapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-// extends AppCompatActivity
-public class PostActivity extends TakePicActivity {
+public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
