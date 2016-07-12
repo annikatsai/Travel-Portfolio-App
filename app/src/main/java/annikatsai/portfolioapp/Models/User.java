@@ -10,13 +10,8 @@ public class User {
     public String email;
     public String name;
     public String coverPhotoUrl;
-//    public String profileImageUrl;
 
     public User () {}
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getEmail() {
         return email;
@@ -25,10 +20,6 @@ public class User {
     public String getId() {
         return id;
     }
-
-//    public String getProfileImageUrl() {
-//        return profileImageUrl;
-//    }
 
     public String getCoverPhotoUrl() {
         return coverPhotoUrl;
@@ -49,7 +40,6 @@ public class User {
             u.id = json.getString("id");
             u.name = json.getString("name");
             u.email = json.getString("email");
-            //u.profileImageUrl = json.getString("profile_image_url");
         } catch (JSONException e) {
             e.printStackTrace();
         }

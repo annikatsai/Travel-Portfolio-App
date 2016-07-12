@@ -61,8 +61,6 @@ public class ProfileActivity extends AppCompatActivity {
         request.executeAsync();
     }
 
-
-    // problems with email and cover photo
     // Loading TextViews and ImageViews
     private void populateProfileInfo(User user) {
         ImageView ivProfilePicture = (ImageView) findViewById(R.id.ivProfilePicture);

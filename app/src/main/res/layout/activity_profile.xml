@@ -32,23 +32,18 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/tvName"
-        android:layout_marginTop="35dp"
         android:layout_below="@+id/ivCoverPhoto"
-        android:layout_toLeftOf="@+id/ivProfilePicture"
-        android:layout_toStartOf="@+id/ivProfilePicture" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/launchMap"
         android:id="@+id/btnLaunchMap"
-        android:layout_below="@+id/tvName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:onClick="launchMap"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="67dp" />
+        android:layout_below="@+id/tvNumPosts"
+        android:layout_toLeftOf="@+id/ivProfilePicture"
+        android:layout_toStartOf="@+id/ivProfilePicture" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -56,8 +51,9 @@
         android:text="New Text"
         android:id="@+id/tvEmail"
         android:layout_below="@+id/tvName"
-        android:layout_alignLeft="@+id/tvName"
-        android:layout_alignStart="@+id/tvName" />
+        android:layout_alignLeft="@+id/btnLaunchMap"
+        android:layout_alignStart="@+id/btnLaunchMap"
+        android:layout_marginTop="18dp" />
 
     <TextView
         android:layout_width="wrap_content"
