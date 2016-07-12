@@ -8,13 +8,11 @@ import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import annikatsai.portfolioapp.Models.Post;
-import android.widget.ListView;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -43,6 +41,12 @@ public class TimelineActivity extends AppCompatActivity {
     public void onProfileView(MenuItem mi) {
         // Launch Profile
         Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
+    }
+
+    public void onPostView(MenuItem item) {
+        // Launch Post
+        Intent i = new Intent(this, PostActivity.class);
         startActivity(i);
     }
 
