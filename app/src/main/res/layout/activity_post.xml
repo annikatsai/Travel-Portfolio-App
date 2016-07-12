@@ -43,4 +43,15 @@
         android:layout_alignParentStart="true"
         android:hint="@string/dateHint" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/btnSelectLocation"
+        android:onClick="selectLocation"
+        android:layout_below="@+id/etBody"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="47dp" />
+
 </RelativeLayout>
