@@ -7,36 +7,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".TakePicActivity">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/take_a_picture"
-        android:id="@+id/btnTake"
-        android:onClick="onTakeClick"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    tools:context="annikatsai.portfolioapp.CameraActivity">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/upload_a_picture"
-        android:id="@+id/btnUpload"
-        android:onClick="onUploadClick"
+        android:id="@+id/btnOne"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onOneClick" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/take_a_picture"
+        android:id="@+id/btnTwo"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="onTwoClick" />
 
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:id="@+id/ivPreview"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btnOne"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/flContainer"></FrameLayout>
 
 </RelativeLayout>
-
-<!--
-ivPreview used to be in this xml
--->

@@ -15,7 +15,8 @@ public class PostActivity extends TakePicActivity {
 
     public void onAddClick(View view){
         // Launch TakePic
-        Intent i = new Intent(this, TakePicActivity.class);
+        //Intent i = new Intent(this, TakePicActivity.class);
+        Intent i = new Intent(this, CameraActivity.class);
         startActivity(i);
     }
 }
