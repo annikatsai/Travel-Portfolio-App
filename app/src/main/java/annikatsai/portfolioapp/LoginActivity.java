@@ -21,12 +21,10 @@ import com.facebook.login.widget.LoginButton;
 
 import java.util.Arrays;
 
-import annikatsai.portfolioapp.Models.User;
-
 public class LoginActivity extends AppCompatActivity {
-    LoginButton loginButton;
+
+    private LoginButton mLoginButton;
     CallbackManager callbackManager;
-    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +34,13 @@ public class LoginActivity extends AppCompatActivity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+        mLoginButton = (LoginButton)findViewById(R.id.login_button);
+        mLoginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
                 //"public_profile", "email", "user_birthday", "user_friends"));
 
         // Initial button that prompts user to begin and disappears upon being clicked
         final Button btnBegin = (Button) findViewById(R.id.btnBegin);
-        loginButton.setVisibility(View.INVISIBLE);
+        mLoginButton.setVisibility(View.INVISIBLE);
 
         btnBegin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        Animation fadeIn = new AlphaAnimation(0, 1);
 //                        fadeIn.setInterpolator(new AccelerateInterpolator());
 //                        fadeIn.setDuration(1000);
-                        loginButton.setVisibility(View.VISIBLE);
+                        mLoginButton.setVisibility(View.VISIBLE);
                     }
                 });
                 fadeAway.start();
@@ -68,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         if (token == null) {
             //Means user is not logged in
             // Create callback to handle results of login and register callbackManager
-            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            mLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     // Launch TimelineActivity
@@ -100,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // onClick method from login button
-    public void onClick(View view) {
+    public void onLoginButtonClick(View view) {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
