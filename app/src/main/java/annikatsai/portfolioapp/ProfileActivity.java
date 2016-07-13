@@ -30,9 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Access Token needed for getting user info
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
-        // Clear the action bar
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         // Loads user info from Facebook Graph API with necessary parameters and parsing JSON
         GraphRequest request = GraphRequest.newMeRequest(
@@ -75,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             tvEmail.setText("No email available");
         }
-        tvNumPosts.setText(numPosts.toString() + " Posts");
+        tvNumPosts.setText(numPosts.toString());
         tvName.setText(user.getName());
         Picasso.with(this).load(user.getCoverPhotoUrl()).into(ivCoverPhoto);
         Picasso.with(this).load("https://graph.facebook.com/" + user.getId() + "/picture?type=large").into(ivProfilePicture);

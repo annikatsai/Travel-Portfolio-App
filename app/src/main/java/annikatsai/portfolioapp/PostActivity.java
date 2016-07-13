@@ -24,9 +24,6 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         tvLocation = (TextView) findViewById(R.id.tvLocation);
-
-
-
     }
 
 //    public void selectLocation(View view) {
@@ -52,7 +49,7 @@ public class PostActivity extends AppCompatActivity {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-//                tvLocation.setText(place.getName());
+                tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
