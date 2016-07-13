@@ -3,6 +3,8 @@ package annikatsai.portfolioapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,17 +18,13 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
-// Roles of the Activity
-// 1. Navigation between activities and fragments
-// 2. Communication between fragments
-// 3. Adding and removing fragments
-// 4. ActionBar
-
 public class CameraActivity extends AppCompatActivity {
 
     public final String APP_TAG = "MyCustomApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
+
+    public final static int PICK_PHOTO_CODE = 1046;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +36,32 @@ public class CameraActivity extends AppCompatActivity {
         onLaunchCamera(view);
     }
 
+    public void onUploadClick(View view) {
+        onPickPhoto(view);
+    }
+
     public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName)); // set the image file name
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        } else{
+            // Warns user if camera can't be opened
+            Toast.makeText(getApplicationContext(), "Can't open camera.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Trigger gallery selection for a photo
+    public void onPickPhoto(View view) {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Bring up gallery to select a photo
+            startActivityForResult(intent, PICK_PHOTO_CODE);
         }
     }
 
@@ -55,11 +70,20 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
+
+                /*
+                String takenPhotoStr = takenPhotoUri.toString();
+                Bitmap roatedImg = rotateBitmapOrientation(takenPhotoStr);
+                */
+
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+                //Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+
+                Bitmap rotatedImg = rotateBitmapOrientation(takenPhotoUri);
+
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(takenImage);
+                ivPreview.setImageBitmap(rotatedImg);//takenImage);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -107,26 +131,33 @@ public class CameraActivity extends AppCompatActivity {
         return state.equals(Environment.MEDIA_MOUNTED);
     }
 
-    //********************************************************************************************************
+    //**********************************************************************************************
 
-    public void onUploadClick(View view) {
-        onPickPhoto(view);
-    }
-
-    // PICK_PHOTO_CODE is a constant integer
-    public final static int PICK_PHOTO_CODE = 1046;
-
-    // Trigger gallery selection for a photo
-    public void onPickPhoto(View view) {
-        // Create intent for picking a photo from the gallery
-        Intent intent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            // Bring up gallery to select a photo
-            startActivityForResult(intent, PICK_PHOTO_CODE);
+    public Bitmap rotateBitmapOrientation(Uri takenPhotoUri) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(takenPhotoUri.getPath(), bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(takenPhotoUri.getPath(), opts);
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(takenPhotoUri.getPath());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
     }
 }
