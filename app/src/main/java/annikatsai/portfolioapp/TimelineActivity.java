@@ -16,9 +16,9 @@ import annikatsai.portfolioapp.Models.Post;
 
 public class TimelineActivity extends AppCompatActivity {
 
-    ArrayList<Post> posts;
-    PostsArrayAdapter postAdapter;
-    ListView lvPosts;
+    private ArrayList<Post> posts;
+    private PostsArrayAdapter postAdapter;
+    private ListView lvPosts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

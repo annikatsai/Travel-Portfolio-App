@@ -42,6 +42,7 @@ public class User {
             u.email = json.getString("email");
         } catch (JSONException e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
         // Return a user
         return u;
