@@ -43,7 +43,6 @@ public class TimelineActivity extends AppCompatActivity {
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         Typeface textFont = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         toolbarTitle.setTypeface(titleFont);
-
     }
 
     @Override

@@ -31,7 +31,7 @@
         app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/view"
+        android:id="@+id/fabDate"
         android:onClick="onPostView"
         android:layout_margin="16dp"
         android:layout_alignBottom="@+id/lvPosts"
