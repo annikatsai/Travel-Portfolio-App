@@ -2,13 +2,16 @@ package annikatsai.portfolioapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -25,11 +28,21 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+
         // Sets up array list, adapter, and list view
         posts = new ArrayList<>();
         postAdapter = new PostsArrayAdapter(this, posts);
         lvPosts = (ListView) findViewById(R.id.lvPosts);
         lvPosts.setAdapter(postAdapter);
+
+        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        Typeface textFont = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
+        toolbarTitle.setTypeface(titleFont);
     }
 
     @Override
@@ -46,6 +59,11 @@ public class TimelineActivity extends AppCompatActivity {
 
     public void onPostView(MenuItem item) {
         // Launch Post
+        Intent i = new Intent(this, PostActivity.class);
+        startActivity(i);
+    }
+
+    public void onPostView(View view) {
         Intent i = new Intent(this, PostActivity.class);
         startActivity(i);
     }
@@ -92,4 +110,5 @@ public class TimelineActivity extends AppCompatActivity {
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         return super.onCreateView(name, context, attrs);
     }
+
 }

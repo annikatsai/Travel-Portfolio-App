@@ -3,16 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="annikatsai.portfolioapp.ProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/white"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_gravity="left"
+            />
+
+    </android.support.v7.widget.Toolbar>
 
     <ImageView
         android:id="@+id/ivProfilePicture"
+        android:layout_below="@id/toolbar"
         android:layout_marginTop="33dp"
+        android:adjustViewBounds="true"
         android:layout_width="125dp"
         android:layout_height="180dp"
         android:background="@android:color/white"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:padding="4dp"
         android:layout_centerHorizontal="true"
         android:translationZ="10dp" />
 
@@ -20,9 +42,9 @@
         android:id="@+id/ivCoverPhoto"
         android:layout_width="360dp"
         android:layout_height="250dp"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/toolbar"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -31,6 +53,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
+        android:fontFamily="sans-serif-medium"
         android:id="@+id/tvName"
         android:layout_below="@+id/ivCoverPhoto"
         android:layout_centerHorizontal="true" />
@@ -39,29 +62,74 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/launchMap"
+        android:fontFamily="sans-serif"
+        android:textAllCaps="false"
         android:id="@+id/btnLaunchMap"
         android:onClick="launchMap"
-        android:layout_below="@+id/tvNumPosts"
-        android:layout_toLeftOf="@+id/ivProfilePicture"
-        android:layout_toStartOf="@+id/ivProfilePicture" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/tvName"
+        android:layout_alignEnd="@+id/tvName"
+        android:layout_marginBottom="52dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:fontFamily="sans-serif"
         android:id="@+id/tvEmail"
+        android:layout_marginTop="22dp"
+        android:textColor="#000000"
+        android:textSize="15sp"
         android:layout_below="@+id/tvName"
-        android:layout_alignLeft="@+id/btnLaunchMap"
-        android:layout_alignStart="@+id/btnLaunchMap"
-        android:layout_marginTop="18dp" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="26dp"
+        android:layout_marginEnd="26dp"
+        android:typeface="sans" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvNumPosts"
+        android:textColor="#000000"
+        android:textSize="15sp"
         android:layout_below="@+id/tvEmail"
         android:layout_alignLeft="@+id/tvEmail"
         android:layout_alignStart="@+id/tvEmail" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:id="@+id/tvEmailPrompt"
+        android:fontFamily="sans-serif-light"
+        android:layout_alignTop="@+id/tvEmail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="33dp"
+        android:layout_marginStart="33dp"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/numberOfPosts"
+        android:id="@+id/tvNumPostsPrompt"
+        android:fontFamily="sans-serif-light"
+        android:textSize="15sp"
+        android:layout_below="@+id/tvEmailPrompt"
+        android:layout_alignLeft="@+id/tvEmailPrompt"
+        android:layout_alignStart="@+id/tvEmailPrompt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/launchMapPrompt"
+        android:id="@+id/tvLaunchMap"
+        android:fontFamily="sans-serif-light"
+        android:textSize="15sp"
+        android:layout_above="@+id/btnLaunchMap"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

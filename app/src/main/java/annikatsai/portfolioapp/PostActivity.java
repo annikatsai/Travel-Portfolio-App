@@ -1,10 +1,14 @@
 package annikatsai.portfolioapp;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -13,10 +17,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
-public class PostActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    TextView tvLocation;
-
+    private TextView tvLocation;
+    private TextView tvDate;
+    private java.util.Calendar c = java.util.Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +29,18 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         tvLocation = (TextView) findViewById(R.id.tvLocation);
+        tvDate = (TextView) findViewById(R.id.tvDate);
 
+        // Customizing Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
 
-
+        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        toolbarTitle.setText("Make a Post");
+        toolbarTitle.setTypeface(titleFont);
     }
 
 //    public void selectLocation(View view) {
@@ -52,7 +66,7 @@ public class PostActivity extends AppCompatActivity {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-//                tvLocation.setText(place.getName());
+                tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
@@ -64,6 +78,30 @@ public class PostActivity extends AppCompatActivity {
             }
         }
     }
+
+    // attach to an onclick handler to show the date picker
+    public void showDatePickerDialog(View v) {
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    // handle the date selected
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        // store the values selected into a Calendar instance
+        c.set(java.util.Calendar.YEAR, year);
+        c.set(java.util.Calendar.MONTH, monthOfYear);
+        c.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        int day = view.getDayOfMonth();
+        int month = view.getMonth() + 1;
+        int getYear = view.getYear();
+
+        String date = "" + String.valueOf(month) + "/" + String.valueOf(day)
+                + "/" + String.valueOf(getYear);
+        tvDate.setText(date);
+    }
+
 
 //    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
 //        @Override

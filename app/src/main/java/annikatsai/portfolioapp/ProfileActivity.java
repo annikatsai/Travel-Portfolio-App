@@ -1,8 +1,10 @@
 package annikatsai.portfolioapp;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,12 +29,19 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Customizing Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+
+        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        toolbarTitle.setText("Profile");
+        toolbarTitle.setTypeface(titleFont);
+
         // Access Token needed for getting user info
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-
-        // Clear the action bar
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Loads user info from Facebook Graph API with necessary parameters and parsing JSON
         GraphRequest request = GraphRequest.newMeRequest(
@@ -72,10 +81,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (user.getEmail() != null) {
             tvEmail.setText(user.getEmail());
+            //tvEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         } else {
             tvEmail.setText("No email available");
         }
-        tvNumPosts.setText(numPosts.toString() + " Posts");
+        tvNumPosts.setText(numPosts.toString());
         tvName.setText(user.getName());
         Picasso.with(this).load(user.getCoverPhotoUrl()).into(ivCoverPhoto);
         Picasso.with(this).load("https://graph.facebook.com/" + user.getId() + "/picture?type=large").into(ivProfilePicture);
