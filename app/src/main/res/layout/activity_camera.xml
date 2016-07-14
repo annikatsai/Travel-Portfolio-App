@@ -37,8 +37,3 @@
         android:layout_alignEnd="@+id/ivPreview" />
 
 </RelativeLayout>
-
-<!--
-Rotates view, but does not actually rotate the image (in ImageView):
-android:rotation="90"
--->

@@ -70,17 +70,9 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-
-                /*
-                String takenPhotoStr = takenPhotoUri.toString();
-                Bitmap roatedImg = rotateBitmapOrientation(takenPhotoStr);
-                */
-
                 // by this point we have the camera photo on disk
                 //Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-
                 Bitmap rotatedImg = rotateBitmapOrientation(takenPhotoUri);
-
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(rotatedImg);//takenImage);
@@ -91,17 +83,22 @@ public class CameraActivity extends AppCompatActivity {
 
         if(requestCode == PICK_PHOTO_CODE){
             if (data != null) {
+                Bitmap bmpRotate = null;
                 Uri photoUri = data.getData();
                 // Do something with the photo based on Uri
                 Bitmap selectedImage = null;
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                    // Will rotate Bitmap (image that was selected)
+                    Matrix mat = new Matrix();
+                    mat.postRotate(90);
+                    bmpRotate = Bitmap.createBitmap(selectedImage, 0, 0, selectedImage.getWidth(), selectedImage.getHeight(), mat, true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(selectedImage);
+                ivPreview.setImageBitmap(bmpRotate);
             }
         }
     }
@@ -140,6 +137,7 @@ public class CameraActivity extends AppCompatActivity {
         BitmapFactory.decodeFile(takenPhotoUri.getPath(), bounds);
         BitmapFactory.Options opts = new BitmapFactory.Options();
         Bitmap bm = BitmapFactory.decodeFile(takenPhotoUri.getPath(), opts);
+
         // Read EXIF Data
         ExifInterface exif = null;
         try {
@@ -147,16 +145,19 @@ public class CameraActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
         int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
         int rotationAngle = 0;
         if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
         if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
         if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+
         // Rotate Bitmap
         Matrix matrix = new Matrix();
         matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
         Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+
         // Return result
         return rotatedBitmap;
     }
