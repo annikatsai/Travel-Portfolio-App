@@ -83,22 +83,17 @@ public class CameraActivity extends AppCompatActivity {
 
         if(requestCode == PICK_PHOTO_CODE){
             if (data != null) {
-                Bitmap bmpRotate = null;
                 Uri photoUri = data.getData();
                 // Do something with the photo based on Uri
                 Bitmap selectedImage = null;
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
-                    // Will rotate Bitmap (image that was selected)
-                    Matrix mat = new Matrix();
-                    mat.postRotate(90);
-                    bmpRotate = Bitmap.createBitmap(selectedImage, 0, 0, selectedImage.getWidth(), selectedImage.getHeight(), mat, true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(bmpRotate);
+                ivPreview.setImageBitmap(selectedImage);
             }
         }
     }
@@ -127,8 +122,6 @@ public class CameraActivity extends AppCompatActivity {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
     }
-
-    //**********************************************************************************************
 
     public Bitmap rotateBitmapOrientation(Uri takenPhotoUri) {
         // Create and configure BitmapFactory
