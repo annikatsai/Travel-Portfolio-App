@@ -26,6 +26,20 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_add"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view"
+        android:onClick="onPostView"
+        android:layout_margin="16dp"
+        android:layout_alignBottom="@+id/lvPosts"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="38dp"
+        android:layout_marginEnd="38dp" />
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

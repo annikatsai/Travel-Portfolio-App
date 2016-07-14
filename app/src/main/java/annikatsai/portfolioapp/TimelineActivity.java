@@ -64,6 +64,11 @@ public class TimelineActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onPostView(View view) {
+        Intent i = new Intent(this, PostActivity.class);
+        startActivity(i);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
@@ -106,4 +111,5 @@ public class TimelineActivity extends AppCompatActivity {
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         return super.onCreateView(name, context, attrs);
     }
+
 }

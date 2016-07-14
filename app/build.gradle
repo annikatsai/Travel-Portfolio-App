@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -32,8 +33,14 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.android.gms:play-services-maps:9.2.1'
     compile 'com.google.android.gms:play-services-places:9.2.1'
-//    compile 'com.google.android.gms:play-services:9.0.1'
-
+    compile "com.android.support:design:24.0.0"
+    compile "com.android.support:support-vector-drawable:24.0.0" // VectorDrawableCompat
+    compile "com.android.support:animated-vector-drawable:24.0.0" // AnimatedVectorDrawableCompat
+    compile "com.android.support:support-annotations:24.0.0"
+    compile "com.android.support:recyclerview-v7:24.0.0"
+    compile "com.android.support:percent:24.0.0"
 }
 
- 
+ext {
+    supportLibVersion = '24.0.0'  // variable that can be referenced to keep support libs consistent
+}
