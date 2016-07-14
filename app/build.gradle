@@ -39,8 +39,12 @@ dependencies {
     compile "com.android.support:support-annotations:24.0.0"
     compile "com.android.support:recyclerview-v7:24.0.0"
     compile "com.android.support:percent:24.0.0"
+    compile "com.google.firebase:firebase-database:9.2.1"
+    compile "com.google.firebase:firebase-auth:9.2.1"
 }
 
 ext {
     supportLibVersion = '24.0.0'  // variable that can be referenced to keep support libs consistent
 }
+
+apply plugin: 'com.google.gms.google-services'

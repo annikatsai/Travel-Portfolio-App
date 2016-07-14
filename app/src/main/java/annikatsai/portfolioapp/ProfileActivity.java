@@ -29,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
@@ -41,8 +42,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Access Token needed for getting user info
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-
-
 
         // Loads user info from Facebook Graph API with necessary parameters and parsing JSON
         GraphRequest request = GraphRequest.newMeRequest(
@@ -82,6 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (user.getEmail() != null) {
             tvEmail.setText(user.getEmail());
+            //tvEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         } else {
             tvEmail.setText("No email available");
         }
