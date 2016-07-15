@@ -18,4 +18,9 @@
     <string name="post">Post</string>
     <string name="add_a_picture">Add a picture</string>
     <string name="typeLocationHint">Type in your Location</string>
+    <string name="searchLocation">Search for a Location</string>
+    <string name="email">Email</string>
+    <string name="numberOfPosts">Number of Posts</string>
+    <string name="launchMapPrompt">Click below to see where you have been!</string>
+    <string name="submit">Submit</string>
 </resources>

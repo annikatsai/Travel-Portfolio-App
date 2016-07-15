@@ -3,10 +3,17 @@ package annikatsai.portfolioapp.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 //@Parcel -> code is complaining
 public class Post implements Parcelable {
 
     // the attributes
+    public String uid;
+    public String location;
     public String title;
     public String body;
     public String date; // have to figure out how to incorporate this; it is not called in PostsArrayAdapter
@@ -74,25 +81,43 @@ public class Post implements Parcelable {
     public Post() {
     }
 
-    protected Post(Parcel in) {
-        this.title = in.readString();
-        this.body = in.readString();
-        this.date = in.readString();
-        //this.createdAt = in.readString();
-        //this.imagePath = in.readString();
+//    protected Post(Parcel in) {
+//        this.title = in.readString();
+//        this.body = in.readString();
+//        this.date = in.readString();
+//        //this.createdAt = in.readString();
+//        //this.imagePath = in.readString();
+//    }
+//
+//    public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
+//        @Override
+//        public Post createFromParcel(Parcel source) {
+//            return new Post(source);
+//        }
+//
+//        @Override
+//        public Post[] newArray(int size) {
+//            return new Post[size];
+//        }
+//    };
+
+    public Post(String uid, String title, String body, String location, String date) {
+        this.title = title;
+        this.uid = uid;
+        this.body = body;
+        this.date = date;
+        this.location = location;
     }
 
-    public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
-        @Override
-        public Post createFromParcel(Parcel source) {
-            return new Post(source);
-        }
-
-        @Override
-        public Post[] newArray(int size) {
-            return new Post[size];
-        }
-    };
-
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("uid", uid);
+        result.put("title", title);
+        result.put("body", body);
+        result.put("location", location);
+        result.put("date", date);
+        return result;
+    }
     // handle camera roll
 }

@@ -5,7 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,30 +20,99 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
+
+import annikatsai.portfolioapp.Models.User;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginButton mLoginButton;
-    CallbackManager callbackManager;
+    private CallbackManager mCallbackManager;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
+
+    private String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        getSupportActionBar().hide();
-
         FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
+        setContentView(R.layout.activity_login);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Toast.makeText(LoginActivity.this, "User not null", Toast.LENGTH_SHORT).show();
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Toast.makeText(LoginActivity.this, "User null", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        mCallbackManager = CallbackManager.Factory.create();
         mLoginButton = (LoginButton)findViewById(R.id.login_button);
-        mLoginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
-                //"public_profile", "email", "user_birthday", "user_friends"));
+        mLoginButton.setReadPermissions("public_profile", "email");
+
+
+        // Checks if user is already logged in
+//        AccessToken token;
+//        token = AccessToken.getCurrentAccessToken();
+//
+//        if (token == null) {
+
+            mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    // Launch TimelineActivity
+
+                    handleFacebookAccessToken(loginResult.getAccessToken());
+                    Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
+                    mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
+
+
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
         // Initial button that prompts user to begin and disappears upon being clicked
         final Button btnBegin = (Button) findViewById(R.id.btnBegin);
         mLoginButton.setVisibility(View.INVISIBLE);
 
+        // Button animation
         btnBegin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -59,42 +130,87 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Checks if user is already logged in
-        AccessToken token;
-        token = AccessToken.getCurrentAccessToken();
 
-        if (token == null) {
+
+        // Checks if user is already logged in
+//        AccessToken token;
+//        token = AccessToken.getCurrentAccessToken();
+//
+//        if (token == null) {
+
             //Means user is not logged in
             // Create callback to handle results of login and register callbackManager
-            mLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    // Launch TimelineActivity
-                    Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
+//            mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+//                @Override
+//                public void onSuccess(LoginResult loginResult) {
+//                    // Launch TimelineActivity
+//
+//                    handleFacebookAccessToken(loginResult.getAccessToken());
+//                    Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+//                    startActivity(i);
+//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//                }
+//
+//                @Override
+//                public void onCancel() {
+//                    Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT);
+//                }
+//
+//                @Override
+//                public void onError(FacebookException exception) {
+//                    Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT);
+//                }
+//            });
+//        } else {
+//            Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+//            startActivity(i);
+//        }
 
-                @Override
-                public void onCancel() {
-                    Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT);
-                }
 
-                @Override
-                public void onError(FacebookException exception) {
-                    Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT);
-                }
-            });
-        } else {
-            Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
-            startActivity(i);
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
     // Handles return from login
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+
     }
 
     // onClick method from login button
