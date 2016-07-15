@@ -106,12 +106,6 @@ public class TimelineActivity extends AppCompatActivity {
         }
     }
 
-    public void onProfileView(MenuItem mi) {
-        // Launch Profile
-        Intent i = new Intent(this, ProfileActivity.class);
-        startActivity(i);
-    }
-
     public void onPostView(View view) {
         Intent i = new Intent(this, PostActivity.class);
         startActivity(i);
