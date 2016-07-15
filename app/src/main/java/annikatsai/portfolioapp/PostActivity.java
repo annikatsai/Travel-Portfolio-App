@@ -9,18 +9,36 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
+
+import annikatsai.portfolioapp.Models.Post;
+import annikatsai.portfolioapp.Models.User;
 
 public class PostActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    private String postKey;
+    private String TAG = "PostActivity";
     private TextView tvLocation;
+    private EditText etTitle;
+    private TextView tvBody;
     private TextView tvDate;
+    private DatabaseReference mDatabase;
     private java.util.Calendar c = java.util.Calendar.getInstance();
 
     @Override
@@ -28,8 +46,11 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        etTitle = (EditText) findViewById(R.id.etTitle);
+        tvBody = (TextView) findViewById(R.id.etBody);
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,6 +63,73 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         toolbarTitle.setText("Make a Post");
         toolbarTitle.setTypeface(titleFont);
     }
+
+    public void onSubmit(View view) {
+
+        if (etTitle.getText() == null || etTitle.getText().toString().equals("")) {
+            etTitle.setText("");
+        }
+        if (tvBody.getText() == null || tvBody.getText().toString().equals("")) {
+            tvBody.setText("");
+        }
+        if (tvLocation.getText() == null || tvLocation.getText().toString().equals("")) {
+            tvLocation.setText("");
+        }
+        if (tvDate.getText() == null || tvDate.getText().toString().equals("")) {
+            tvDate.setText("");
+        }
+
+        final String title = etTitle.getText().toString();
+        final String body = tvBody.getText().toString();
+        final String location = tvLocation.getText().toString();
+        final String date = tvDate.getText().toString();
+
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase.child("users").child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user == null) {
+                    Toast.makeText(PostActivity.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
+                } else {
+                    composeNewPost(userId, title, body, location, date);
+                }
+//                Intent i = new Intent(PostActivity.this, TimelineActivity.class);
+//                i.putExtra("postKey", postKey);
+//                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+            }
+        });
+
+    }
+
+    private void composeNewPost(String userId, String title, String body, String location, String date) {
+
+        postKey = mDatabase.child("posts").push().getKey();
+        Post newPost = new Post(userId, title, body, location, date);
+        Map<String, Object> postValues = newPost.toMap();
+        //mDatabase.child("posts").push().setValue(postValues);
+
+//        Map<String, Object> updateChild = new HashMap<>();
+//        updateChild.put("/user/" + userId + "/posts/" + postKey, postValues);
+        mDatabase.child("posts").updateChildren(postValues, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast.makeText(PostActivity.this, "Data could not be saved. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PostActivity.this, "Data successfully saved", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
+
 
 //    public void selectLocation(View view) {
 //        Intent intent = new Intent(this, SearchLocationActivity.class);
