@@ -51,10 +51,12 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    Toast.makeText(LoginActivity.this, "User not null", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Toast.makeText(LoginActivity.this, "User null", Toast.LENGTH_SHORT).show();
                 }
                 // ...
             }

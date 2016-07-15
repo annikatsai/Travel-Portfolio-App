@@ -26,6 +26,9 @@ public class CameraActivity extends AppCompatActivity {
 
     public final static int PICK_PHOTO_CODE = 1046;
 
+    Bitmap manualRotateBm = null;
+    int rotationAngle = 90;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,20 @@ public class CameraActivity extends AppCompatActivity {
 
     public void onUploadClick(View view) {
         onPickPhoto(view);
+    }
+
+    public void onRotateClick(View view){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotationAngle);
+        rotationAngle = rotationAngle + 90;
+        Bitmap bm = Bitmap.createBitmap(manualRotateBm, 0, 0, manualRotateBm.getWidth(), manualRotateBm.getHeight(), matrix, true);
+        // Load the taken image into a preview
+        ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+        ivPreview.setImageBitmap(bm);
+    }
+
+    public void onSubmitClick(View view){
+
     }
 
     public void onLaunchCamera(View view) {
@@ -73,6 +90,9 @@ public class CameraActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 //Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
                 Bitmap rotatedImg = rotateBitmapOrientation(takenPhotoUri);
+
+                manualRotateBm = rotatedImg;
+
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(rotatedImg);//takenImage);
@@ -91,6 +111,9 @@ public class CameraActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                manualRotateBm = selectedImage;
+
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(selectedImage);
