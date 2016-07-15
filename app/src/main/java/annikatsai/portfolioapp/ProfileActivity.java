@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -80,8 +81,8 @@ public class ProfileActivity extends AppCompatActivity {
         TextView tvEmail = (TextView) findViewById(R.id.tvEmail);
 
         if (user.getEmail() != null) {
-            tvEmail.setText(user.getEmail());
-            //tvEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            //tvEmail.setText(user.getEmail());
+            tvEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         } else {
             tvEmail.setText("No email available");
         }
@@ -89,6 +90,8 @@ public class ProfileActivity extends AppCompatActivity {
         tvName.setText(user.getName());
         Picasso.with(this).load(user.getCoverPhotoUrl()).into(ivCoverPhoto);
         Picasso.with(this).load("https://graph.facebook.com/" + user.getId() + "/picture?type=large").into(ivProfilePicture);
+        // Picasso.with(this).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).into(ivProfilePicture);
+
     }
 
     public void launchMap(View view) {

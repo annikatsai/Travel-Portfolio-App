@@ -9,9 +9,8 @@
         android:onClick="onProfileView"/>
 
     <item
-        android:id="@+id/miPost"
-        android:title="@string/post"
-        app:showAsAction="collapseActionView"
-        android:onClick="onPostView"/>
+        android:id="@+id/signOut"
+        android:title="Sign Out"
+        app:showAsAction="collapseActionView"/>
 
 </menu>

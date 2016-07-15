@@ -28,15 +28,15 @@
 
     <ImageView
         android:id="@+id/ivProfilePicture"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="33dp"
         android:adjustViewBounds="true"
         android:layout_width="125dp"
         android:layout_height="180dp"
         android:background="@android:color/white"
         android:padding="4dp"
+        android:translationZ="10dp"
+        android:layout_alignBottom="@+id/ivCoverPhoto"
         android:layout_centerHorizontal="true"
-        android:translationZ="10dp" />
+        android:layout_marginBottom="31dp" />
 
     <ImageView
         android:id="@+id/ivCoverPhoto"
@@ -96,7 +96,8 @@
         android:textSize="15sp"
         android:layout_below="@+id/tvEmail"
         android:layout_alignLeft="@+id/tvEmail"
-        android:layout_alignStart="@+id/tvEmail" />
+        android:layout_alignStart="@+id/tvEmail"
+        android:gravity="right" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -1,17 +1,14 @@
 package annikatsai.portfolioapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import annikatsai.portfolioapp.Models.Post;
 
@@ -27,7 +24,8 @@ public class PostsArrayAdapter extends ArrayAdapter<Post> {
 
     // Constructor
     public PostsArrayAdapter(Context context, ArrayList<Post> posts){
-        super(context, R.layout.item_post, posts);
+        //super(context, R.layout.item_post, posts);
+        super(context, android.R.layout.simple_list_item_1, posts);
     }
 
     /*public PostsArrayAdapter(Context context, List<Post> posts) {
