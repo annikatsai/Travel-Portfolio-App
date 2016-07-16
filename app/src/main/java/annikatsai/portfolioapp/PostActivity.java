@@ -110,21 +110,20 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
     private void composeNewPost(String userId, String title, String body, String location, String date) {
 
-        postKey = mDatabase.child("posts").push().getKey();
+        postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
         Post newPost = new Post(userId, title, body, location, date);
         Map<String, Object> postValues = newPost.toMap();
         //mDatabase.child("posts").push().setValue(postValues);
 
 //        Map<String, Object> updateChild = new HashMap<>();
 //        updateChild.put("/user/" + userId + "/posts/" + postKey, postValues);
-        mDatabase.child("posts").updateChildren(postValues, new DatabaseReference.CompletionListener() {
+        mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
                     Toast.makeText(PostActivity.this, "Data could not be saved. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(PostActivity.this, "Data successfully saved", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });

@@ -14,7 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -23,9 +27,10 @@ import annikatsai.portfolioapp.Models.Post;
 public class TimelineActivity extends AppCompatActivity {
 
     private DatabaseReference mPostReference;
+    private DatabaseReference mDatabase;
     private String TAG = "TimelineActivity";
     private ArrayList<Post> posts;
-    private PostsArrayAdapter postAdapter;
+    private PostsArrayAdapter postAdapter;          // need to get count for profile, maybe add to database
     private ListView lvPosts;
 
     @Override
@@ -43,19 +48,38 @@ public class TimelineActivity extends AppCompatActivity {
         toolbarTitle.setTypeface(titleFont);
 
         // Create listener for reading data from database
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("https://fluted-alloy-136917.firebaseio.com/");
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.d(TAG, "Read success");
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.d(TAG, "Read failed");
-//            }
-//        });
+        // Might have to have the childAdded listener and then the add value event listener
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/posts");
+        myRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                // add to adapter
+                Post post = dataSnapshot.getValue(Post.class);
+                postAdapter.add(post);
+                postAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // find item in adapter and update
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // find item in adapter and remove
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
 //        String mPostKey = getIntent().getStringExtra("postKey");
