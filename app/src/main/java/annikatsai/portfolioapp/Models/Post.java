@@ -29,9 +29,6 @@ public class Post implements Parcelable {
         return body;
     }
 
-    public String getDate() {
-        return date;
-    }
 
     /*public String getCreatedAt() {
         return createdAt;

@@ -85,7 +85,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String date = tvDate.getText().toString();
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase.child("users").child(userId).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
