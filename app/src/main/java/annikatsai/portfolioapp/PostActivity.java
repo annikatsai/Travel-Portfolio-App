@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,13 +20,19 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.Map;
 
 import annikatsai.portfolioapp.Models.Post;
@@ -43,6 +50,11 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private java.util.Calendar c = java.util.Calendar.getInstance();
     private final int REQUEST_CODE = 20;
 
+
+    Uri photoUri = null;
+    private FirebaseStorage mStorage;
+    StorageReference storageRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +65,11 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Create an instance of FirebaseStorage
+        mStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app
+        storageRef = mStorage.getReferenceFromUrl("gs://fluted-alloy-136917.appspot.com");
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -66,7 +83,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         toolbarTitle.setTypeface(titleFont);
     }
 
-    public void onAddClick(View view){
+    public void onAddClick(View view) {
         Intent i = new Intent(this, CameraActivity.class);
         startActivityForResult(i, REQUEST_CODE);
     }
@@ -89,6 +106,34 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String body = tvBody.getText().toString();
         final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
+
+        /*STORAGE FIREBASE CODE: START*/
+        // Create a reference to "mountains.jpg"
+        StorageReference mountainsRef = storageRef.child("mountains.jpg");
+        // Create a reference to 'images/mountains.jpg'
+        StorageReference mountainImagesRef = storageRef.child("images/mountains.jpg");
+        // While the file names are the same, the references point to different files
+        mountainsRef.getName().equals(mountainImagesRef.getName());    // true
+        mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+
+        Uri file = Uri.fromFile(new File(photoUri.getPath()));
+        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(file);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        });
+        /*STORAGE FIREBASE CODE: END*/
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase.child("users").child(userId).addValueEventListener(new ValueEventListener() {
@@ -169,9 +214,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 // The user canceled the operation.
             }
         }
-        if(requestCode == REQUEST_CODE){
-            if(resultCode == RESULT_OK){
-                Uri photoUri = data.getData();
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                photoUri = data.getData();
                 // Toast.makeText(getApplicationContext(), "URI is: " + photoUri.toString(), Toast.LENGTH_SHORT).show();
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);
                 tvUri.setText(photoUri.toString());

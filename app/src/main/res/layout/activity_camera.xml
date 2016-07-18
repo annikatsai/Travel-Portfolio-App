@@ -109,19 +109,3 @@
         android:layout_marginTop="36dp" />
 
 </RelativeLayout>
-
-<!--
-<Button
-        android:id="@+id/btnRotate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onRotateClick"
-        android:text="@string/rotate"
-        android:textAllCaps="false"
-        android:layout_below="@+id/ivPreview"
-        android:layout_alignRight="@+id/ivPreview"
-        android:layout_alignEnd="@+id/ivPreview"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
--->
