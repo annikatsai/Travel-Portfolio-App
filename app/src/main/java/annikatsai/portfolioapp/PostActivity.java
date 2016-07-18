@@ -3,6 +3,7 @@ package annikatsai.portfolioapp;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +41,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private TextView tvDate;
     private DatabaseReference mDatabase;
     private java.util.Calendar c = java.util.Calendar.getInstance();
+    private final int REQUEST_CODE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +66,12 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         toolbarTitle.setTypeface(titleFont);
     }
 
-    public void onSubmit(View view) {
+    public void onAddClick(View view){
+        Intent i = new Intent(this, CameraActivity.class);
+        startActivityForResult(i, REQUEST_CODE);
+    }
 
+    public void onSubmit(View view) {
         if (etTitle.getText() == null || etTitle.getText().toString().equals("")) {
             etTitle.setText("");
         }
@@ -105,7 +111,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 Log.w(TAG, "getUser:onCancelled", databaseError.toException());
             }
         });
-
     }
 
     private void composeNewPost(String userId, String title, String body, String location, String date) {
@@ -163,6 +168,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
+        }
+        if(requestCode == REQUEST_CODE){
+            Uri photoUri = data.getData();
+            Toast.makeText(getApplicationContext(), "URI is: " + photoUri.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -252,13 +261,4 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 //                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
 //                Toast.LENGTH_SHORT).show();
 //    }
-
-
-
-    public void onAddClick(View view){
-        // Launch TakePic
-        //Intent i = new Intent(this, TakePicActivity.class);
-        Intent i = new Intent(this, CameraActivity.class);
-        startActivity(i);
-    }
 }
