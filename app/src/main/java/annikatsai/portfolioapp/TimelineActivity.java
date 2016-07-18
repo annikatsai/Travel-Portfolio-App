@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -121,7 +122,8 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.signOut) {
-            FirebaseAuth.getInstance().signOut();
+            FirebaseAuth.getInstance().signOut();       // Firebase User sign out
+            LoginManager.getInstance().logOut();        // Facebook sign out
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return true;
@@ -151,5 +153,9 @@ public class TimelineActivity extends AppCompatActivity {
     public void onProfileView(MenuItem item) {
         Intent i = new Intent(this, ProfileActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

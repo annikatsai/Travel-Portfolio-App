@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 //        AccessToken token;
 //        token = AccessToken.getCurrentAccessToken();
 //
-//        if (token == null) {
+        if (AccessToken.getCurrentAccessToken() == null) {      // User not logged in
 
             mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                 @Override
@@ -106,7 +106,25 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT).show();
                 }
             });
+        } else {            // User logged in on log in screen
+            mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    LoginManager.getInstance().logOut();
+                    FirebaseAuth.getInstance().signOut();
+                }
 
+                @Override
+                public void onCancel() {
+                    Toast.makeText(LoginActivity.this, "Logout attempt canceled", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    Toast.makeText(LoginActivity.this, "Logout attempt failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         // Initial button that prompts user to begin and disappears upon being clicked
         final Button btnBegin = (Button) findViewById(R.id.btnBegin);
