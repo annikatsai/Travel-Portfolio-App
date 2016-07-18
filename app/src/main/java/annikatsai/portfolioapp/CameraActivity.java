@@ -88,14 +88,11 @@ public class CameraActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
                 // by this point we have the camera photo on disk
-                //Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-                Bitmap rotatedImg = rotateBitmapOrientation(takenPhotoUri);
-
-                manualRotateBm = rotatedImg;
+                manualRotateBm = rotateBitmapOrientation(takenPhotoUri);
 
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(rotatedImg);//takenImage);
+                ivPreview.setImageBitmap(manualRotateBm);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -105,18 +102,15 @@ public class CameraActivity extends AppCompatActivity {
             if (data != null) {
                 Uri photoUri = data.getData();
                 // Do something with the photo based on Uri
-                Bitmap selectedImage = null;
                 try {
-                    selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                    manualRotateBm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                manualRotateBm = selectedImage;
-
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(selectedImage);
+                ivPreview.setImageBitmap(manualRotateBm);
             }
         }
     }
