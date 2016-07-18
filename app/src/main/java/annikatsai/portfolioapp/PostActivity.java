@@ -170,8 +170,14 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             }
         }
         if(requestCode == REQUEST_CODE){
-            Uri photoUri = data.getData();
-            Toast.makeText(getApplicationContext(), "URI is: " + photoUri.toString(), Toast.LENGTH_SHORT).show();
+            if(resultCode == RESULT_OK){
+                Uri photoUri = data.getData();
+                // Toast.makeText(getApplicationContext(), "URI is: " + photoUri.toString(), Toast.LENGTH_SHORT).show();
+                TextView tvUri = (TextView) findViewById(R.id.tvUri);
+                tvUri.setText(photoUri.toString());
+            } else { // RESULT_CANCELED
+                Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -72,8 +72,12 @@ public class CameraActivity extends AppCompatActivity {
 
     public void onSubmitClick(View view){
         Intent data = new Intent(this, PostActivity.class);
-        data.setData(photoUri);
-        setResult(RESULT_OK, data);
+        if(photoUri == null){
+            setResult(RESULT_CANCELED);
+        } else{
+            data.setData(photoUri);
+            setResult(RESULT_OK, data);
+        }
         finish();
     }
 

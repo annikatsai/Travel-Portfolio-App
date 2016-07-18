@@ -24,4 +24,5 @@
     <string name="launchMapPrompt">Click below to see where you have been!</string>
     <string name="rotate">Rotate</string>
     <string name="submit">Submit</string>
+    <string name="hintForUri">Selected image . . .</string>
 </resources>
