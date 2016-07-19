@@ -43,6 +43,12 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        // Sets up array list, adapter, and list view
+        posts = new ArrayList<>();
+        postAdapter = new PostsArrayAdapter(this, posts);
+        lvPosts = (ListView) findViewById(R.id.lvPosts);
+        lvPosts.setAdapter(postAdapter);
+
         // Customizing toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
@@ -91,12 +97,6 @@ public class TimelineActivity extends AppCompatActivity {
 
             }
         });
-
-        // Sets up array list, adapter, and list view
-        posts = new ArrayList<>();
-        postAdapter = new PostsArrayAdapter(this, posts);
-        lvPosts = (ListView) findViewById(R.id.lvPosts);
-        lvPosts.setAdapter(postAdapter);
 
         setupViewListeners();
     }
@@ -170,29 +170,29 @@ public class TimelineActivity extends AppCompatActivity {
         startActivityForResult(i, REQUEST_CODE);
     }
 
-
+    // editing by deleting old and adding new?
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
+            final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
             Map<String, Object> editedPost = post.toMap();
             mDataBaseReference
                     .child("users")
                     .child(userId)
                     .child("posts")
                     .child(post.getKey())
-                    .updateChildren(editedPost, new DatabaseReference.CompletionListener() {
+                    .setValue(editedPost, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
                         Toast.makeText(TimelineActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
+                        postAdapter.remove(post);
                         Toast.makeText(TimelineActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-            postAdapter.remove(post);
         }
     }
 
