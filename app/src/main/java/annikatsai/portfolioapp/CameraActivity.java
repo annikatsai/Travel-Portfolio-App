@@ -32,6 +32,7 @@ public class CameraActivity extends AppCompatActivity {
     Bitmap image = null;
     int rotationAngle = 90;
     Uri photoUri = null;
+    Boolean takenPicture = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class CameraActivity extends AppCompatActivity {
             setResult(RESULT_CANCELED);
         } else{
             data.setData(photoUri);
+            //data.putExtra("takenPicture", takenPicture);
             setResult(RESULT_OK, data);
         }
         finish();
@@ -114,6 +116,8 @@ public class CameraActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 image = rotateBitmapOrientation(photoUri);
 
+                takenPicture = true;
+
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(image);
@@ -124,13 +128,15 @@ public class CameraActivity extends AppCompatActivity {
 
         if(requestCode == PICK_PHOTO_CODE){
             if (data != null) {
+                // Gets Uri
                 photoUri = data.getData();
-                // Do something with the photo based on Uri
                 try {
                     image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                takenPicture = false;
 
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
