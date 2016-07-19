@@ -50,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -74,8 +76,6 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager = CallbackManager.Factory.create();
         mLoginButton = (LoginButton)findViewById(R.id.login_button);
         mLoginButton.setReadPermissions("public_profile", "email");
-
-
 
         // Checks if user is already logged in
 //        AccessToken token;

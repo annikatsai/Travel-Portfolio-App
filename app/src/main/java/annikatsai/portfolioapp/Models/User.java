@@ -10,6 +10,7 @@ public class User {
     public String email;
     public String name;
     public String coverPhotoUrl;
+    public Integer numPosts;
 
     public User () {}
 
@@ -17,6 +18,7 @@ public class User {
         this.id = id;
         this.email = email;
         this.name = name;
+        this.numPosts = 0;
     }
 
     public String getEmail() {
@@ -38,6 +40,12 @@ public class User {
     public String getName() {
         return name;
     }
+
+    public Integer getNumPosts() { return numPosts; }
+
+    public void incrementPosts() { numPosts++; }
+
+    public void decrementPosts() { numPosts--; }
 
     public static User fromJSON(JSONObject json) {
         User u = new User();
