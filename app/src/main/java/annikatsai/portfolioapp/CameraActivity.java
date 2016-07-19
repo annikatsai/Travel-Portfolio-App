@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -26,13 +29,26 @@ public class CameraActivity extends AppCompatActivity {
 
     public final static int PICK_PHOTO_CODE = 1046;
 
-    Bitmap manualRotateBm = null;
+    Bitmap image = null;
     int rotationAngle = 90;
+    Uri photoUri = null;
+    Boolean takenPicture = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        // Customizing Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+
+        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        toolbarTitle.setText("Choose a Picture");
+        toolbarTitle.setTypeface(titleFont);
     }
 
     public void onTakeClick(View view) {
@@ -47,14 +63,24 @@ public class CameraActivity extends AppCompatActivity {
         Matrix matrix = new Matrix();
         matrix.postRotate(rotationAngle);
         rotationAngle = rotationAngle + 90;
-        Bitmap bm = Bitmap.createBitmap(manualRotateBm, 0, 0, manualRotateBm.getWidth(), manualRotateBm.getHeight(), matrix, true);
+        Bitmap bm = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
         // Load the taken image into a preview
         ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
         ivPreview.setImageBitmap(bm);
+
+        image = bm;
     }
 
     public void onSubmitClick(View view){
-
+        Intent data = new Intent(this, PostActivity.class);
+        if(photoUri == null){
+            setResult(RESULT_CANCELED);
+        } else{
+            data.setData(photoUri);
+            //data.putExtra("takenPicture", takenPicture);
+            setResult(RESULT_OK, data);
+        }
+        finish();
     }
 
     public void onLaunchCamera(View view) {
@@ -86,16 +112,15 @@ public class CameraActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Uri takenPhotoUri = getPhotoFileUri(photoFileName);
+                photoUri = getPhotoFileUri(photoFileName);
                 // by this point we have the camera photo on disk
-                //Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-                Bitmap rotatedImg = rotateBitmapOrientation(takenPhotoUri);
+                image = rotateBitmapOrientation(photoUri);
 
-                manualRotateBm = rotatedImg;
+                takenPicture = true;
 
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(rotatedImg);//takenImage);
+                ivPreview.setImageBitmap(image);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -103,20 +128,19 @@ public class CameraActivity extends AppCompatActivity {
 
         if(requestCode == PICK_PHOTO_CODE){
             if (data != null) {
-                Uri photoUri = data.getData();
-                // Do something with the photo based on Uri
-                Bitmap selectedImage = null;
+                // Gets Uri
+                photoUri = data.getData();
                 try {
-                    selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                    image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                manualRotateBm = selectedImage;
+                takenPicture = false;
 
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(selectedImage);
+                ivPreview.setImageBitmap(image);
             }
         }
     }

@@ -3,6 +3,7 @@ package annikatsai.portfolioapp;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Map;
 
@@ -40,6 +43,13 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private TextView tvDate;
     private DatabaseReference mDatabase;
     private java.util.Calendar c = java.util.Calendar.getInstance();
+    private final int REQUEST_CODE = 20;
+
+
+    Uri photoUri = null;
+    //Boolean takenPicture = null;
+    private FirebaseStorage mStorage;
+    StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +61,11 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        /*// Create an instance of FirebaseStorage
+        mStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app. Note: might need to edit gs:// below
+        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");*/
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -64,8 +79,12 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         toolbarTitle.setTypeface(titleFont);
     }
 
-    public void onSubmit(View view) {
+    public void onAddClick(View view) {
+        Intent i = new Intent(this, CameraActivity.class);
+        startActivityForResult(i, REQUEST_CODE);
+    }
 
+    public void onSubmit(View view) {
         if (etTitle.getText() == null || etTitle.getText().toString().equals("")) {
             etTitle.setText("");
         }
@@ -84,7 +103,25 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
 
+        /*STORAGE FIREBASE CODE: START*/
+        /*Uri file = Uri.fromFile(new File(photoUri.getPath()));
+        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(file);
 
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        });*/
+        /*STORAGE FIREBASE CODE: END*/
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -107,7 +144,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 Log.w(TAG, "getUser:onCancelled", databaseError.toException());
             }
         });
-
     }
 
     private void composeNewPost(String userId, String title, String body, String location, String date) {
@@ -164,6 +200,18 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
+            }
+        }
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                photoUri = data.getData();
+                //takenPicture = data.getBooleanExtra("takenPicture", takenPicture);
+                //Toast.makeText(getApplicationContext(), "Boolean: " + takenPicture, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "URI is: " + photoUri.toString(), Toast.LENGTH_SHORT).show();
+                TextView tvUri = (TextView) findViewById(R.id.tvUri);
+                tvUri.setText(photoUri.toString());
+            } else { // RESULT_CANCELED
+                Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -254,13 +302,4 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 //                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
 //                Toast.LENGTH_SHORT).show();
 //    }
-
-
-
-    public void onAddClick(View view){
-        // Launch TakePic
-        //Intent i = new Intent(this, TakePicActivity.class);
-        Intent i = new Intent(this, CameraActivity.class);
-        startActivity(i);
-    }
 }
