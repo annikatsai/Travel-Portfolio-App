@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Parcel
-public class Post{
+public class Post extends Object {
 
     public Post() {
     }

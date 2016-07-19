@@ -17,9 +17,9 @@ public class PostsArrayAdapter extends ArrayAdapter<Post> {
 
     // View lookup cache
     private static class ViewHolder {
-        TextView tvTitle;
-        TextView tvPreviewStory;
-        ImageView ivImage;
+        private TextView tvTitle;
+        private TextView tvPreviewStory;
+        private ImageView ivImage;
     }
 
     // Constructor
@@ -36,10 +36,10 @@ public class PostsArrayAdapter extends ArrayAdapter<Post> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the post
-        Post post = getItem(position);
+        final Post post = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
+        final ViewHolder viewHolder; // view lookup cache stored in tag
         if(convertView == null){
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
