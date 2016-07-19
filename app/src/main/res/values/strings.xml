@@ -25,4 +25,7 @@
     <string name="rotate">Rotate</string>
     <string name="submit">Submit</string>
     <string name="choose_a_picture">Choose a Picture</string>
+    <string name="viewMode">View Mode</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>
