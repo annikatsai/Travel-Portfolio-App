@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "30015986707",
-    "firebase_url": "https://fluted-alloy-136917.firebaseio.com",
-    "project_id": "fluted-alloy-136917",
-    "storage_bucket": "fluted-alloy-136917.appspot.com"
+    "project_number": "161211725477",
+    "firebase_url": "https://travel-portfolio-app.firebaseio.com",
+    "project_id": "travel-portfolio-app",
+    "storage_bucket": "travel-portfolio-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:30015986707:android:9a31c950489b1a48",
+        "mobilesdk_app_id": "1:161211725477:android:9a31c950489b1a48",
         "android_client_info": {
           "package_name": "annikatsai.portfolioapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "30015986707-j8iir4dpakhfdk05d3jgpatssbshp0oh.apps.googleusercontent.com",
+          "client_id": "161211725477-e6f2va7u3odn5mtm1sarndpgeuphcv8i.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDGE8cKyq7Z3QriQDcOzP4MO1sA9cMnVi4"
+          "current_key": "AIzaSyDZvTemmz7MWq0gF4dud5RAk8lgiJRAuwU"
         }
       ],
       "services": {

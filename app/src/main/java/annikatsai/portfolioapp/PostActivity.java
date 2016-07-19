@@ -84,6 +84,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
 
+
+
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -111,7 +113,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private void composeNewPost(String userId, String title, String body, String location, String date) {
 
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, location, date);
+        Post newPost = new Post(userId, title, body, location, date, postKey);
         Map<String, Object> postValues = newPost.toMap();
         //mDatabase.child("posts").push().setValue(postValues);
 

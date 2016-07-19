@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="annikatsai.portfolioapp.PostActivity">
+    tools:context="annikatsai.portfolioapp.EditPostActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -138,12 +138,24 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/submit"
+        android:text="@string/save"
         android:textAllCaps="false"
         android:id="@+id/btnSave"
-        android:onClick="onSubmit"
+        android:onClick="onFinishEdit"
+        android:layout_marginBottom="27dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp" />
+        android:layout_toRightOf="@+id/tvLocation"
+        android:layout_toEndOf="@+id/tvLocation" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textAllCaps="false"
+        android:id="@+id/btnCancel"
+        android:onClick="onSubmit"
+        android:layout_alignTop="@+id/btnSave"
+        android:layout_alignRight="@+id/etTitle"
+        android:layout_alignEnd="@+id/etTitle" />
 
 </RelativeLayout>

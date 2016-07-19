@@ -10,8 +10,10 @@ import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,14 +23,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 import annikatsai.portfolioapp.Models.Post;
 
 public class TimelineActivity extends AppCompatActivity {
 
-    private DatabaseReference mPostReference;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDataBaseReference;
     private String TAG = "TimelineActivity";
     private ArrayList<Post> posts;
     private PostsArrayAdapter postAdapter;          // need to get count for profile, maybe add to database
@@ -48,9 +52,10 @@ public class TimelineActivity extends AppCompatActivity {
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         toolbarTitle.setTypeface(titleFont);
 
+        mDataBaseReference = FirebaseDatabase.getInstance().getReference();
+
         // Create listener for reading data from database
-        // Might have to have the childAdded listener and then the add value event listener
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/posts");
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -63,12 +68,17 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // find item in adapter and update
+                Post post = dataSnapshot.getValue(Post.class);
+                postAdapter.add(post);
+                postAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 // find item in adapter and remove
+                Post post = dataSnapshot.getValue(Post.class);
+                postAdapter.remove(post);
+                postAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -81,42 +91,110 @@ public class TimelineActivity extends AppCompatActivity {
 
             }
         });
-//
-
-//        String mPostKey = getIntent().getStringExtra("postKey");
-//        if (mPostKey == null) {
-//            throw new IllegalArgumentException("Must pass key");
-//        }
-//        mPostReference = FirebaseDatabase.getInstance().getReference().child("posts").child(mPostKey);
 
         // Sets up array list, adapter, and list view
         posts = new ArrayList<>();
         postAdapter = new PostsArrayAdapter(this, posts);
         lvPosts = (ListView) findViewById(R.id.lvPosts);
         lvPosts.setAdapter(postAdapter);
+
+        setupViewListeners();
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        ValueEventListener postListener = new ValueEventListener() {
+
+    // Think of ways to display this to user
+    // - buttons on list view
+    // - pull up menu when user clicks on the item
+    private void setupViewListeners() {
+
+        // View Posts
+//        lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Post post = dataSnapshot.getValue(Post.class);
-//                postAdapter.add(post);
-//                postAdapter.notifyDataSetChanged();
-//                // Update UI
-//            }
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                // Post post equals to post selected
+//                // Post post = posts.get(i);
+//                // notify data set changed
+//                // postAdapter.notifyDataSetChanged();
+//                // launch view post activity
+//                launchViewPost(i);
 //
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-//                Toast.makeText(TimelineActivity.this, "Post could not load", Toast.LENGTH_SHORT).show();
 //            }
-//        };
-//        mPostReference.addValueEventListener(postListener);
-//    }
+//        });
+
+        // Edit Posts
+        lvPosts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // Post post equals to post selected
+                // Post post = posts.get(i);
+                // notify data set changed
+                // postAdapter.notifyDataSetChanged();
+                // launch edit post activity
+                launchEditPost(i);
+                return true;
+            }
+        });
+
+
+        // Deleting Posts
+//        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Post post = posts.get(i);
+//                mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+//                    @Override
+//                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//                        if (databaseError != null) {
+//                            Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//            }
+//        });
+    }
+
+    private void launchViewPost(int position) {
+        Intent i = new Intent(TimelineActivity.this, ViewPostActivity.class);
+        i.putExtra("post", Parcels.wrap(posts.get(position)));
+        startActivity(i);
+    }
+
+    int REQUEST_CODE = 5;
+
+    private void launchEditPost(int position) {
+        Intent i = new Intent(TimelineActivity.this, EditPostActivity.class);
+        i.putExtra("editPost", Parcels.wrap(posts.get(position)));
+        startActivityForResult(i, REQUEST_CODE);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
+            Map<String, Object> editedPost = post.toMap();
+            mDataBaseReference
+                    .child("users")
+                    .child(userId)
+                    .child("posts")
+                    .child(post.getKey())
+                    .updateChildren(editedPost, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Toast.makeText(TimelineActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(TimelineActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            postAdapter.remove(post);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

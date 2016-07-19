@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="annikatsai.portfolioapp.PostActivity">
+    tools:context="annikatsai.portfolioapp.ViewPostActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -24,34 +24,34 @@
             android:layout_gravity="left"
             />
 
+
+
     </android.support.v7.widget.Toolbar>
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/etTitle"
+        android:id="@+id/tvTitle"
+        android:text="New Text"
         android:fontFamily="sans-serif-medium"
         android:background="@android:color/transparent"
-        android:hint="@string/titleHint"
         android:textSize="30sp"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
         android:ems="10"
         android:background="@android:color/transparent"
-        android:id="@+id/etBody"
+        android:id="@+id/tvBody"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="@string/bodyHint"
+        android:text="New Text"
         android:gravity="top|left"
         android:layout_below="@+id/tvDivider"
         android:layout_centerHorizontal="true" />
@@ -64,29 +64,19 @@
         android:hint="@string/dateHint"
         android:textSize="17sp"
         android:layout_marginTop="19dp"
-        android:layout_below="@+id/etTitle"
+        android:text="New Text"
+        android:layout_below="@+id/tvTitle"
         android:layout_toRightOf="@+id/fabDate"
         android:layout_toEndOf="@+id/fabDate"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_a_picture"
-        android:id="@+id/btnAdd"
-        android:onClick="onAddClick"
-        android:textAllCaps="false"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/fabLocation"
-        android:layout_alignStart="@+id/fabLocation"
-        android:layout_marginBottom="138dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/searchLocation"
         android:id="@+id/tvLocation"
+        android:text="New Text"
         android:fontFamily="sans-serif-light"
         android:textSize="17sp"
         android:layout_marginTop="16dp"
@@ -114,11 +104,10 @@
         app:fabSize="mini"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:onClick="showDatePickerDialog"
         android:id="@+id/fabDate"
         android:layout_alignBottom="@+id/tvDate"
-        android:layout_alignLeft="@+id/etTitle"
-        android:layout_alignStart="@+id/etTitle" />
+        android:layout_alignLeft="@+id/tvTitle"
+        android:layout_alignStart="@+id/tvTitle" />
 
 
     <android.support.design.widget.FloatingActionButton
@@ -130,20 +119,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/fabLocation"
-        android:onClick="selectLocation"
         android:layout_alignBottom="@+id/tvLocation"
         android:layout_alignLeft="@+id/fabDate"
         android:layout_alignStart="@+id/fabDate" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/submit"
-        android:textAllCaps="false"
-        android:id="@+id/btnSave"
-        android:onClick="onSubmit"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp" />
 
 </RelativeLayout>

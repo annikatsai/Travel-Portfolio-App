@@ -32,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
+import annikatsai.portfolioapp.Models.User;
+
 public class LoginActivity extends AppCompatActivity {
 
     private LoginButton mLoginButton;
@@ -92,9 +94,9 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(i);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-//                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//                    User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
-//                    mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
+                    mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
 
                 }
 

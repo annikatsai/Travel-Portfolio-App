@@ -1,22 +1,34 @@
 package annikatsai.portfolioapp.Models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
+
+import org.parceler.Parcel;
 
 import java.util.HashMap;
 import java.util.Map;
 
-//@Parcel -> code is complaining
-public class Post implements Parcelable {
+@Parcel
+public class Post{
 
-    // the attributes
+    public Post() {
+    }
+
+    public Post(String uid, String title, String body, String location, String date, String key) {
+        this.title = title;
+        this.uid = uid;
+        this.body = body;
+        this.date = date;
+        this.key = key;
+        this.location = location;
+    }
+
     public String uid;
     public String location;
     public String title;
     public String body;
-    public String date; // have to figure out how to incorporate this; it is not called in PostsArrayAdapter
+    public String date;
+    public String key;
     //public String createdAt;
     //public String imagePath;
 
@@ -27,6 +39,18 @@ public class Post implements Parcelable {
 
     public String getBody() {
         return body;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getKey() {
+        return key;
     }
 
 
@@ -61,22 +85,19 @@ public class Post implements Parcelable {
     }*/
 
     // handle parcelable
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.title);
-        dest.writeString(this.body);
-        dest.writeString(this.date);
-        //dest.writeString(this.createdAt);
-        //dest.writeString(this.imagePath);
-    }
-
-    public Post() {
-    }
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(this.title);
+//        dest.writeString(this.body);
+//        dest.writeString(this.date);
+//        //dest.writeString(this.createdAt);
+//        //dest.writeString(this.imagePath);
+//    }
 
 //    protected Post(Parcel in) {
 //        this.title = in.readString();
@@ -98,13 +119,7 @@ public class Post implements Parcelable {
 //        }
 //    };
 
-    public Post(String uid, String title, String body, String location, String date) {
-        this.title = title;
-        this.uid = uid;
-        this.body = body;
-        this.date = date;
-        this.location = location;
-    }
+
 
     @Exclude
     public Map<String, Object> toMap() {
@@ -114,6 +129,7 @@ public class Post implements Parcelable {
         result.put("body", body);
         result.put("location", location);
         result.put("date", date);
+        result.put("key", key);
         return result;
     }
     // handle camera roll
