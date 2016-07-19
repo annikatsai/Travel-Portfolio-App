@@ -57,6 +57,7 @@ public class TimelineActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        toolbarTitle.setText("Roam");
         toolbarTitle.setTypeface(titleFont);
 
         mDataBaseReference = FirebaseDatabase.getInstance().getReference();

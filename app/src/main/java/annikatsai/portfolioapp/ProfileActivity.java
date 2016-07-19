@@ -23,7 +23,7 @@ import annikatsai.portfolioapp.Models.User;
 public class ProfileActivity extends AppCompatActivity {
 
     User user;
-    //Integer numPosts = 0;       // CHANGE THIS
+    Integer numPosts = 0;       // CHANGE THIS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             tvEmail.setText("No email available");
         }
-        tvNumPosts.setText(user.getNumPosts().toString());
+        tvNumPosts.setText(numPosts.toString());
         tvName.setText(user.getName());
         Picasso.with(this).load(user.getCoverPhotoUrl()).into(ivCoverPhoto);
         Picasso.with(this).load("https://graph.facebook.com/" + user.getId() + "/picture?type=large").into(ivProfilePicture);
