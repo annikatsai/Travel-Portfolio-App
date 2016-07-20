@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.Map;
 
 import annikatsai.portfolioapp.Models.Post;
@@ -47,7 +52,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
 
     Uri photoUri = null;
-    //Boolean takenPicture = null;
+    int takenPicture;
     private FirebaseStorage mStorage;
     StorageReference storageRef;
 
@@ -62,10 +67,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        /*// Create an instance of FirebaseStorage
+        // Create an instance of FirebaseStorage
         mStorage = FirebaseStorage.getInstance();
         // Create a storage reference from our app. Note: might need to edit gs:// below
-        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");*/
+        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -104,23 +109,60 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String date = tvDate.getText().toString();
 
         /*STORAGE FIREBASE CODE: START*/
-        /*Uri file = Uri.fromFile(new File(photoUri.getPath()));
-        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
-        UploadTask uploadTask = riversRef.putFile(file);
+        if(photoUri != null){
+            if(takenPicture == 1){
+                Uri file = Uri.fromFile(new File(photoUri.getPath()));
+                StorageReference picRef = storageRef.child("images/" + file.getLastPathSegment());
+                UploadTask uploadTask = picRef.putFile(file);
 
-        // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
+                // Register observers to listen for when the download is done or if it fails
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "Couldn't upload image! :(", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        //Toast.makeText(getApplicationContext(), "downlaodUrl: " + downloadUrl, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            if(takenPicture == 0){
+                Toast.makeText(getApplicationContext(), "FIXME: Should upload gallery pic...", Toast.LENGTH_LONG).show();
+                /* Caused by: java.lang.SecurityException: Permission Denial: reading com.android.providers.media.MediaProvider uri content://media/external/images/media/103 from pid=16252, uid=10205 requires android.permission.READ_EXTERNAL_STORAGE, or grantUriPermission()
+                Bitmap picture = null;
+                StorageReference mountainsRef = storageRef.child("mountains.jpg");
+                try {
+                    picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri); // line of error; request permissions requried
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                if (picture != null) {
+                    picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                }
+                byte[] data = baos.toByteArray();
+                UploadTask uploadTask = mountainsRef.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "Couldn't upload image! :(", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    }
+                });*/
             }
-        });*/
+
+        }
         /*STORAGE FIREBASE CODE: END*/
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -205,9 +247,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 photoUri = data.getData();
-                //takenPicture = data.getBooleanExtra("takenPicture", takenPicture);
-                //Toast.makeText(getApplicationContext(), "Boolean: " + takenPicture, Toast.LENGTH_SHORT).show();
-                // Toast.makeText(getApplicationContext(), "URI is: " + photoUri.toString(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "int: " + photoUri, Toast.LENGTH_SHORT).show();
+                takenPicture = data.getIntExtra("takenPicture", takenPicture);
+                // Toast.makeText(getApplicationContext(), "int: " + takenPicture, Toast.LENGTH_SHORT).show();
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);
                 tvUri.setText(photoUri.toString());
             } else { // RESULT_CANCELED
