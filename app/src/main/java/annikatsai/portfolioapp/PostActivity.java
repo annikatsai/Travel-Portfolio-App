@@ -37,7 +37,9 @@ import java.util.Map;
 
 import annikatsai.portfolioapp.Models.Post;
 import annikatsai.portfolioapp.Models.User;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class PostActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private String postKey;
