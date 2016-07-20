@@ -30,7 +30,7 @@ import java.util.Map;
 
 import annikatsai.portfolioapp.Models.Post;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements PostsArrayAdapter.PostsArrayAdapterCallback {
 
     private DatabaseReference mDataBaseReference;
     private String TAG = "TimelineActivity";
@@ -47,6 +47,7 @@ public class TimelineActivity extends AppCompatActivity {
         // Sets up array list, adapter, and list view
 //        posts = new ArrayList<>();
         postAdapter = new PostsArrayAdapter(this, posts);
+        postAdapter.setCallback(this);
         lvPosts = (ListView) findViewById(R.id.lvPosts);
         lvPosts.setAdapter(postAdapter);
 
@@ -103,59 +104,16 @@ public class TimelineActivity extends AppCompatActivity {
     // - buttons on list view
     // - pull up menu when user clicks on the item
     private void setupViewListeners() {
-
-        // View Posts
-//        lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                // Post post equals to post selected
-//                // Post post = posts.get(i);
-//                // notify data set changed
-//                // postAdapter.notifyDataSetChanged();
-//                // launch view post activity
-//                launchViewPost(i);
-//
-//            }
-//        });
-
-        // Edit Posts
-        lvPosts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // Post post equals to post selected
-                // Post post = posts.get(i);
-                // notify data set changed
-                // postAdapter.notifyDataSetChanged();
-                // launch edit post activity
-                launchEditPost(i);
-                return true;
-            }
-        });
-
-
-        // Deleting Posts
-        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//         View Posts
         lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final Post post = posts.get(i);
-                mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (databaseError != null) {
-                            Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            postAdapter.remove(post);
-                            postAdapter.notifyDataSetChanged();
-                            Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                launchViewPost(i);
             }
         });
     }
 
-    private void launchViewPost(int position) {
+    public void launchViewPost(int position) {
         Intent i = new Intent(TimelineActivity.this, ViewPostActivity.class);
         i.putExtra("post", Parcels.wrap(posts.get(position)));
         startActivity(i);
@@ -163,11 +121,30 @@ public class TimelineActivity extends AppCompatActivity {
 
     int REQUEST_CODE = 5;
 
-    private void launchEditPost(int position) {
+    @Override
+    public void launchEditPost(int position) {
         Intent i = new Intent(TimelineActivity.this, EditPostActivity.class);
         oldPost = posts.get(position);
         i.putExtra("editPost", Parcels.wrap(posts.get(position)));
         startActivityForResult(i, REQUEST_CODE);
+    }
+
+    @Override
+    public void deletePost(int position) {
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final Post post = posts.get(position);
+        mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    postAdapter.remove(post);
+                    postAdapter.notifyDataSetChanged();
+                    Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     // editing by deleting old and adding new?
@@ -202,7 +179,7 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.signOut) {
-            FirebaseAuth.getInstance().signOut();       // Firebase User sign out
+            //FirebaseAuth.getInstance().signOut();       // Firebase User sign out
             LoginManager.getInstance().logOut();        // Facebook sign out
             startActivity(new Intent(this, LoginActivity.class));
             finish();

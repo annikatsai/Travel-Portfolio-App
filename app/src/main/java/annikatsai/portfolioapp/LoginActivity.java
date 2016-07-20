@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
+        // Auth state listener responds to change in user's sign-in state
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -64,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                     Toast.makeText(LoginActivity.this, "User null", Toast.LENGTH_SHORT).show();
+
                 }
             }
         };
@@ -72,58 +74,39 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton = (LoginButton)findViewById(R.id.login_button);
         mLoginButton.setReadPermissions("public_profile", "email");
 
-        // Checks if user is already logged in
-//        AccessToken token;
-//        token = AccessToken.getCurrentAccessToken();
-//
-//        if (AccessToken.getCurrentAccessToken() == null ) {      // User not logged in
+        // If user already logged into Facebook, launch TimelineActivity (skip log in page)
+        if (AccessToken.getCurrentAccessToken() != null) {
+            Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+            startActivity(i);
+        }
 
-            mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    // Launch TimelineActivity
+        mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // Launch TimelineActivity
 
-                    Toast.makeText(LoginActivity.this, "Login attempt success", Toast.LENGTH_SHORT).show();
-                    handleFacebookAccessToken(loginResult.getAccessToken());
-                    Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                Toast.makeText(LoginActivity.this, "Login attempt success", Toast.LENGTH_SHORT).show();
+                handleFacebookAccessToken(loginResult.getAccessToken());
+                Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
-                    mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
+                mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
 
-                }
+            }
 
-                @Override
-                public void onCancel() {
-                    Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT).show();
-                }
+            @Override
+            public void onCancel() {
+                Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT).show();
+            }
 
-                @Override
-                public void onError(FacebookException exception) {
-                    Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT).show();
-                }
-            });
-//        } else {            // User logged in on log in screen
-//            mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-//                @Override
-//                public void onSuccess(LoginResult loginResult) {
-//                    LoginManager.getInstance().logOut();
-//                    FirebaseAuth.getInstance().signOut();
-//                }
-//
-//                @Override
-//                public void onCancel() {
-//                    Toast.makeText(LoginActivity.this, "Logout attempt canceled", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onError(FacebookException exception) {
-//                    Toast.makeText(LoginActivity.this, "Logout attempt failed", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Initial button that prompts user to begin and disappears upon being clicked
         final Button btnBegin = (Button) findViewById(R.id.btnBegin);
@@ -146,46 +129,9 @@ public class LoginActivity extends AppCompatActivity {
                 fadeAway.start();
             }
         });
-
-
-
-        // Checks if user is already logged in
-//        AccessToken token;
-//        token = AccessToken.getCurrentAccessToken();
-//
-//        if (token == null) {
-
-            //Means user is not logged in
-            // Create callback to handle results of login and register callbackManager
-//            mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-//                @Override
-//                public void onSuccess(LoginResult loginResult) {
-//                    // Launch TimelineActivity
-//
-//                    handleFacebookAccessToken(loginResult.getAccessToken());
-//                    Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
-//                    startActivity(i);
-//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//                }
-//
-//                @Override
-//                public void onCancel() {
-//                    Toast.makeText(LoginActivity.this, "Login attempt canceled", Toast.LENGTH_SHORT);
-//                }
-//
-//                @Override
-//                public void onError(FacebookException exception) {
-//                    Toast.makeText(LoginActivity.this, "Login attempt failed", Toast.LENGTH_SHORT);
-//                }
-//            });
-//        } else {
-//            Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
-//            startActivity(i);
-//        }
-
-
     }
 
+    // Exchanges Facebook credential for firebase credential and authenticate
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 

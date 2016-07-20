@@ -85,7 +85,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), tvLocation.getText().toString(), tvDate.getText().toString(), postKey);
         Intent i = new Intent(EditPostActivity.this, TimelineActivity.class);
         i.putExtra("editPost", Parcels.wrap(post));
-//        i.putExtra("oldPost", Parcels.wrap(editPost));
         setResult(RESULT_OK, i);
         finish();
     }
