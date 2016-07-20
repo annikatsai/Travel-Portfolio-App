@@ -34,17 +34,18 @@ public class TimelineActivity extends AppCompatActivity {
 
     private DatabaseReference mDataBaseReference;
     private String TAG = "TimelineActivity";
-    private ArrayList<Post> posts;
+    private ArrayList<Post> posts = new ArrayList<>();
     private PostsArrayAdapter postAdapter;          // need to get count for profile, maybe add to database
     private ListView lvPosts;
+    private Post oldPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        // Sets up array list, adapter, and list view
-        posts = new ArrayList<>();
+        // Sets up array list, adapter, and views
+//        posts = new ArrayList<>();
         postAdapter = new PostsArrayAdapter(this, posts);
         lvPosts = (ListView) findViewById(R.id.lvPosts);
         lvPosts.setAdapter(postAdapter);
@@ -56,6 +57,7 @@ public class TimelineActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        toolbarTitle.setText("Roam");
         toolbarTitle.setTypeface(titleFont);
 
         mDataBaseReference = FirebaseDatabase.getInstance().getReference();
@@ -70,31 +72,28 @@ public class TimelineActivity extends AppCompatActivity {
                 Post post = dataSnapshot.getValue(Post.class);
                 postAdapter.add(post);
                 postAdapter.notifyDataSetChanged();
+                // increment posts
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Post post = dataSnapshot.getValue(Post.class);
+                postAdapter.remove(oldPost);
                 postAdapter.add(post);
                 postAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                // find item in adapter and remove
-                Post post = dataSnapshot.getValue(Post.class);
-                postAdapter.remove(post);
-                postAdapter.notifyDataSetChanged();
+                // decrement posts
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
@@ -137,23 +136,25 @@ public class TimelineActivity extends AppCompatActivity {
 
 
         // Deleting Posts
-//        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Post post = posts.get(i);
-//                mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-//                    @Override
-//                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                        if (databaseError != null) {
-//                            Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-//        });
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final Post post = posts.get(i);
+                mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            postAdapter.remove(post);
+                            postAdapter.notifyDataSetChanged();
+                            Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void launchViewPost(int position) {
@@ -166,6 +167,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void launchEditPost(int position) {
         Intent i = new Intent(TimelineActivity.this, EditPostActivity.class);
+        oldPost = posts.get(position);
         i.putExtra("editPost", Parcels.wrap(posts.get(position)));
         startActivityForResult(i, REQUEST_CODE);
     }
@@ -188,7 +190,6 @@ public class TimelineActivity extends AppCompatActivity {
                     if (databaseError != null) {
                         Toast.makeText(TimelineActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        postAdapter.remove(post);
                         Toast.makeText(TimelineActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
                     }
                 }

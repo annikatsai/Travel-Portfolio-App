@@ -2,8 +2,10 @@ package annikatsai.portfolioapp;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -29,39 +31,52 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     TextView tvDate;
     EditText etBody;
     private String postKey;
+    private Post editPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_post);
 
-        Post editPost = Parcels.unwrap(getIntent().getParcelableExtra("editPost"));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+
+        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        toolbarTitle.setText("Edit Post");
+        toolbarTitle.setTypeface(titleFont);
+
+        editPost = Parcels.unwrap(getIntent().getParcelableExtra("editPost"));
 
         etTitle = (EditText) findViewById(R.id.etTitle);
+        etTitle.append("");
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         etBody = (EditText) findViewById(R.id.etBody);
+        etBody.append("");
 
         postKey = editPost.getKey();
         if (editPost.getTitle().equals("")) {
             etTitle.setText("");
         } else {
-            etTitle.setText(editPost.getTitle());
+            etTitle.append(editPost.getTitle());
         }
         if (editPost.getLocation().equals("")) {
             tvLocation.setText("");
         } else {
-            tvLocation.setText(editPost.getLocation());
+            tvLocation.append(editPost.getLocation());
         }
         if (editPost.getDate().equals("")) {
             tvDate.setText("");
         } else {
-            tvDate.setText(editPost.getDate());
+            tvDate.append(editPost.getDate());
         }
         if (editPost.getBody().equals("")) {
             etBody.setText("");
         } else {
-            etBody.setText(editPost.getBody());
+            etBody.append(editPost.getBody());
         }
     }
 
