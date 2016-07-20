@@ -35,6 +35,15 @@
         android:layout_toLeftOf="@+id/ivImage"
         android:layout_toStartOf="@+id/ivImage" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/btnPopupMenu"
+        android:layout_below="@+id/ivImage"
+        android:layout_alignRight="@+id/ivImage"
+        android:layout_alignEnd="@+id/ivImage" />
+
 </RelativeLayout>
 
 <!--
