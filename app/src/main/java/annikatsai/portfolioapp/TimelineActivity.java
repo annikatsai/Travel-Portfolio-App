@@ -31,6 +31,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Map;
 
+import annikatsai.portfolioapp.Models.Location;
 import annikatsai.portfolioapp.Models.Post;
 
 public class TimelineActivity extends AppCompatActivity implements PostsArrayAdapter.PostsArrayAdapterCallback {
@@ -76,7 +77,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 Post post = dataSnapshot.getValue(Post.class);
                 postAdapter.add(post);
                 postAdapter.notifyDataSetChanged();
-
+                // increment posts
             }
 
             @Override
@@ -93,12 +94,10 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
@@ -146,6 +145,16 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 }
             }
         });
+        mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     // editing by deleting old and adding new?
@@ -157,6 +166,8 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
             if (requestCode == REQUEST_CODE) {
                 final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
                 Map<String, Object> editedPost = post.toMap();
+                Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
+                Map<String, Object> editedLocation = loc.locationToMap();
                 mDataBaseReference
                         .child("users")
                         .child(userId)
@@ -172,6 +183,16 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 }
                             }
                         });
+                mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 postAdapter.clear();
                 Query searchQuery = mDataBaseReference.child("users").child(userId).child("posts").orderByKey();

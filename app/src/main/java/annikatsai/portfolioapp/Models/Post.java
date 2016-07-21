@@ -14,13 +14,14 @@ public class Post extends Object {
     public Post() {
     }
 
-    public Post(String uid, String title, String body, String location, String date, String key) {
+    public Post(String uid, String title, String body, String location, String date, String key, String locationKey) {
         this.title = title;
         this.uid = uid;
         this.body = body;
         this.date = date;
         this.key = key;
         this.location = location;
+        this.locationKey = locationKey;
     }
 
     public String uid;
@@ -29,6 +30,7 @@ public class Post extends Object {
     public String body;
     public String date;
     public String key;
+    public String locationKey;
     //public String createdAt;
     //public String imagePath;
 
@@ -130,6 +132,7 @@ public class Post extends Object {
         result.put("location", location);
         result.put("date", date);
         result.put("key", key);
+        result.put("locationKey", locationKey);
         return result;
     }
     // handle camera roll

@@ -19,6 +19,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,12 +31,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.Map;
 
+import annikatsai.portfolioapp.Models.Location;
 import annikatsai.portfolioapp.Models.Post;
 import annikatsai.portfolioapp.Models.User;
 
 public class PostActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    private String postKey;
+    private String postKey, locationKey;
     private String TAG = "PostActivity";
     private TextView tvLocation;
     private EditText etTitle;
@@ -44,7 +46,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private DatabaseReference mDatabase;
     private java.util.Calendar c = java.util.Calendar.getInstance();
     private final int REQUEST_CODE = 20;
-
+    private Location latlngLocation;
+    private String locationName;
+    private int numPosts = 0;
 
     Uri photoUri = null;
     //Boolean takenPicture = null;
@@ -131,11 +135,14 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 if (user == null) {
                     Toast.makeText(PostActivity.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
                 } else {
-                    composeNewPost(userId, title, body, location, date);
+                    String locationKey;
+                    if (latlngLocation != null) {
+                        locationKey = addLocationToMap(userId);
+                    } else {
+                        locationKey = "";
+                    }
+                    composeNewPost(userId, title, body, location, date, locationKey);
                 }
-//                Intent i = new Intent(PostActivity.this, TimelineActivity.class);
-//                i.putExtra("postKey", postKey);
-//                startActivity(i);
                 finish();
             }
 
@@ -146,15 +153,29 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         });
     }
 
-    private void composeNewPost(String userId, String title, String body, String location, String date) {
+    private String addLocationToMap(String userId) {
+        locationKey = mDatabase.child("users").child(userId).child("locations").push().getKey();
+        latlngLocation.setLocationKey(locationKey);
+        Map<String, Object> locationValues = latlngLocation.locationToMap();
+        mDatabase.child("users").child(userId).child("locations").child(locationKey).setValue(locationValues, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        return locationKey;
+    }
+
+    private void composeNewPost(String userId, String title, String body, String location, String date, String locationKey) {
 
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, location, date, postKey);
+        Post newPost = new Post(userId, title, body, location, date, postKey, locationKey);
         Map<String, Object> postValues = newPost.toMap();
-        //mDatabase.child("posts").push().setValue(postValues);
 
-//        Map<String, Object> updateChild = new HashMap<>();
-//        updateChild.put("/user/" + userId + "/posts/" + postKey, postValues);
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -166,12 +187,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             }
         });
     }
-
-
-//    public void selectLocation(View view) {
-//        Intent intent = new Intent(this, SearchLocationActivity.class);
-//        startActivity(intent);
-//    }
 
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
@@ -191,6 +206,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
+                LatLng loc = place.getLatLng();
+                locationName = place.getName().toString();
+                latlngLocation = new Location(loc, locationName.toString());
                 tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
@@ -238,68 +256,4 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 + "/" + String.valueOf(getYear);
         tvDate.setText(date);
     }
-
-
-//    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
-//        @Override
-//        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//            final AutocompletePrediction item = (AutocompletePrediction) mAdapter.getItem(i);
-//            final String placeId = item.getPlaceId();
-//            final CharSequence primaryText = item.getPrimaryText(null);
-//
-//            Log.i("TAG", "Autocomplete item selected: " + primaryText);
-//
-//            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
-//            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-//
-//            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
-//            Log.i("TAG", "Called getPlaceById to get Place details for " + placeId);
-//
-//        }
-//    };
-//
-//    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
-//        @Override
-//        public void onResult(@NonNull PlaceBuffer places) {
-//            if (!places.getStatus().isSuccess()) {
-//                // Request did not complete successfully
-//                Log.e("TAG", "Place query did not complete. Error: " + places.getStatus().toString());
-//                places.release();
-//                return;
-//            }
-//
-//            // Get the Place object from the buffer.
-//            final Place place = places.get(0);
-//
-//            // Format details fo the place for display and show it in a TextView
-//            // mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(), place.getId(),
-//            // place.getAddress(), place.getPhoneNumber(), place.getWebsiteUri()));
-//
-//            // Display the third party attributions if set.
-//            final CharSequence thirdPartyAttribution = places.getAttributions();
-//            if (thirdPartyAttribution == null) {
-//                mPlaceDetailsAttribution.setVisibility(View.GONE);
-//            } else {
-//                mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
-//                mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
-//            }
-//
-//            Log.i("TAG", "Place details received: " + place.getName());
-//            places.release();
-//        }
-//    };
-
-    // formatPlaceDetails
-
-//    @Override
-//    public void onConnectionFailed(ConnectionResult connectionResult) {
-//
-//        Log.e("TAG", "onConnectionFailed: ConnectionResult.getErrorCode() = "
-//                + connectionResult.getErrorCode());
-//
-//        // TODO(Developer): Check error code and notify the user of error state and resolution.
-//        Toast.makeText(this,
-//                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
-//                Toast.LENGTH_SHORT).show();
-//    }
 }
