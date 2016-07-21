@@ -13,6 +13,8 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -23,7 +25,8 @@ import annikatsai.portfolioapp.Models.User;
 public class ProfileActivity extends AppCompatActivity {
 
     User user;
-    Integer numPosts = 0;       // CHANGE THIS
+    int numPosts = 0;       // CHANGE THIS
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Access Token needed for getting user info
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Loads user info from Facebook Graph API with necessary parameters and parsing JSON
         GraphRequest request = GraphRequest.newMeRequest(
@@ -86,12 +90,12 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             tvEmail.setText("No email available");
         }
-        tvNumPosts.setText(numPosts.toString());
+
+        tvNumPosts.setText(numPosts);
         tvName.setText(user.getName());
         Picasso.with(this).load(user.getCoverPhotoUrl()).into(ivCoverPhoto);
         Picasso.with(this).load("https://graph.facebook.com/" + user.getId() + "/picture?type=large").into(ivProfilePicture);
         // Picasso.with(this).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).into(ivProfilePicture);
-
     }
 
     public void launchMap(View view) {

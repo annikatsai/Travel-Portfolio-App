@@ -24,6 +24,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Map;
 
+import annikatsai.portfolioapp.Models.Location;
 import annikatsai.portfolioapp.Models.Post;
 
 public class SearchActivity extends AppCompatActivity implements PostsArrayAdapter.PostsArrayAdapterCallback{
@@ -128,6 +129,16 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                 }
             }
         });
+        mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast.makeText(SearchActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SearchActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     // editing by deleting old and adding new
@@ -137,6 +148,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
+            Location location = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
             Map<String, Object> editedPost = post.toMap();
             mDataBaseReference
                     .child("users")
@@ -157,6 +169,16 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                             }
                         }
                     });
+            mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(location.getLatLngLocation(), new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Toast.makeText(SearchActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SearchActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 }
