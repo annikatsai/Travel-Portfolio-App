@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,6 +43,10 @@ public class CameraActivity extends AppCompatActivity {
     Uri photoUri = null;
     int takenPicture;
 
+    private FirebaseStorage mStorage;
+    StorageReference storageRef;
+    final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +62,11 @@ public class CameraActivity extends AppCompatActivity {
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         toolbarTitle.setText("Choose a Picture");
         toolbarTitle.setTypeface(titleFont);
+
+        // Create an instance of FirebaseStorage
+        mStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app. Note: might need to edit gs:// below
+        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
     }
 
     public void onTakeClick(View view) {
@@ -72,13 +90,68 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public void onSubmitClick(View view){
-        Intent data = new Intent(this, PostActivity.class);
+        Intent i = new Intent(this, PostActivity.class);
         if(photoUri == null){
             setResult(RESULT_CANCELED);
         } else{
-            data.setData(photoUri);
-            data.putExtra("takenPicture", takenPicture);
-            setResult(RESULT_OK, data);
+            i.setData(photoUri);
+            setResult(RESULT_OK, i);
+
+            /*STORAGE FIREBASE CODE: START*/
+            if (takenPicture == 1) {
+                Uri file = Uri.fromFile(new File(photoUri.getPath()));
+                //StorageReference picRef = storageRef.child("images/" + file.getLastPathSegment());
+                StorageReference picRef = storageRef.child("users").child(userId).child(file.getLastPathSegment());
+                UploadTask uploadTask = picRef.putFile(file);
+
+                // Register observers to listen for when the download is done or if it fails
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "Couldn't upload image! :(", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        //Toast.makeText(getApplicationContext(), "downlaodUrl: " + downloadUrl, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            if (takenPicture == 0) {
+                // Toast.makeText(getApplicationContext(), "FIXME: Should upload gallery pic...", Toast.LENGTH_LONG).show();
+                // Caused by: java.lang.SecurityException: Permission Denial: reading com.android.providers.media.MediaProvider uri content://media/external/images/media/103 from pid=16252, uid=10205 requires android.permission.READ_EXTERNAL_STORAGE, or grantUriPermission()
+                Bitmap picture = null;
+                StorageReference picRef = storageRef.child("users").child(userId).child("photo");
+                try {
+                    picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri); // line of error; request permissions requried
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                if (picture != null) {
+                    picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                }
+                byte[] data = baos.toByteArray();
+                UploadTask uploadTask = picRef.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "Couldn't upload image! :(", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    }
+                });
+            }
+            /*STORAGE FIREBASE CODE: END*/
+
         }
         finish();
     }
