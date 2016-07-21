@@ -23,9 +23,6 @@
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_gravity="left"
             />
-
-
-
     </android.support.v7.widget.Toolbar>
 
     <TextView
@@ -122,5 +119,15 @@
         android:layout_alignBottom="@+id/tvLocation"
         android:layout_alignLeft="@+id/fabDate"
         android:layout_alignStart="@+id/fabDate" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/btnFinishView"
+        android:onClick="onFinishView"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="39dp" />
 
 </RelativeLayout>

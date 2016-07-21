@@ -88,7 +88,9 @@
         <activity android:name=".SearchLocation" />
         <activity android:name=".SearchLocationActivity" />
         <activity android:name=".ViewPostActivity" />
-        <activity android:name=".EditPostActivity"></activity>
+        <activity android:name=".EditPostActivity" />
+        <activity android:name=".SearchActivity" />
+
     </application>
 
 </manifest>

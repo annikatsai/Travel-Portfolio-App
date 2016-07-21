@@ -32,6 +32,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     EditText etBody;
     private String postKey;
     private Post editPost;
+    private String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         toolbarTitle.setTypeface(titleFont);
 
         editPost = Parcels.unwrap(getIntent().getParcelableExtra("editPost"));
+        code = getIntent().getStringExtra("code");
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etTitle.append("");
@@ -83,7 +85,12 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), tvLocation.getText().toString(), tvDate.getText().toString(), postKey);
-        Intent i = new Intent(EditPostActivity.this, TimelineActivity.class);
+        Intent i = new Intent();
+        if (code.equals("fromTimeline")) {
+            i = new Intent(EditPostActivity.this, TimelineActivity.class);
+        } else if (code.equals("fromSearchActivity")) {
+            i = new Intent(EditPostActivity.this, SearchActivity.class);
+        }
         i.putExtra("editPost", Parcels.wrap(post));
         setResult(RESULT_OK, i);
         finish();

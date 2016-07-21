@@ -29,4 +29,6 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="hintForUri">Selected image . . .</string>
+    <string name="search">Search</string>
+    <string name="signOut">Sign Out</string>
 </resources>
