@@ -39,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Button"
+        android:focusable="false"
         android:id="@+id/btnPopupMenu"
         android:layout_below="@+id/ivImage"
         android:layout_alignRight="@+id/ivImage"
