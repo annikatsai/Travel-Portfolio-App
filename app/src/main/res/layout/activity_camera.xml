@@ -104,8 +104,7 @@
         android:onClick="onSubmitClick"
         android:text="@string/submit"
         android:textAllCaps="false"
-        android:layout_below="@+id/ivPreview"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp" />
+        android:layout_below="@+id/fabRotate"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

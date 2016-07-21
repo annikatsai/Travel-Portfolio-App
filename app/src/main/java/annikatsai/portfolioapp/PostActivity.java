@@ -43,7 +43,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private java.util.Calendar c = java.util.Calendar.getInstance();
     private final int REQUEST_CODE = 20;
 
-
     Uri photoUri = null;
 
     @Override
