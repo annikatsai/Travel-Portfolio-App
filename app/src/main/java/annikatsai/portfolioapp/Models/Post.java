@@ -11,6 +11,16 @@ import java.util.Map;
 @Parcel
 public class Post extends Object {
 
+    public String uid;
+    public String location;
+    public String title;
+    public String body;
+    public String date;
+    public String key;
+    public String locationKey;
+    //public String createdAt;
+    //public String imagePath;
+
     public Post() {
     }
 
@@ -23,16 +33,6 @@ public class Post extends Object {
         this.location = location;
         this.locationKey = locationKey;
     }
-
-    public String uid;
-    public String location;
-    public String title;
-    public String body;
-    public String date;
-    public String key;
-    public String locationKey;
-    //public String createdAt;
-    //public String imagePath;
 
     // getters:
     public String getTitle() {

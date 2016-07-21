@@ -135,6 +135,7 @@
         android:layout_alignLeft="@+id/fabDate"
         android:layout_alignStart="@+id/fabDate" />
 
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -150,13 +151,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvUri"
-        android:layout_alignLeft="@+id/btnSubmit"
-        android:layout_alignStart="@+id/btnSubmit"
         android:layout_alignBottom="@+id/btnAdd"
         android:layout_alignRight="@+id/etBody"
         android:layout_alignEnd="@+id/etBody"
         android:textSize="14sp"
         android:hint="@string/hintForUri"
+        android:layout_alignLeft="@+id/btnSave"
+        android:layout_alignStart="@+id/btnSave"
         android:layout_alignTop="@+id/btnAdd" />
 
 </RelativeLayout>

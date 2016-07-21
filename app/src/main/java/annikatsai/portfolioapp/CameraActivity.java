@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -32,7 +41,12 @@ public class CameraActivity extends AppCompatActivity {
     Bitmap image = null;
     int rotationAngle = 90;
     Uri photoUri = null;
-    Boolean takenPicture = null;
+
+    private FirebaseStorage mStorage;
+    StorageReference storageRef;
+    final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+    StorageReference picRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +63,11 @@ public class CameraActivity extends AppCompatActivity {
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         toolbarTitle.setText("Choose a Picture");
         toolbarTitle.setTypeface(titleFont);
+
+        // Create an instance of FirebaseStorage
+        mStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app. Note: might need to edit gs:// below
+        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
     }
 
     public void onTakeClick(View view) {
@@ -72,13 +91,12 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public void onSubmitClick(View view){
-        Intent data = new Intent(this, PostActivity.class);
+        Intent i = new Intent(this, PostActivity.class);
         if(photoUri == null){
             setResult(RESULT_CANCELED);
         } else{
-            data.setData(photoUri);
-            //data.putExtra("takenPicture", takenPicture);
-            setResult(RESULT_OK, data);
+            i.setData(photoUri);
+            setResult(RESULT_OK, i);
         }
         finish();
     }
@@ -116,11 +134,32 @@ public class CameraActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 image = rotateBitmapOrientation(photoUri);
 
-                takenPicture = true;
-
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(image);
+
+                /*STORAGE FIREBASE CODE: START*/
+                Uri file = Uri.fromFile(new File(photoUri.getPath()));
+                //StorageReference picRef = storageRef.child("images/" + file.getLastPathSegment());
+                picRef = storageRef.child("users").child(userId).child(file.getLastPathSegment());
+                UploadTask uploadTask = picRef.putFile(file);
+
+                // Register observers to listen for when the download is done or if it fails
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "Couldn't upload image! :(", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        //Toast.makeText(getApplicationContext(), "downlaodUrl: " + downloadUrl, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                /*STORAGE FIREBASE CODE: END*/
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -136,12 +175,63 @@ public class CameraActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                takenPicture = false;
-
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(image);
+
+                /*STORAGE FIREBASE CODE: START*/
+                Bitmap picture = null;
+                picRef = storageRef.child("users").child(userId).child("photo");
+                try {
+                    picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri); // line of error; request permissions requried
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                if (picture != null) {
+                    picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                }
+                byte[] byteArray = baos.toByteArray();
+                UploadTask uploadTask = picRef.putBytes(byteArray);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "Couldn't upload image! :(", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    }
+                });
+                /*STORAGE FIREBASE CODE: END*/
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(photoUri != null) {
+            // Delete the file
+            picRef.delete().addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+
+                }
+
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 

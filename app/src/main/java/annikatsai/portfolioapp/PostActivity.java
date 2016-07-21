@@ -26,8 +26,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.Map;
 
@@ -35,7 +33,7 @@ import annikatsai.portfolioapp.Models.Location;
 import annikatsai.portfolioapp.Models.Post;
 import annikatsai.portfolioapp.Models.User;
 
-public class PostActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class PostActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
 
     private String postKey, locationKey;
     private String TAG = "PostActivity";
@@ -51,9 +49,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private int numPosts = 0;
 
     Uri photoUri = null;
-    //Boolean takenPicture = null;
-    private FirebaseStorage mStorage;
-    StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +60,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        /*// Create an instance of FirebaseStorage
-        mStorage = FirebaseStorage.getInstance();
-        // Create a storage reference from our app. Note: might need to edit gs:// below
-        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");*/
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -106,26 +96,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String body = tvBody.getText().toString();
         final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
-
-        /*STORAGE FIREBASE CODE: START*/
-        /*Uri file = Uri.fromFile(new File(photoUri.getPath()));
-        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
-        UploadTask uploadTask = riversRef.putFile(file);
-
-        // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-            }
-        });*/
-        /*STORAGE FIREBASE CODE: END*/
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -202,30 +172,27 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent i) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
+                Place place = PlaceAutocomplete.getPlace(this, i);
                 LatLng loc = place.getLatLng();
                 locationName = place.getName().toString();
                 latlngLocation = new Location(loc, locationName.toString());
                 tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
+                Status status = PlaceAutocomplete.getStatus(this, i);
                 // TODO: Handle the error.
                 Log.i("TAG", status.getStatusMessage());
-
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
         }
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                photoUri = data.getData();
-                //takenPicture = data.getBooleanExtra("takenPicture", takenPicture);
-                //Toast.makeText(getApplicationContext(), "Boolean: " + takenPicture, Toast.LENGTH_SHORT).show();
-                // Toast.makeText(getApplicationContext(), "URI is: " + photoUri.toString(), Toast.LENGTH_SHORT).show();
+                photoUri = i.getData();
+                // Toast.makeText(getApplicationContext(), "int: " + photoUri, Toast.LENGTH_SHORT).show();
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);
                 tvUri.setText(photoUri.toString());
             } else { // RESULT_CANCELED
