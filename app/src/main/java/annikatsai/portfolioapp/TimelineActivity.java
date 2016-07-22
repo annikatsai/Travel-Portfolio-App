@@ -39,7 +39,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     private DatabaseReference mDataBaseReference;
     private String TAG = "TimelineActivity";
     private ArrayList<Post> posts = new ArrayList<>();
-    private PostsArrayAdapter postAdapter;          // need to get count for profile, maybe add to database
+    private PostsArrayAdapter postAdapter;
     private ListView lvPosts;
     private Post oldPost;
 
@@ -89,21 +89,14 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                // decrement posts
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
-    // Think of ways to display this to user
-    // - buttons on list view
-    // - pull up menu when user clicks on the item
     private void setupViewListeners() {
         lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -165,8 +158,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
                 final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
-//                boolean locationChanged = getIntent().getBooleanExtra("locationChanged", false);
-//                if (locationChanged) {
                     Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
                     Map<String, Object> editedLocation = loc.locationToMap();
                     mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
@@ -179,7 +170,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                             }
                         }
                     });
-
                 Map<String, Object> editedPost = post.toMap();
                 mDataBaseReference
                         .child("users")
@@ -261,8 +251,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         });
         return super.onCreateOptionsMenu(menu);
     }
-
-
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {

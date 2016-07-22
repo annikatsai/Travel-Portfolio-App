@@ -11,8 +11,6 @@ public class User {
     public String name;
     public String coverPhotoUrl;
     public Integer numPosts;
-//    public String locations;
-//    public ArrayList<LatLng> locations;
 
     public User () {}
 
@@ -21,8 +19,6 @@ public class User {
         this.email = email;
         this.name = name;
         this.numPosts = 0;
-//        this.locations = "";
-//        this.locations = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -44,12 +40,6 @@ public class User {
     public String getName() {
         return name;
     }
-
-    public Integer getNumPosts() { return numPosts; }
-
-    public void incrementPosts() { numPosts++; }
-
-    public void decrementPosts() { numPosts--; }
 
     public static User fromJSON(JSONObject json) {
         User u = new User();

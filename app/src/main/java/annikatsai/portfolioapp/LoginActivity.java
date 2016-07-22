@@ -42,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private String TAG = "LoginActivity";
-    // static Boolean called = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

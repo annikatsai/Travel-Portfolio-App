@@ -30,7 +30,6 @@ public class PostsArrayAdapter extends ArrayAdapter<Post> {
 
     // Constructor
     public PostsArrayAdapter(Context context, ArrayList<Post> posts){
-        //super(context, R.layout.item_post, posts);
         super(context, android.R.layout.simple_list_item_1, posts);
     }
 

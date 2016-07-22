@@ -70,7 +70,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        //latlngLocation = new Location(null, "");
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -103,13 +102,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             // Delete the file
             picRef.delete().addOnSuccessListener(new OnSuccessListener() {
                 @Override
-                public void onSuccess(Object o) {
-
-                }
-
-                public void onSuccess(Void aVoid) {
-                    // File deleted successfully
-                }
+                public void onSuccess(Object o) {}
+                public void onSuccess(Void aVoid) {}
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
@@ -139,7 +133,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
 
-        // final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -179,7 +172,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName) {
-
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
         Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName);
         Map<String, Object> postValues = newPost.toMap();
@@ -217,22 +209,16 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 LatLng loc = place.getLatLng();
                 locationName = place.getName().toString();
                 latlngLocation = new Location(loc, locationName);
-//                latlngLocation.setLatLngLocation(loc);
-//                latlngLocation.setName(locationName);
                 tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, i);
-                // TODO: Handle the error.
                 Log.i("TAG", status.getStatusMessage());
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
+            } else if (resultCode == RESULT_CANCELED) {}
         }
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 photoUri = i.getData();
-                // Toast.makeText(getApplicationContext(), "int: " + photoUri, Toast.LENGTH_SHORT).show();
                 fileName = i.getExtras().getString("fileName");
                 picRef = storageRef.child("users").child(userId).child(fileName);
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);

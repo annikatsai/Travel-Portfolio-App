@@ -103,7 +103,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             i = new Intent(EditPostActivity.this, SearchActivity.class);
         }
         i.putExtra("editPost", Parcels.wrap(post));
-//        i.putExtra("locationChanged", locationChanged);
         i.putExtra("latLngLocation", Parcels.wrap(latLngLocation));
         setResult(RESULT_OK, i);
         finish();
@@ -126,7 +125,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-//                locationChanged = true;
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 LatLng latlng = place.getLatLng();
                 latLngLocation.latitude = latlng.latitude;
