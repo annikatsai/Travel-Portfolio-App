@@ -40,6 +40,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private String locationKey;
     private DatabaseReference mDatabaseReference;
     private Location latLngLocation;
+    private String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), tvLocation.getText().toString(), tvDate.getText().toString(), postKey, locationKey);
+        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), tvLocation.getText().toString(), tvDate.getText().toString(), postKey, locationKey, fileName);
         Intent i = new Intent();
         if (code.equals("fromTimeline")) {
             i = new Intent(EditPostActivity.this, TimelineActivity.class);

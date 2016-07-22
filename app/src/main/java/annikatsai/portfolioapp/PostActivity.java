@@ -154,7 +154,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                     } else {
                         locationKey = "";
                     }
-                    composeNewPost(userId, title, body, location, date, locationKey);
+                    composeNewPost(userId, title, body, location, date, locationKey, fileName);
                 }
                 finish();
             }
@@ -183,10 +183,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         return locationKey;
     }
 
-    private void composeNewPost(String userId, String title, String body, String location, String date, String locationKey) {
+    private void composeNewPost(String userId, String title, String body, String location, String date, String locationKey, String fileName) {
 
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, location, date, postKey, locationKey);
+        Post newPost = new Post(userId, title, body, location, date, postKey, locationKey, fileName);
         Map<String, Object> postValues = newPost.toMap();
 
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
