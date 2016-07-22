@@ -46,8 +46,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private final int REQUEST_CODE = 20;
     private Location latlngLocation;
     private String locationName;
-    private int numPosts = 0;
-
     Uri photoUri = null;
 
     @Override
@@ -60,6 +58,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        //latlngLocation = new Location(null, "");
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -105,13 +104,13 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 if (user == null) {
                     Toast.makeText(PostActivity.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
                 } else {
-                    String locationKey;
-                    if (latlngLocation != null) {
-                        locationKey = addLocationToMap(userId);
-                    } else {
-                        locationKey = "";
-                    }
-                    composeNewPost(userId, title, body, location, date, locationKey);
+                    Location location;
+                    //if (latlngLocation != null) {
+                        location = addLocationToMap(userId);
+                    //} else {
+                    //    locationKey = "";
+                    //}
+                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey);
                 }
                 finish();
             }
@@ -123,7 +122,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         });
     }
 
-    private String addLocationToMap(String userId) {
+    private Location addLocationToMap(String userId) {
         locationKey = mDatabase.child("users").child(userId).child("locations").push().getKey();
         latlngLocation.setLocationKey(locationKey);
         Map<String, Object> locationValues = latlngLocation.locationToMap();
@@ -137,13 +136,13 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 }
             }
         });
-        return locationKey;
+        return latlngLocation;
     }
 
-    private void composeNewPost(String userId, String title, String body, String location, String date, String locationKey) {
+    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey) {
 
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, location, date, postKey, locationKey);
+        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey);
         Map<String, Object> postValues = newPost.toMap();
 
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
@@ -178,7 +177,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 Place place = PlaceAutocomplete.getPlace(this, i);
                 LatLng loc = place.getLatLng();
                 locationName = place.getName().toString();
-                latlngLocation = new Location(loc, locationName.toString());
+                latlngLocation = new Location(loc, locationName);
+//                latlngLocation.setLatLngLocation(loc);
+//                latlngLocation.setName(locationName);
                 tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {

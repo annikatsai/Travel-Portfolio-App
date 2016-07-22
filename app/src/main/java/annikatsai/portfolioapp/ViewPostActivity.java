@@ -36,7 +36,7 @@ public class ViewPostActivity extends AppCompatActivity {
         TextView tvBody = (TextView) findViewById(R.id.tvBody);
 
         tvTitle.setText(post.getTitle());
-        tvLocation.setText(post.getLocation());
+        tvLocation.setText(post.location);
         tvDate.setText(post.getDate());
         tvBody.setText(post.getBody());
     }

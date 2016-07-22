@@ -165,9 +165,22 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
                 final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
+//                boolean locationChanged = getIntent().getBooleanExtra("locationChanged", false);
+//                if (locationChanged) {
+                    Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
+                    Map<String, Object> editedLocation = loc.locationToMap();
+                    mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null) {
+                                Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                 Map<String, Object> editedPost = post.toMap();
-                Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
-                Map<String, Object> editedLocation = loc.locationToMap();
                 mDataBaseReference
                         .child("users")
                         .child(userId)
@@ -183,16 +196,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 }
                             }
                         });
-                mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (databaseError != null) {
-                            Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 postAdapter.clear();
                 Query searchQuery = mDataBaseReference.child("users").child(userId).child("posts").orderByKey();
