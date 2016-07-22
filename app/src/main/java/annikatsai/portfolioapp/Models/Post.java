@@ -13,6 +13,8 @@ public class Post extends Object {
 
     public String uid;
     public String location;
+    public double latitude;
+    public double longitude;
     public String title;
     public String body;
     public String date;
@@ -24,13 +26,15 @@ public class Post extends Object {
     public Post() {
     }
 
-    public Post(String uid, String title, String body, String location, String date, String key, String locationKey) {
+    public Post(String uid, String title, String body, String location, double latitude, double longitude, String date, String key, String locationKey) {
         this.title = title;
         this.uid = uid;
         this.body = body;
         this.date = date;
         this.key = key;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.locationKey = locationKey;
     }
 
@@ -43,9 +47,11 @@ public class Post extends Object {
         return body;
     }
 
-    public String getLocation() {
-        return location;
-    }
+//    public String getLocation() {
+//        return location;
+//    }
+
+//    public Location getLocation() {return location;}
 
     public String getDate() {
         return date;
@@ -130,6 +136,8 @@ public class Post extends Object {
         result.put("title", title);
         result.put("body", body);
         result.put("location", location);
+        result.put("longitude", longitude);
+        result.put("latitude", latitude);
         result.put("date", date);
         result.put("key", key);
         result.put("locationKey", locationKey);

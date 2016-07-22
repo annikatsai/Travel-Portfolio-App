@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Parcel
-public class Location {
+public class Location extends Object {
 
     public Location() {}
 
@@ -37,6 +37,10 @@ public class Location {
     public void setLocationKey(String key) {
         this.locationKey = key;
     }
+
+    public void setLatLngLocation(LatLng loc) { this.latLngLocation = loc; }
+
+    public void setName(String name) { this.name = name; }
 
     @Exclude
     public Map<String, Object> locationToMap() {

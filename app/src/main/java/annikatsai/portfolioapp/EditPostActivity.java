@@ -19,8 +19,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.parceler.Parcels;
 
@@ -38,8 +36,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private Post editPost;
     private String code;
     private String locationKey;
-    private DatabaseReference mDatabaseReference;
     private Location latLngLocation;
+//    private boolean locationChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +50,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         toolbarTitle.setText("Edit Post");
         toolbarTitle.setTypeface(titleFont);
@@ -60,6 +57,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         editPost = Parcels.unwrap(getIntent().getParcelableExtra("editPost"));
         code = getIntent().getStringExtra("code");
         locationKey = editPost.locationKey;
+        LatLng latLng = new LatLng(editPost.latitude, editPost.longitude);
+        latLngLocation = new Location(latLng, editPost.location);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etTitle.append("");
@@ -74,10 +73,10 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         } else {
             etTitle.append(editPost.getTitle());
         }
-        if (editPost.getLocation().equals("")) {
+        if (editPost.location.equals("")) {
             tvLocation.setText("");
         } else {
-            tvLocation.append(editPost.getLocation());
+            tvLocation.append(editPost.location);
         }
         if (editPost.getDate().equals("")) {
             tvDate.setText("");
@@ -95,7 +94,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), tvLocation.getText().toString(), tvDate.getText().toString(), postKey, locationKey);
+        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey);
         Intent i = new Intent();
         if (code.equals("fromTimeline")) {
             i = new Intent(EditPostActivity.this, TimelineActivity.class);
@@ -103,6 +102,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             i = new Intent(EditPostActivity.this, SearchActivity.class);
         }
         i.putExtra("editPost", Parcels.wrap(post));
+//        i.putExtra("locationChanged", locationChanged);
         i.putExtra("latLngLocation", Parcels.wrap(latLngLocation));
         setResult(RESULT_OK, i);
         finish();
@@ -125,9 +125,13 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+//                locationChanged = true;
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 LatLng latlng = place.getLatLng();
-                latLngLocation = new Location(latlng, place.getName().toString());
+                latLngLocation.latitude = latlng.latitude;
+                latLngLocation.longitude = latlng.longitude;
+                latLngLocation.setLatLngLocation(latlng);
+                latLngLocation.setName(place.getName().toString());
                 tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
