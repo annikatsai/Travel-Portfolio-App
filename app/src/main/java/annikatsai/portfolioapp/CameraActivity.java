@@ -48,6 +48,8 @@ public class CameraActivity extends AppCompatActivity {
 
     StorageReference picRef;
 
+    String fileName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +98,7 @@ public class CameraActivity extends AppCompatActivity {
             setResult(RESULT_CANCELED);
         } else{
             i.setData(photoUri);
+            i.putExtra("fileName", fileName);
             setResult(RESULT_OK, i);
         }
         finish();
@@ -141,9 +144,16 @@ public class CameraActivity extends AppCompatActivity {
                 /*STORAGE FIREBASE CODE: START*/
                 Uri file = Uri.fromFile(new File(photoUri.getPath()));
                 //StorageReference picRef = storageRef.child("images/" + file.getLastPathSegment());
-                picRef = storageRef.child("users").child(userId).child(file.getLastPathSegment());
-                UploadTask uploadTask = picRef.putFile(file);
+                // picRef = storageRef.child("users").child(userId).child(file.getLastPathSegment());
 
+
+
+                fileName = file.getLastPathSegment();
+                picRef = storageRef.child("users").child(userId).child(fileName);
+
+
+
+                UploadTask uploadTask = picRef.putFile(file);
                 // Register observers to listen for when the download is done or if it fails
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -163,6 +173,7 @@ public class CameraActivity extends AppCompatActivity {
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
+            // Toast.makeText(getApplicationContext(), "pic reference: " + picRef , Toast.LENGTH_LONG).show();
         }
 
         if(requestCode == PICK_PHOTO_CODE){
@@ -181,7 +192,9 @@ public class CameraActivity extends AppCompatActivity {
 
                 /*STORAGE FIREBASE CODE: START*/
                 Bitmap picture = null;
-                picRef = storageRef.child("users").child(userId).child("photo");
+                // picRef = storageRef.child("users").child(userId).child("photo");
+                fileName = "photo";
+                picRef = storageRef.child("users").child(userId).child(fileName);
                 try {
                     picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri); // line of error; request permissions requried
                 } catch (IOException e) {
@@ -207,6 +220,7 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 });
                 /*STORAGE FIREBASE CODE: END*/
+                // Toast.makeText(getApplicationContext(), "pic reference: " + picRef , Toast.LENGTH_LONG).show();
             }
         }
     }

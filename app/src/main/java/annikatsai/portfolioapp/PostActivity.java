@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,12 +21,16 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Map;
 
@@ -47,6 +52,13 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private Location latlngLocation;
     private String locationName;
     Uri photoUri = null;
+
+    private FirebaseStorage mStorage;
+    StorageReference storageRef;
+
+    String fileName;
+    StorageReference picRef;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +82,42 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         toolbarTitle.setText("Make a Post");
         toolbarTitle.setTypeface(titleFont);
+
+        // Create an instance of FirebaseStorage
+        mStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app. Note: might need to edit gs:// below
+        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // Toast.makeText(getApplicationContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
     }
 
     public void onAddClick(View view) {
         Intent i = new Intent(this, CameraActivity.class);
         startActivityForResult(i, REQUEST_CODE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(photoUri != null) {
+            // Delete the file
+            picRef.delete().addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+
+                }
+
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     public void onSubmit(View view) {
@@ -96,7 +139,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
 
-        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -105,12 +148,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                     Toast.makeText(PostActivity.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
                 } else {
                     Location location;
-                    //if (latlngLocation != null) {
-                        location = addLocationToMap(userId);
-                    //} else {
-                    //    locationKey = "";
-                    //}
-                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey);
+                    location = addLocationToMap(userId);
+                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName);
                 }
                 finish();
             }
@@ -139,10 +178,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         return latlngLocation;
     }
 
-    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey) {
+    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName) {
 
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey);
+        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName);
         Map<String, Object> postValues = newPost.toMap();
 
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
@@ -194,6 +233,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             if (resultCode == RESULT_OK) {
                 photoUri = i.getData();
                 // Toast.makeText(getApplicationContext(), "int: " + photoUri, Toast.LENGTH_SHORT).show();
+                fileName = i.getExtras().getString("fileName");
+                picRef = storageRef.child("users").child(userId).child(fileName);
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);
                 tvUri.setText(photoUri.toString());
             } else { // RESULT_CANCELED

@@ -20,13 +20,14 @@ public class Post extends Object {
     public String date;
     public String key;
     public String locationKey;
+    public String fileName;
     //public String createdAt;
     //public String imagePath;
 
     public Post() {
     }
 
-    public Post(String uid, String title, String body, String location, double latitude, double longitude, String date, String key, String locationKey) {
+    public Post(String uid, String title, String body, String location, double latitude, double longitude, String date, String key, String locationKey, String fileName) {
         this.title = title;
         this.uid = uid;
         this.body = body;
@@ -36,6 +37,7 @@ public class Post extends Object {
         this.latitude = latitude;
         this.longitude = longitude;
         this.locationKey = locationKey;
+        this.fileName = fileName;
     }
 
     // getters:
@@ -59,6 +61,10 @@ public class Post extends Object {
 
     public String getKey() {
         return key;
+    }
+
+    public String getFileName(){
+        return fileName;
     }
 
 
@@ -141,6 +147,7 @@ public class Post extends Object {
         result.put("date", date);
         result.put("key", key);
         result.put("locationKey", locationKey);
+        result.put("fileName", fileName);
         return result;
     }
     // handle camera roll
