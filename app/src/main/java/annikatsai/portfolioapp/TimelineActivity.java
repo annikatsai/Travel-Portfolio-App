@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.parceler.Parcels;
 
@@ -42,6 +47,12 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     private PostsArrayAdapter postAdapter;
     private ListView lvPosts;
     private Post oldPost;
+
+    private FirebaseStorage mStorage;
+    StorageReference storageRef;
+
+    StorageReference picRef;
+    String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,11 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         toolbarTitle.setTypeface(titleFont);
 
         mDataBaseReference = FirebaseDatabase.getInstance().getReference();
+
+        // Create an instance of FirebaseStorage
+        mStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app. Note: might need to edit gs:// below
+        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
 
         // Create listener for reading data from database
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -133,6 +149,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     public void deletePost(int position) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final Post post = posts.get(position);
+        fileName = posts.get(position).getFileName();
+        picRef = storageRef.child("users").child(userId).child(fileName);
+        // Toast.makeText(getApplicationContext(), "File Name: " + fileName, Toast.LENGTH_LONG).show();
         mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -140,6 +159,18 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                     Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
                     postAdapter.remove(post);
+                    // Delete the file
+                    picRef.delete().addOnSuccessListener(new OnSuccessListener() {
+                        @Override
+                        public void onSuccess(Object o) {}
+                        public void onSuccess(Void aVoid) {}
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Uh-oh, an error occurred!
+                            Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     postAdapter.notifyDataSetChanged();
                     Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
                 }
