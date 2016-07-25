@@ -40,7 +40,7 @@
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:authorities="com.facebook.app.FacebookContentProvider1548302398812375"
             android:exported="true" />
 
         <activity
@@ -85,8 +85,6 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".CameraActivity" />
-        <activity android:name=".SearchLocation" />
-        <activity android:name=".SearchLocationActivity" />
         <activity android:name=".ViewPostActivity" />
         <activity android:name=".EditPostActivity" />
         <activity android:name=".SearchActivity" />

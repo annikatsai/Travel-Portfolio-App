@@ -69,32 +69,39 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 
         // Create listener for reading data from database
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/posts");
-        myRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                // add to adapter
-                Post post = dataSnapshot.getValue(Post.class);
-                postAdapter.add(post);
-                postAdapter.notifyDataSetChanged();
-                // increment posts
-            }
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            DatabaseReference myRef = database.getReference("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/posts");
+            myRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    // add to adapter
+                    Post post = dataSnapshot.getValue(Post.class);
+                    postAdapter.add(post);
+                    postAdapter.notifyDataSetChanged();
+                    // increment posts
+                }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Post post = dataSnapshot.getValue(Post.class);
-                postAdapter.remove(oldPost);
-                postAdapter.add(post);
-                postAdapter.notifyDataSetChanged();
-            }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    Post post = dataSnapshot.getValue(Post.class);
+                    postAdapter.remove(oldPost);
+                    postAdapter.add(post);
+                    postAdapter.notifyDataSetChanged();
+                }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
     }
 
     private void setupViewListeners() {

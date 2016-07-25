@@ -21,8 +21,10 @@ public class Location extends Object {
 
     public Location(LatLng loc, String name) {
         this.latLngLocation = loc;
-        this.latitude = latLngLocation.latitude;
-        this.longitude = latLngLocation.longitude;
+        if (this.latLngLocation != null) {
+            this.latitude = latLngLocation.latitude;
+            this.longitude = latLngLocation.longitude;
+        }
         this.name = name;
     }
 

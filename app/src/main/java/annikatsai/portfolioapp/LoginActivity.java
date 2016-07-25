@@ -55,11 +55,14 @@ public class LoginActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                //FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     // User is signed in
                     Toast.makeText(LoginActivity.this, "User not null", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    User u = new User(user.getUid(), user.getDisplayName(), user.getEmail());
+                    mDatabase.child("users").child(user.getUid()).setValue(u);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -86,13 +89,16 @@ public class LoginActivity extends AppCompatActivity {
 
                 Toast.makeText(LoginActivity.this, "Login attempt success", Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(loginResult.getAccessToken());
+                //Toast.makeText(LoginActivity.this, "User: " + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
-                mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
+//                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//                if (firebaseUser != null) {
+//                    User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
+//                    mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
+//                }
 
             }
 
@@ -149,6 +155,8 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+
+                        // ...
                     }
                 });
     }

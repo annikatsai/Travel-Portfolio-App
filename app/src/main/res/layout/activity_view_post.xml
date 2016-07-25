@@ -123,11 +123,20 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/done"
         android:id="@+id/btnFinishView"
         android:onClick="onFinishView"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="39dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shareFb"
+        android:id="@+id/btnShare"
+        android:layout_alignBottom="@+id/btnFinishView"
+        android:layout_toRightOf="@+id/btnFinishView"
+        android:layout_toEndOf="@+id/btnFinishView" />
 
 </RelativeLayout>
