@@ -52,7 +52,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     StorageReference storageRef;
 
     StorageReference picRef;
-    String fileName;
+    String fileName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +136,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     }
 
     int REQUEST_CODE = 5;
+
     @Override
     public void launchEditPost(int position) {
         Intent i = new Intent(TimelineActivity.this, EditPostActivity.class);
@@ -150,8 +151,10 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final Post post = posts.get(position);
         fileName = posts.get(position).getFileName();
-        picRef = storageRef.child("users").child(userId).child(fileName);
         // Toast.makeText(getApplicationContext(), "File Name: " + fileName, Toast.LENGTH_LONG).show();
+        if(!(fileName.isEmpty())){
+            picRef = storageRef.child("users").child(userId).child(fileName);
+        }
         mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -159,18 +162,23 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                     Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
                     postAdapter.remove(post);
-                    // Delete the file
-                    picRef.delete().addOnSuccessListener(new OnSuccessListener() {
-                        @Override
-                        public void onSuccess(Object o) {}
-                        public void onSuccess(Void aVoid) {}
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred!
-                            Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    if (!(fileName.isEmpty())) {
+                        // Delete the file
+                        picRef.delete().addOnSuccessListener(new OnSuccessListener() {
+                            @Override
+                            public void onSuccess(Object o) {
+                            }
+
+                            public void onSuccess(Void aVoid) {
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                     postAdapter.notifyDataSetChanged();
                     Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
                 }
@@ -196,18 +204,18 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
                 final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
-                    Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
-                    Map<String, Object> editedLocation = loc.locationToMap();
-                    mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if (databaseError != null) {
-                                Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
-                            }
+                Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
+                Map<String, Object> editedLocation = loc.locationToMap();
+                mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                });
                 Map<String, Object> editedPost = post.toMap();
                 mDataBaseReference
                         .child("users")
@@ -235,14 +243,22 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                         postAdapter.add(post);
                         postAdapter.notifyDataSetChanged();
                     }
+
                     @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+
                     @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+
                     @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {}
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
                 });
             }
         }
@@ -267,6 +283,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     }
 
     int SEARCHACTIVITY_REQUESTCODE = 10;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
@@ -301,5 +318,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+    }
 }

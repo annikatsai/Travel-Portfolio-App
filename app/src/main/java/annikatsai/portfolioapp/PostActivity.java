@@ -129,6 +129,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if (tvDate.getText() == null || tvDate.getText().toString().equals("")) {
             tvDate.setText("");
         }
+        if(fileName == null){
+            fileName = "";
+        }
 
         final String title = etTitle.getText().toString();
         final String body = tvBody.getText().toString();
