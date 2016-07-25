@@ -133,8 +133,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/shareFb"
+        android:text="@string/share"
         android:id="@+id/btnShare"
+        android:onClick="onShareClick"
         android:layout_alignBottom="@+id/btnFinishView"
         android:layout_toRightOf="@+id/btnFinishView"
         android:layout_toEndOf="@+id/btnFinishView" />

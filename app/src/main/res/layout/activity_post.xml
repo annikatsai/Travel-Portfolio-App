@@ -112,8 +112,8 @@
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorAccent"
         app:fabSize="mini"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:onClick="showDatePickerDialog"
         android:id="@+id/fabDate"
         android:layout_alignBottom="@+id/tvDate"
@@ -127,8 +127,8 @@
         android:tint="@android:color/white"
         android:scaleType="fitCenter"
         app:fabSize="mini"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:id="@+id/fabLocation"
         android:onClick="selectLocation"
         android:layout_alignBottom="@+id/tvLocation"
@@ -143,22 +143,20 @@
         android:textAllCaps="false"
         android:id="@+id/btnSave"
         android:onClick="onSubmit"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp" />
+        android:layout_alignRight="@+id/tvDivider"
+        android:layout_alignEnd="@+id/tvDivider" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvUri"
-        android:layout_alignBottom="@+id/btnAdd"
-        android:layout_alignRight="@+id/etBody"
-        android:layout_alignEnd="@+id/etBody"
         android:textSize="14sp"
         android:hint="@string/hintForUri"
-        android:layout_alignLeft="@+id/btnSave"
-        android:layout_alignStart="@+id/btnSave"
-        android:layout_alignTop="@+id/btnAdd" />
+        android:layout_alignBaseline="@+id/btnAdd"
+        android:layout_alignBottom="@+id/btnAdd"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
 

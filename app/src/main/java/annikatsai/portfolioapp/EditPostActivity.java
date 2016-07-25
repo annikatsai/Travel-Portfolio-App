@@ -1,13 +1,17 @@
 package annikatsai.portfolioapp;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -146,6 +150,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
 
     // attach to an onclick handler to show the date picker
     public void showDatePickerDialog(View v) {
+        hideSoftKeyboard(v);
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
@@ -170,5 +175,52 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onAddClick(View view){
         Intent i = new Intent(this, CameraActivity.class);
         startActivity(i);
+    }
+
+    public void hideSoftKeyboard(View view){
+        InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Cancel");
+        alertDialogBuilder
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        superOnBackPressed();
+//                        if(photoUri != null) {
+//                            // Delete the file
+//                            picRef.delete().addOnSuccessListener(new OnSuccessListener() {
+//                                @Override
+//                                public void onSuccess(Object o) {}
+//                                public void onSuccess(Void aVoid) {}
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception exception) {
+//                                    // Uh-oh, an error occurred!
+//                                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+//                                }
+//                            });
+//                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void superOnBackPressed() {
+        super.onBackPressed();
     }
 }

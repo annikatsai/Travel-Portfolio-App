@@ -4,12 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -42,12 +44,20 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private String TAG = "LoginActivity";
+    private static boolean firstLogin = false;   // change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        TextView appTitle = (TextView) findViewById(R.id.tvTitle);
+        TextView welcomePrompt = (TextView) findViewById(R.id.tvWelcome);
+        appTitle.setTypeface(titleFont);
+        appTitle.setText("Roam");
+        welcomePrompt.setText("Welcome to");
 
         // Auth state listener responds to change in user's sign-in state
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -61,8 +71,11 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed in
                     Toast.makeText(LoginActivity.this, "User not null", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    User u = new User(user.getUid(), user.getDisplayName(), user.getEmail());
-                    mDatabase.child("users").child(user.getUid()).setValue(u);
+                    //if (firstLogin) {
+                        User u = new User(user.getUid(), user.getDisplayName(), user.getEmail());
+                        mDatabase.child("users").child(user.getUid()).setValue(u);
+                      //  firstLogin = false;
+                    //}
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");

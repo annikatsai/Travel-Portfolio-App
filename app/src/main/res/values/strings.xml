@@ -31,6 +31,6 @@
     <string name="hintForUri">Selected image . . .</string>
     <string name="search">Search</string>
     <string name="signOut">Sign Out</string>
-    <string name="shareFb">Share to Facebook</string>
+    <string name="share">Share</string>
     <string name="done">Done</string>
 </resources>

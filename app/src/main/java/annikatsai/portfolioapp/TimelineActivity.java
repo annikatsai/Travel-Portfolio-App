@@ -83,10 +83,10 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    Post post = dataSnapshot.getValue(Post.class);
-                    postAdapter.remove(oldPost);
-                    postAdapter.add(post);
-                    postAdapter.notifyDataSetChanged();
+//                    Post post = dataSnapshot.getValue(Post.class);
+//                    postAdapter.remove(oldPost);
+//                    postAdapter.add(post);
+//                    postAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -165,18 +165,18 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
                 final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
-                    Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
-                    Map<String, Object> editedLocation = loc.locationToMap();
-                    mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if (databaseError != null) {
-                                Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
-                            }
+                Location loc = Parcels.unwrap(data.getParcelableExtra("latLngLocation"));
+                Map<String, Object> editedLocation = loc.locationToMap();
+                mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(editedLocation, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                });
                 Map<String, Object> editedPost = post.toMap();
                 mDataBaseReference
                         .child("users")
@@ -193,7 +193,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 }
                             }
                         });
-
+                postAdapter.remove(oldPost);
+                postAdapter.add(post);
+                postAdapter.notifyDataSetChanged();
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 postAdapter.clear();
                 Query searchQuery = mDataBaseReference.child("users").child(userId).child("posts").orderByKey();

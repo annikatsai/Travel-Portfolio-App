@@ -27,7 +27,7 @@
         android:text="@string/title"
         android:id="@+id/tvTitle"
         android:textColor="#FFFFFF"
-        android:textSize="40sp"
+        android:textSize="60sp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
