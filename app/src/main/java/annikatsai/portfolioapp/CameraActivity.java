@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -34,7 +36,6 @@ public class CameraActivity extends AppCompatActivity {
 
     public final String APP_TAG = "MyCustomApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    public String photoFileName = "photo.jpg";
 
     public final static int PICK_PHOTO_CODE = 1046;
 
@@ -47,8 +48,9 @@ public class CameraActivity extends AppCompatActivity {
     final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     StorageReference picRef;
-
     String fileName;
+
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,9 @@ public class CameraActivity extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         // Create a storage reference from our app. Note: might need to edit gs:// below
         storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        fileName = mDatabase.child("users").child(userId).child("fileName").push().getKey();
     }
 
     public void onTakeClick(View view) {
@@ -107,7 +112,7 @@ public class CameraActivity extends AppCompatActivity {
     public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName)); // set the image file name
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(fileName));
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
@@ -133,7 +138,7 @@ public class CameraActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                photoUri = getPhotoFileUri(photoFileName);
+                photoUri = getPhotoFileUri(fileName);
                 // by this point we have the camera photo on disk
                 image = rotateBitmapOrientation(photoUri);
 
@@ -143,15 +148,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 /*STORAGE FIREBASE CODE: START*/
                 Uri file = Uri.fromFile(new File(photoUri.getPath()));
-                //StorageReference picRef = storageRef.child("images/" + file.getLastPathSegment());
-                // picRef = storageRef.child("users").child(userId).child(file.getLastPathSegment());
-
-
-
-                fileName = file.getLastPathSegment();
                 picRef = storageRef.child("users").child(userId).child(fileName);
-
-
 
                 UploadTask uploadTask = picRef.putFile(file);
                 // Register observers to listen for when the download is done or if it fails
@@ -173,7 +170,6 @@ public class CameraActivity extends AppCompatActivity {
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
-            // Toast.makeText(getApplicationContext(), "pic reference: " + picRef , Toast.LENGTH_LONG).show();
         }
 
         if(requestCode == PICK_PHOTO_CODE){
@@ -192,11 +188,9 @@ public class CameraActivity extends AppCompatActivity {
 
                 /*STORAGE FIREBASE CODE: START*/
                 Bitmap picture = null;
-                // picRef = storageRef.child("users").child(userId).child("photo");
-                fileName = "photo";
                 picRef = storageRef.child("users").child(userId).child(fileName);
                 try {
-                    picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri); // line of error; request permissions requried
+                    picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -220,7 +214,6 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 });
                 /*STORAGE FIREBASE CODE: END*/
-                // Toast.makeText(getApplicationContext(), "pic reference: " + picRef , Toast.LENGTH_LONG).show();
             }
         }
     }
