@@ -99,10 +99,10 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    Post post = dataSnapshot.getValue(Post.class);
-                    postAdapter.remove(oldPost);
-                    postAdapter.add(post);
-                    postAdapter.notifyDataSetChanged();
+//                    Post post = dataSnapshot.getValue(Post.class);
+//                    postAdapter.remove(oldPost);
+//                    postAdapter.add(post);
+//                    postAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -232,7 +232,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 }
                             }
                         });
-
+                postAdapter.remove(oldPost);
+                postAdapter.add(post);
+                postAdapter.notifyDataSetChanged();
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 postAdapter.clear();
                 Query searchQuery = mDataBaseReference.child("users").child(userId).child("posts").orderByKey();

@@ -1,6 +1,8 @@
 package annikatsai.portfolioapp;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,15 +15,12 @@ import annikatsai.portfolioapp.Models.Post;
 
 public class ViewPostActivity extends AppCompatActivity {
 
-    //private CallbackManager mCallbackManager;
-    //ShareDialog shareDialog;
+    private Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_post);
-
-        //shareDialog = new ShareDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
@@ -33,30 +32,12 @@ public class ViewPostActivity extends AppCompatActivity {
         toolbarTitle.setText("View Post");
         toolbarTitle.setTypeface(titleFont);
 
-        Post post = Parcels.unwrap(getIntent().getParcelableExtra("post"));
+        post = Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         TextView tvLocation = (TextView) findViewById(R.id.tvLocation);
         TextView tvDate = (TextView) findViewById(R.id.tvDate);
         TextView tvBody = (TextView) findViewById(R.id.tvBody);
-
-//        Button btnshareFB = (Button) findViewById(R.id.btnShare);
-//        btnshareFB.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (ShareDialog.canShow(ShareLinkContent.class)) {
-//                    ShareLinkContent linkContent = new ShareLinkContent.Builder()
-//                            .setContentTitle("How to integrate Linkedin from your app")
-//                            .setImageUrl(Uri.parse("https://www.numetriclabz.com/wp-content/uploads/2015/11/114.png"))
-//                            .setContentDescription(
-//                                    "simple LinkedIn integration")
-//                            .setContentUrl(Uri.parse("https://www.numetriclabz.com/android-linkedin-integration-login-tutorial/"))
-//                            .build();
-//
-//                    shareDialog.show(linkContent);  // Show facebook ShareDialog
-//                }
-//            }
-//        });
 
         tvTitle.setText(post.getTitle());
         tvLocation.setText(post.location);
@@ -64,8 +45,24 @@ public class ViewPostActivity extends AppCompatActivity {
         tvBody.setText(post.getBody());
     }
 
-
     public void onFinishView(View view) {
         this.finish();
+    }
+
+    public void onShareClick(View view) {
+        Intent shareIntent = new Intent();
+        String title = post.getTitle();
+        String body = post.getBody();
+        if (!post.getFileName().equals("") || post.getFileName() != null) {
+            Uri pictureUri = Uri.parse(post.getFileName());
+            shareIntent.putExtra(Intent.EXTRA_STREAM, pictureUri);
+        }
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, title);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, body);
+
+        shareIntent.setType("image/*");
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(shareIntent, "Share Image"));
     }
 }

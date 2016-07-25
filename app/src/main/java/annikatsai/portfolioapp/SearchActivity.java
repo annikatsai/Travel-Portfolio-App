@@ -181,4 +181,8 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
             });
         }
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

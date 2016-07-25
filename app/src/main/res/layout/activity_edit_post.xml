@@ -89,8 +89,7 @@
         android:id="@+id/tvLocation"
         android:fontFamily="sans-serif-light"
         android:textSize="17sp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/fabDate"
+        android:layout_above="@+id/tvDivider"
         android:layout_alignLeft="@+id/tvDate"
         android:layout_alignStart="@+id/tvDate" />
 
@@ -112,8 +111,8 @@
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorAccent"
         app:fabSize="mini"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:onClick="showDatePickerDialog"
         android:id="@+id/fabDate"
         android:layout_alignBottom="@+id/tvDate"
@@ -127,11 +126,11 @@
         android:tint="@android:color/white"
         android:scaleType="fitCenter"
         app:fabSize="mini"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:id="@+id/fabLocation"
         android:onClick="selectLocation"
-        android:layout_alignBottom="@+id/tvLocation"
+        android:layout_below="@+id/fabDate"
         android:layout_alignLeft="@+id/fabDate"
         android:layout_alignStart="@+id/fabDate" />
 
@@ -142,20 +141,9 @@
         android:textAllCaps="false"
         android:id="@+id/btnSave"
         android:onClick="onFinishEdit"
-        android:layout_marginBottom="21dp"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/btnCancel"
-        android:layout_toEndOf="@+id/btnCancel" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cancel"
-        android:textAllCaps="false"
-        android:id="@+id/btnCancel"
-        android:onClick="onSubmit"
-        android:layout_alignTop="@+id/btnSave"
-        android:layout_toRightOf="@+id/btnAdd"
-        android:layout_toEndOf="@+id/btnAdd" />
+        android:layout_alignRight="@+id/etBody"
+        android:layout_alignEnd="@+id/etBody" />
 
 </RelativeLayout>
