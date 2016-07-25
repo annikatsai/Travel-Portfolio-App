@@ -82,6 +82,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         toolbarTitle.setText("Make a Post");
         toolbarTitle.setTypeface(titleFont);
 
+        latlngLocation = new Location(null, "");
+
         // Create an instance of FirebaseStorage
         mStorage = FirebaseStorage.getInstance();
         // Create a storage reference from our app. Note: might need to edit gs:// below
@@ -208,7 +210,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 Place place = PlaceAutocomplete.getPlace(this, i);
                 LatLng loc = place.getLatLng();
                 locationName = place.getName().toString();
-                latlngLocation = new Location(loc, locationName);
+                //latlngLocation = new Location(loc, locationName);
+                latlngLocation.setLatLngLocation(loc);
+                latlngLocation.setName(locationName);
                 tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {

@@ -58,10 +58,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Location location = dataSnapshot.getValue(Location.class);
-                LatLng latLng = new LatLng(location.latitude, location.longitude);
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.name));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                dropPinEffect(marker);
+                if (location.latitude != 0 && location.longitude != 0) {
+                    LatLng latLng = new LatLng(location.latitude, location.longitude);
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.name));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    dropPinEffect(marker);
+                }
             }
 
             @Override
