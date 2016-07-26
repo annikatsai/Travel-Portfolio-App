@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -22,7 +25,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.parceler.Parcels;
 
@@ -41,8 +48,21 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private String code;
     private String locationKey;
     private Location latLngLocation;
-    private String fileName;
 
+
+    private FirebaseStorage mStorage;
+    StorageReference storageRef;
+
+    private String fileName;
+    StorageReference picRef;
+
+    private final int CAMERA_REQUEST_CODE = 13;
+    String userId;
+
+    private String newFileName;
+    StorageReference newPicRef;
+    Uri photoUri = null;
+    TextView tvUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +79,12 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         toolbarTitle.setText("Edit Post");
         toolbarTitle.setTypeface(titleFont);
 
+        // Create an instance of FirebaseStorage
+        mStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app. Note: might need to edit gs:// below
+        storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         editPost = Parcels.unwrap(getIntent().getParcelableExtra("editPost"));
         code = getIntent().getStringExtra("code");
         locationKey = editPost.locationKey;
@@ -71,6 +97,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         tvDate = (TextView) findViewById(R.id.tvDate);
         etBody = (EditText) findViewById(R.id.etBody);
         etBody.append("");
+
+        tvUri = (TextView) findViewById(R.id.tvUri);
 
         postKey = editPost.getKey();
         if (editPost.getTitle().equals("")) {
@@ -94,12 +122,33 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             etBody.append(editPost.getBody());
         }
 
+        fileName = editPost.getFileName();
+        if((fileName != null) && !(fileName.isEmpty())){
+            picRef = storageRef.child("users").child(userId).child(fileName);
+        }
+        tvUri.setText(fileName);
     }
 
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, fileName);
+        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName);
+
+        if((fileName != null) && !(fileName.isEmpty())){
+            // Delete the file
+            picRef.delete().addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {}
+                public void onSuccess(Void aVoid) {}
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
         Intent i = new Intent();
         if (code.equals("fromTimeline")) {
             i = new Intent(EditPostActivity.this, TimelineActivity.class);
@@ -145,6 +194,14 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
+        } else if (requestCode == CAMERA_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                photoUri = data.getData();
+                newFileName = data.getExtras().getString("fileName");
+                newPicRef = storageRef.child("users").child(userId).child(newFileName);
+                TextView tvUri = (TextView) findViewById(R.id.tvUri);
+                tvUri.setText(newFileName);
+            }
         }
     }
 
@@ -172,13 +229,15 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         tvDate.setText(date);
     }
 
-    public void onAddClick(View view){
+    public void onAddClick(View view) {
         Intent i = new Intent(this, CameraActivity.class);
-        startActivity(i);
+        i.putExtra("activity", "EditPost");
+        //startActivity(i);
+        startActivityForResult(i, CAMERA_REQUEST_CODE);
     }
 
-    public void hideSoftKeyboard(View view){
-        InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+    public void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -193,20 +252,20 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         superOnBackPressed();
-//                        if(photoUri != null) {
-//                            // Delete the file
-//                            picRef.delete().addOnSuccessListener(new OnSuccessListener() {
-//                                @Override
-//                                public void onSuccess(Object o) {}
-//                                public void onSuccess(Void aVoid) {}
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception exception) {
-//                                    // Uh-oh, an error occurred!
-//                                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
-//                                }
-//                            });
-//                        }
+                        if(!(newFileName.isEmpty())) {
+                            // Delete the file
+                            newPicRef.delete().addOnSuccessListener(new OnSuccessListener() {
+                                @Override
+                                public void onSuccess(Object o) {}
+                                public void onSuccess(Void aVoid) {}
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Uh-oh, an error occurred!
+                                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

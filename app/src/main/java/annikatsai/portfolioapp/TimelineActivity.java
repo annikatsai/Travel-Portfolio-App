@@ -255,6 +255,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                         });
                 postAdapter.remove(oldPost);
                 postAdapter.add(post);
+                if(post.fileName == null){
+                    fileName = "";
+                }
                 postAdapter.notifyDataSetChanged();
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 postAdapter.clear();

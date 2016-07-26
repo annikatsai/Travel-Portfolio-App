@@ -99,6 +99,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
     public void onAddClick(View view) {
         Intent i = new Intent(this, CameraActivity.class);
+        i.putExtra("activity", "Post");
         startActivityForResult(i, REQUEST_CODE);
     }
 

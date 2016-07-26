@@ -154,9 +154,12 @@
         android:id="@+id/tvUri"
         android:textSize="14sp"
         android:hint="@string/hintForUri"
-        android:layout_alignBaseline="@+id/btnAdd"
+        android:layout_alignRight="@+id/etBody"
+        android:layout_alignEnd="@+id/etBody"
         android:layout_alignBottom="@+id/btnAdd"
-        android:layout_centerHorizontal="true" />
+        android:layout_toRightOf="@+id/btnAdd"
+        android:layout_toEndOf="@+id/btnAdd"
+        android:layout_alignTop="@+id/btnAdd" />
 
 </RelativeLayout>
 
