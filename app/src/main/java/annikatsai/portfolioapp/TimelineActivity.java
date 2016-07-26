@@ -319,6 +319,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 Intent intent = new Intent(TimelineActivity.this, SearchActivity.class);
                 intent.putExtra("query", query);
                 startActivityForResult(intent, SEARCHACTIVITY_REQUESTCODE);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 return true;
             }
 

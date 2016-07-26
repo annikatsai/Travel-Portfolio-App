@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private String TAG = "LoginActivity";
-    private static boolean firstLogin = false;   // change
+    private static boolean firstLogin = true;   // change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +71,11 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed in
                     Toast.makeText(LoginActivity.this, "User not null", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    //if (firstLogin) {
+                    if (firstLogin) {
                         User u = new User(user.getUid(), user.getDisplayName(), user.getEmail());
                         mDatabase.child("users").child(user.getUid()).setValue(u);
-                      //  firstLogin = false;
-                    //}
+                        firstLogin = false;
+                    }
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
