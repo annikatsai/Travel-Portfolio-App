@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -55,14 +54,13 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private final int REQUEST_CODE = 20;
     private Location latlngLocation;
     private String locationName;
-    Uri photoUri = null;
 
     private FirebaseStorage mStorage;
-    StorageReference storageRef;
+    private StorageReference storageRef;
 
-    String fileName;
-    StorageReference picRef;
-    String userId;
+    private String fileName;
+    private StorageReference picRef;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +86,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
         latlngLocation = new Location(null, "");
 
-        // Create an instance of FirebaseStorage
         mStorage = FirebaseStorage.getInstance();
-        // Create a storage reference from our app. Note: might need to edit gs:// below
         storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // Toast.makeText(getApplicationContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
-
     }
 
     public void onAddClick(View view) {
@@ -114,7 +108,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         superOnBackPressed();
-                        if(photoUri != null) {
+                        if(fileName != null) {
                             // Delete the file
                             picRef.delete().addOnSuccessListener(new OnSuccessListener() {
                                 @Override
@@ -255,11 +249,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         }
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                photoUri = i.getData();
                 fileName = i.getExtras().getString("fileName");
                 picRef = storageRef.child("users").child(userId).child(fileName);
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);
-                tvUri.setText(photoUri.toString());
+                tvUri.setText(fileName);
             } else { // RESULT_CANCELED
                 Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
             }

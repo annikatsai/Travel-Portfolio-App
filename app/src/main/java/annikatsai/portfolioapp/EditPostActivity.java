@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -51,17 +50,16 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
 
 
     private FirebaseStorage mStorage;
-    StorageReference storageRef;
+    private StorageReference storageRef;
 
     private String fileName;
-    StorageReference picRef;
+    private StorageReference picRef;
 
     private final int CAMERA_REQUEST_CODE = 13;
-    String userId;
+    private String userId;
 
     private String newFileName;
-    StorageReference newPicRef;
-    Uri photoUri = null;
+    private StorageReference newPicRef;
     TextView tvUri;
 
     @Override
@@ -79,9 +77,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         toolbarTitle.setText("Edit Post");
         toolbarTitle.setTypeface(titleFont);
 
-        // Create an instance of FirebaseStorage
         mStorage = FirebaseStorage.getInstance();
-        // Create a storage reference from our app. Note: might need to edit gs:// below
         storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -135,18 +131,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName);
 
         if((fileName != null) && !(fileName.isEmpty())){
-            // Delete the file
-            picRef.delete().addOnSuccessListener(new OnSuccessListener() {
-                @Override
-                public void onSuccess(Object o) {}
-                public void onSuccess(Void aVoid) {}
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Uh-oh, an error occurred!
-                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
-                }
-            });
+            deletePicRef(picRef);
         }
 
         Intent i = new Intent();
@@ -196,7 +181,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             }
         } else if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                photoUri = data.getData();
                 newFileName = data.getExtras().getString("fileName");
                 newPicRef = storageRef.child("users").child(userId).child(newFileName);
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);
@@ -232,7 +216,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onAddClick(View view) {
         Intent i = new Intent(this, CameraActivity.class);
         i.putExtra("activity", "EditPost");
-        //startActivity(i);
         startActivityForResult(i, CAMERA_REQUEST_CODE);
     }
 
@@ -253,18 +236,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                     public void onClick(DialogInterface dialogInterface, int i) {
                         superOnBackPressed();
                         if(!(newFileName.isEmpty())) {
-                            // Delete the file
-                            newPicRef.delete().addOnSuccessListener(new OnSuccessListener() {
-                                @Override
-                                public void onSuccess(Object o) {}
-                                public void onSuccess(Void aVoid) {}
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Uh-oh, an error occurred!
-                                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            deletePicRef(newPicRef);
                         }
                     }
                 })
@@ -277,6 +249,21 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void deletePicRef(StorageReference ref){
+        // Deletes the file
+        ref.delete().addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {}
+            public void onSuccess(Void aVoid) {}
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void superOnBackPressed() {
