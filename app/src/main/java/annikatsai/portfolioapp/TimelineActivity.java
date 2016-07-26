@@ -9,14 +9,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +47,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     private String TAG = "TimelineActivity";
     private ArrayList<Post> posts = new ArrayList<>();
     private PostsArrayAdapter postAdapter;
-    private ListView lvPosts;
+    private RecyclerView rvPosts;
     private Post oldPost;
+    private int postPosition;
 
     private FirebaseStorage mStorage;
     StorageReference storageRef;
@@ -64,8 +65,12 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         // Sets up array list, adapter, list view, and listeners
         postAdapter = new PostsArrayAdapter(this, posts);
         postAdapter.setCallback(this);
-        lvPosts = (ListView) findViewById(R.id.lvPosts);
-        lvPosts.setAdapter(postAdapter);
+
+        rvPosts = (RecyclerView) findViewById(R.id.rvPosts);
+        rvPosts.setAdapter(postAdapter);
+        rvPosts.setLayoutManager(new LinearLayoutManager(this));
+        rvPosts.setHasFixedSize(true);
+
         setupViewListeners();
 
         // Customizing toolbar
@@ -94,9 +99,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     // add to adapter
                     Post post = dataSnapshot.getValue(Post.class);
-                    postAdapter.add(post);
+//                    postAdapter.add(post);
+                    posts.add(post);
                     postAdapter.notifyDataSetChanged();
-                    // increment posts
                 }
 
                 @Override
@@ -108,25 +113,21 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 }
 
                 @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                }
-
+                public void onChildRemoved(DataSnapshot dataSnapshot) {}
                 @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                }
-
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
+                public void onCancelled(DatabaseError databaseError) {}
             });
         }
     }
 
     private void setupViewListeners() {
-        lvPosts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ItemClickSupport.addTo(rvPosts).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                launchViewPost(i);
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                postPosition = position;
+                launchViewPost(position);
             }
         });
     }
@@ -135,6 +136,10 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         Intent i = new Intent(TimelineActivity.this, ViewPostActivity.class);
         i.putExtra("post", Parcels.wrap(posts.get(position)));
         startActivity(i);
+    }
+
+    public int getPostPosition(Post post) {
+        return postPosition;
     }
 
     int REQUEST_CODE = 5;
@@ -150,6 +155,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 
     @Override
     public void deletePost(int position) {
+        postPosition = position;
         final int pos = position;
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -174,7 +180,10 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 if (databaseError != null) {
                                     Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    postAdapter.remove(post);
+//                                    postAdapter.remove(post);
+                                    posts.remove(post);
+                                    postAdapter.notifyDataSetChanged();
+
                                     if (!(fileName.isEmpty())) {
                                         // Delete the file
                                         picRef.delete().addOnSuccessListener(new OnSuccessListener() {
@@ -253,38 +262,36 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 }
                             }
                         });
-                postAdapter.remove(oldPost);
-                postAdapter.add(post);
+                posts.remove(oldPost);
+                posts.add(post);
+                postAdapter.notifyDataSetChanged();
                 if(post.fileName == null){
                     fileName = "";
                 }
-                postAdapter.notifyDataSetChanged();
+
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
-                postAdapter.clear();
+//                postAdapter.clear();
+                for (int i = 0; i < postAdapter.getItemCount(); i++) {
+                    posts.remove(i);
+                }
                 Query searchQuery = mDataBaseReference.child("users").child(userId).child("posts").orderByKey();
                 searchQuery.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Post post = dataSnapshot.getValue(Post.class);
-                        postAdapter.add(post);
+//                        postAdapter.add(post);
+                        posts.add(post);
                         postAdapter.notifyDataSetChanged();
                     }
 
                     @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    }
-
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
                     @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    }
-
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
                     @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    }
-
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
+                    public void onCancelled(DatabaseError databaseError) {}
                 });
             }
         }
@@ -294,9 +301,28 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.signOut) {
-            LoginManager.getInstance().logOut();        // Facebook sign out
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Sign Out");
+            alertDialogBuilder
+                    .setMessage("Are you sure you want to sign out?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            LoginManager.getInstance().logOut();        // Facebook sign out
+                            startActivity(new Intent(TimelineActivity.this, LoginActivity.class));
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

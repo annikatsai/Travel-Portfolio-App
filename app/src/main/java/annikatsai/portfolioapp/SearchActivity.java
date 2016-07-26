@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,8 +32,9 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
     private PostsArrayAdapter postsArrayAdapter;
     private ArrayList<Post> posts = new ArrayList<>();
     private DatabaseReference mDataBaseReference;
-    private ListView lvSearchResults;
+    private RecyclerView rvSearchResults;
     private Post oldPost;
+    private int postPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +52,13 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
         toolbarTitle.setText("Search Results for: " + query);
         toolbarTitle.setTypeface(titleFont);
 
-        lvSearchResults = (ListView) findViewById(R.id.lvSearchResults);
+        rvSearchResults = (RecyclerView) findViewById(R.id.rvSearchResults);
         postsArrayAdapter = new PostsArrayAdapter(this, posts);
         postsArrayAdapter.setCallback(this);
-        lvSearchResults.setAdapter(postsArrayAdapter);
+        rvSearchResults.setAdapter(postsArrayAdapter);
+        rvSearchResults.setLayoutManager(new LinearLayoutManager(this));
+        rvSearchResults.setHasFixedSize(true);
+
         mDataBaseReference = FirebaseDatabase.getInstance().getReference();
 
         performSearch(query);
@@ -68,7 +72,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Post post = dataSnapshot.getValue(Post.class);
-                postsArrayAdapter.add(post);
+                posts.add(post);
                 postsArrayAdapter.notifyDataSetChanged();
             }
             @Override
@@ -89,10 +93,11 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
     }
 
     private void setupViewListeners() {
-        lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ItemClickSupport.addTo(rvSearchResults).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                launchViewPost(i);
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                postPosition = position;
+                launchViewPost(position);
             }
         });
     }
@@ -108,14 +113,20 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
     @Override
     public void launchEditPost(int position) {
         oldPost = posts.get(position);
+        postPosition = position;
         Intent i = new Intent(SearchActivity.this, EditPostActivity.class);
         i.putExtra("editPost", Parcels.wrap(posts.get(position)));
         i.putExtra("code", "fromSearchActivity");
         startActivityForResult(i, REQUEST_CODE);
     }
 
+    public int getPostPosition(Post post) {
+        return postPosition;
+    }
+
     @Override
     public void deletePost(int position) {
+        postPosition = position;
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final Post post = posts.get(position);
         mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
@@ -124,7 +135,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                 if (databaseError != null) {
                     Toast.makeText(SearchActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    postsArrayAdapter.remove(post);
+                    posts.remove(post);
                     postsArrayAdapter.notifyDataSetChanged();
                     Toast.makeText(SearchActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
                 }
@@ -162,8 +173,8 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                             if (databaseError != null) {
                                 Toast.makeText(SearchActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                             } else {
-                                postsArrayAdapter.remove(oldPost);
-                                postsArrayAdapter.add(post);
+                                posts.remove(oldPost);
+                                posts.add(post);
                                 postsArrayAdapter.notifyDataSetChanged();
                                 Toast.makeText(SearchActivity.this, post.getTitle(), Toast.LENGTH_SHORT).show();
                                 Toast.makeText(SearchActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
