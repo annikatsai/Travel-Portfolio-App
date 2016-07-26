@@ -136,17 +136,33 @@
         android:layout_alignStart="@+id/fabDate" />
 
 
-    <Button
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/submit"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:id="@+id/btnSave"-->
+        <!--android:onClick="onSubmit"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignRight="@+id/tvDivider"-->
+        <!--android:layout_alignEnd="@+id/tvDivider" />-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_check"
+        app:backgroundTint="@color/colorAccent"
+        android:tint="@android:color/white"
+        android:scaleType="center"
+        app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/submit"
-        android:textAllCaps="false"
-        android:id="@+id/btnSave"
+        android:id="@+id/fabSubmit"
         android:onClick="onSubmit"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="21dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/tvDivider"
-        android:layout_alignEnd="@+id/tvDivider" />
+        android:layout_alignRight="@+id/etBody"
+        android:layout_alignEnd="@+id/etBody" />
+
 
     <TextView
         android:layout_width="wrap_content"

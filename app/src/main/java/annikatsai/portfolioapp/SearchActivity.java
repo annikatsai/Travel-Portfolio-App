@@ -85,6 +85,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
     public void onFinishSearch(View view) {
         setResult(RESULT_OK);
         finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
     }
 
     private void setupViewListeners() {

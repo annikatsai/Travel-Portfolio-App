@@ -63,6 +63,6 @@ public class ViewPostActivity extends AppCompatActivity {
 
         shareIntent.setType("image/*");
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(shareIntent, "Share Image"));
+        startActivity(Intent.createChooser(shareIntent, "Share"));
     }
 }
