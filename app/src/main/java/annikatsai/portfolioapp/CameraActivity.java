@@ -70,7 +70,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Create an instance of FirebaseStorage
         mStorage = FirebaseStorage.getInstance();
-        // Create a storage reference from our app. Note: might need to edit gs:// below
+        // Create a storage reference from our app.
         storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -98,12 +98,20 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public void onSubmitClick(View view){
-        Intent i = new Intent(this, PostActivity.class);
-        if(photoUri == null){
+        String activity = getIntent().getStringExtra("activity");
+        Intent i = null;
+        if (activity.equals("Post")) {
+            i = new Intent(this, PostActivity.class);
+
+        } else if (activity.equals("EditPost")) {
+            i = new Intent(this, EditPostActivity.class);
+        }
+        if (photoUri == null) {
             setResult(RESULT_CANCELED);
-        } else{
-            i.setData(photoUri);
-            i.putExtra("fileName", fileName);
+        } else {
+            if (i != null) {
+                i.putExtra("fileName", fileName);
+            }
             setResult(RESULT_OK, i);
         }
         finish();

@@ -165,7 +165,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                         final Post post = posts.get(pos);
                         fileName = posts.get(pos).getFileName();
                         // Toast.makeText(getApplicationContext(), "File Name: " + fileName, Toast.LENGTH_LONG).show();
-                        if(!(fileName.isEmpty())){
+                        if((fileName != null) && !(fileName.isEmpty())){
                             picRef = storageRef.child("users").child(userId).child(fileName);
                         }
                         mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
@@ -255,6 +255,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                         });
                 postAdapter.remove(oldPost);
                 postAdapter.add(post);
+                if(post.fileName == null){
+                    fileName = "";
+                }
                 postAdapter.notifyDataSetChanged();
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 postAdapter.clear();
