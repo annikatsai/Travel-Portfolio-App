@@ -234,7 +234,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         superOnBackPressed();
-                        if(!(newFileName.isEmpty())) {
+                        if((fileName != null) && !(newFileName.isEmpty())) {
                             deletePicRef(newPicRef);
                         }
                     }
