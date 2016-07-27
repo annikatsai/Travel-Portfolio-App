@@ -10,7 +10,6 @@ public class User {
     public String email;
     public String name;
     public String coverPhotoUrl;
-    public Integer numPosts;
 
     public User () {}
 
@@ -18,7 +17,6 @@ public class User {
         this.id = id;
         this.email = email;
         this.name = name;
-        this.numPosts = 0;
     }
 
     public String getEmail() {

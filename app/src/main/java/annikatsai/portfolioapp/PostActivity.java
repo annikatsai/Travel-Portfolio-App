@@ -237,8 +237,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 Place place = PlaceAutocomplete.getPlace(this, i);
                 LatLng loc = place.getLatLng();
                 locationName = place.getName().toString();
-                //latlngLocation = new Location(loc, locationName);
                 latlngLocation.setLatLngLocation(loc);
+                latlngLocation.latitude = loc.latitude;
+                latlngLocation.longitude = loc.longitude;
                 latlngLocation.setName(locationName);
                 tvLocation.setText(place.getName());
                 Log.i("TAG", "Place: " + place.getName());

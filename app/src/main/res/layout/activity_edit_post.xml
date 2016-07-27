@@ -138,13 +138,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"
-        android:textAllCaps="false"
+        android:textAllCaps="true"
         android:id="@+id/btnSave"
         android:onClick="onFinishEdit"
         android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/etBody"
-        android:layout_alignEnd="@+id/etBody" />
+        android:layout_alignEnd="@+id/etBody"
+        android:background="#FFFFFF" />
 
     <TextView
         android:layout_width="wrap_content"
