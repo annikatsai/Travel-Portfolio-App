@@ -48,7 +48,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private String locationKey;
     private Location latLngLocation;
 
-
     private FirebaseStorage mStorage;
     private StorageReference storageRef;
 
