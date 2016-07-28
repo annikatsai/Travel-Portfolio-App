@@ -39,10 +39,10 @@ public class ViewPostActivity extends AppCompatActivity {
         TextView tvDate = (TextView) findViewById(R.id.tvDate);
         TextView tvBody = (TextView) findViewById(R.id.tvBody);
 
-        tvTitle.setText(post.getTitle());
+        tvTitle.setText(post.title);
         tvLocation.setText(post.location);
-        tvDate.setText(post.getDate());
-        tvBody.setText(post.getBody());
+        tvDate.setText(post.date);
+        tvBody.setText(post.body);
     }
 
     public void onFinishView(View view) {
@@ -51,10 +51,10 @@ public class ViewPostActivity extends AppCompatActivity {
 
     public void onShareClick(View view) {
         Intent shareIntent = new Intent();
-        String title = post.getTitle();
-        String body = post.getBody();
-        if (!post.getFileName().equals("") || post.getFileName() != null) {
-            Uri pictureUri = Uri.parse(post.getFileName());
+        String title = post.title;
+        String body = post.body;
+        if (!post.fileName.equals("") || post.fileName != null) {
+            Uri pictureUri = Uri.parse(post.fileName);
             shareIntent.putExtra(Intent.EXTRA_STREAM, pictureUri);
         }
         shareIntent.setAction(Intent.ACTION_SEND);

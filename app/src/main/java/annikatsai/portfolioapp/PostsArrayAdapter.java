@@ -74,7 +74,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
     public void onBindViewHolder(final PostsArrayAdapter.ViewHolder holder, int position) {
         final Post post = mPosts.get(position);
 
-        holder.tvTitle.setText(post.getTitle());
+        holder.tvTitle.setText(post.title);
         holder.ivImage.setImageResource(0);
         holder.btnPopupMenu.setOnClickListener(new View.OnClickListener() {
             @Override

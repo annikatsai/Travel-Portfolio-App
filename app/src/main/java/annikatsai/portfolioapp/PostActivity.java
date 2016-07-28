@@ -262,13 +262,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 fileName = i.getExtras().getString("fileName");
                 downloadUrl = i.getData();
                 photoUrl = downloadUrl.toString();
-                // Toast.makeText(PostActivity.this, "Passed download: " + downloadUrl, Toast.LENGTH_SHORT).show();
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 Picasso.with(this).load(photoUrl).into(ivPreview);
                 picRef = storageRef.child("users").child(userId).child(fileName);
-                /*TextView tvUri = (TextView) findViewById(R.id.tvUri);
-                tvUri.setText(fileName);*/
             } else { // RESULT_CANCELED
                 Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
             }

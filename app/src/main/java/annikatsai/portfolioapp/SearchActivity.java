@@ -129,7 +129,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
         postPosition = position;
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final Post post = posts.get(position);
-        mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+        mDataBaseReference.child("users").child(userId).child("posts").child(post.key).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
@@ -166,7 +166,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                     .child("users")
                     .child(userId)
                     .child("posts")
-                    .child(post.getKey())
+                    .child(post.key)
                     .setValue(editedPost, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -176,7 +176,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                                 posts.remove(oldPost);
                                 posts.add(post);
                                 postsArrayAdapter.notifyDataSetChanged();
-                                Toast.makeText(SearchActivity.this, post.getTitle(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SearchActivity.this, post.title, Toast.LENGTH_SHORT).show();
                                 Toast.makeText(SearchActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
                             }
                         }

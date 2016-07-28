@@ -40,26 +40,6 @@ public class Post extends Object {
         this.photoUrl = photoUrl;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getFileName(){
-        return fileName;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }

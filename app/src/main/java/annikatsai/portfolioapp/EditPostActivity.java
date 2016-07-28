@@ -65,7 +65,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private Uri downloadUrl;
     private String newPhotoUrl;
     String photoUrl;
-    //TextView tvUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,36 +98,33 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         etBody = (EditText) findViewById(R.id.etBody);
         etBody.append("");
 
-        //tvUri = (TextView) findViewById(R.id.tvUri);
-
-        postKey = editPost.getKey();
-        if (editPost.getTitle().equals("")) {
+        postKey = editPost.key;
+        if (editPost.title.equals("")) {
             etTitle.setText("");
         } else {
-            etTitle.append(editPost.getTitle());
+            etTitle.append(editPost.title);
         }
         if (editPost.location.equals("")) {
             tvLocation.setText("");
         } else {
             tvLocation.append(editPost.location);
         }
-        if (editPost.getDate().equals("")) {
+        if (editPost.date.equals("")) {
             tvDate.setText("");
         } else {
-            tvDate.append(editPost.getDate());
+            tvDate.append(editPost.date);
         }
-        if (editPost.getBody().equals("")) {
+        if (editPost.body.equals("")) {
             etBody.setText("");
         } else {
-            etBody.append(editPost.getBody());
+            etBody.append(editPost.body);
         }
 
-        fileName = editPost.getFileName();
+        fileName = editPost.fileName;
         if((fileName != null) && !(fileName.isEmpty())){
             picRef = storageRef.child("users").child(userId).child(fileName);
         }
         photoUrl = editPost.photoUrl;
-        //tvUri.setText(fileName);
     }
 
     public void onFinishEdit(View v) {
@@ -192,9 +188,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                 downloadUrl = data.getData();
                 newPhotoUrl = downloadUrl.toString();
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                Picasso.with(this).load(photoUrl).into(ivPreview);
-                /*TextView tvUri = (TextView) findViewById(R.id.tvUri);
-                tvUri.setText(newFileName);*/
+                ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
+                Picasso.with(this).load(newPhotoUrl).into(ivPreview);
             }
         }
     }
