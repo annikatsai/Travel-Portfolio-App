@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
@@ -255,10 +257,13 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             if (resultCode == RESULT_OK) {
                 fileName = i.getExtras().getString("fileName");
                 downloadUrl = i.getData();
-                Toast.makeText(PostActivity.this, "Passed download: " + downloadUrl, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(PostActivity.this, "Passed download: " + downloadUrl, Toast.LENGTH_SHORT).show();
+                // Load the taken image into a preview
+                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+                Picasso.with(this).load(downloadUrl).into(ivPreview);
                 picRef = storageRef.child("users").child(userId).child(fileName);
-                TextView tvUri = (TextView) findViewById(R.id.tvUri);
-                tvUri.setText(fileName);
+                /*TextView tvUri = (TextView) findViewById(R.id.tvUri);
+                tvUri.setText(fileName);*/
             } else { // RESULT_CANCELED
                 Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
             }
@@ -293,5 +298,4 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-
 }

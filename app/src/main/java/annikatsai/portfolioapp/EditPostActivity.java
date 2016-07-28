@@ -127,7 +127,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName);
+        //Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName);
 
         if((fileName != null) && !(fileName.isEmpty())){
             deletePicRef(picRef);
@@ -139,7 +139,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         } else if (code.equals("fromSearchActivity")) {
             i = new Intent(EditPostActivity.this, SearchActivity.class);
         }
-        i.putExtra("editPost", Parcels.wrap(post));
+        //i.putExtra("editPost", Parcels.wrap(post));
         i.putExtra("latLngLocation", Parcels.wrap(latLngLocation));
         setResult(RESULT_OK, i);
         finish();
