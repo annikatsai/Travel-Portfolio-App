@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private String TAG = "LoginActivity";
-    private static boolean firstLogin = true;   // change
+    public static boolean firstLogin = true;   // change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

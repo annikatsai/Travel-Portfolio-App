@@ -45,10 +45,6 @@ public class ViewPostActivity extends AppCompatActivity {
         tvBody.setText(post.getBody());
     }
 
-    public void onFinishView(View view) {
-        this.finish();
-    }
-
     public void onShareClick(View view) {
         Intent shareIntent = new Intent();
         String title = post.getTitle();

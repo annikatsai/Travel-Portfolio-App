@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PortfolioApp</string>
     <string name="facebook_app_id">1548302398812375</string>
-    <string name="title">App Name</string>
+    <string name="title">Roam</string>
     <string name="fb_login_protocol_scheme">fb1548302398812375</string>
     <string name="welcome">Welcome to</string>
     <string name="begin">Begin</string>

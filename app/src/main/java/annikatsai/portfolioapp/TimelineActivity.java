@@ -100,7 +100,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                     // add to adapter
                     Post post = dataSnapshot.getValue(Post.class);
 //                    postAdapter.add(post);
-                    posts.add(post);
+                    posts.add(0, post);
                     postAdapter.notifyDataSetChanged();
                 }
 
@@ -184,7 +184,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                     posts.remove(post);
                                     postAdapter.notifyDataSetChanged();
 
-                                    if (!(fileName.isEmpty())) {
+                                    if (fileName == null && !(fileName.isEmpty())) {
                                         // Delete the file
                                         picRef.delete().addOnSuccessListener(new OnSuccessListener() {
                                             @Override
@@ -262,8 +262,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 }
                             }
                         });
+                int position = posts.indexOf(oldPost);
                 posts.remove(oldPost);
-                posts.add(post);
+                posts.add(position, post);
                 postAdapter.notifyDataSetChanged();
                 if(post.fileName == null){
                     fileName = "";

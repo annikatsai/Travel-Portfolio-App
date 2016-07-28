@@ -63,12 +63,11 @@
         android:fontFamily="sans-serif-light"
         android:hint="@string/dateHint"
         android:textSize="17sp"
-        android:layout_marginTop="19dp"
-        android:layout_below="@+id/etTitle"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_alignTop="@+id/fabDate"
         android:layout_toRightOf="@+id/fabDate"
-        android:layout_toEndOf="@+id/fabDate"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp" />
+        android:layout_toEndOf="@+id/fabDate" />
 
     <Button
         android:layout_width="wrap_content"
@@ -89,7 +88,7 @@
         android:id="@+id/tvLocation"
         android:fontFamily="sans-serif-light"
         android:textSize="17sp"
-        android:layout_above="@+id/tvDivider"
+        android:layout_alignTop="@+id/fabLocation"
         android:layout_alignLeft="@+id/tvDate"
         android:layout_alignStart="@+id/tvDate" />
 
@@ -115,7 +114,8 @@
         android:layout_height="35dp"
         android:onClick="showDatePickerDialog"
         android:id="@+id/fabDate"
-        android:layout_alignBottom="@+id/tvDate"
+        android:layout_marginTop="19dp"
+        android:layout_below="@+id/etTitle"
         android:layout_alignLeft="@+id/etTitle"
         android:layout_alignStart="@+id/etTitle" />
 
@@ -130,7 +130,8 @@
         android:layout_height="35dp"
         android:id="@+id/fabLocation"
         android:onClick="selectLocation"
-        android:layout_below="@+id/fabDate"
+        android:layout_marginTop="26dp"
+        android:layout_below="@+id/tvDate"
         android:layout_alignLeft="@+id/fabDate"
         android:layout_alignStart="@+id/fabDate" />
 

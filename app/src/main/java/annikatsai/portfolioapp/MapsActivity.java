@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.view.animation.BounceInterpolator;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -62,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LatLng latLng = new LatLng(location.latitude, location.longitude);
                     Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.name));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latLng);
+                    mMap.animateCamera(cameraUpdate);
                     dropPinEffect(marker);
                 }
             }
