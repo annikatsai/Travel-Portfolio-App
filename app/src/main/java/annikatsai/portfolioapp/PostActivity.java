@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -61,6 +62,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private String fileName;
     private StorageReference picRef;
     private String userId;
+
+    Uri downloadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,6 +254,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 fileName = i.getExtras().getString("fileName");
+                downloadUrl = i.getData();
+                Toast.makeText(PostActivity.this, "Passed download: " + downloadUrl, Toast.LENGTH_SHORT).show();
                 picRef = storageRef.child("users").child(userId).child(fileName);
                 TextView tvUri = (TextView) findViewById(R.id.tvUri);
                 tvUri.setText(fileName);
