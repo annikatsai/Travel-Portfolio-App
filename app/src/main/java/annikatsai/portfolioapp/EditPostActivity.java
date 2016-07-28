@@ -66,6 +66,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private String newPhotoUrl;
     String photoUrl;
 
+    ImageView ivPreview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,26 +100,28 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         etBody = (EditText) findViewById(R.id.etBody);
         etBody.append("");
 
-        postKey = editPost.key;
-        if (editPost.title.equals("")) {
+        ivPreview = (ImageView) findViewById(R.id.ivPreview);
+
+        postKey = editPost.getKey();
+        if (editPost.getTitle().equals("")) {
             etTitle.setText("");
         } else {
-            etTitle.append(editPost.title);
+            etTitle.append(editPost.getTitle());
         }
         if (editPost.location.equals("")) {
             tvLocation.setText("");
         } else {
             tvLocation.append(editPost.location);
         }
-        if (editPost.date.equals("")) {
+        if (editPost.getDate().equals("")) {
             tvDate.setText("");
         } else {
-            tvDate.append(editPost.date);
+            tvDate.append(editPost.getDate());
         }
-        if (editPost.body.equals("")) {
+        if (editPost.getBody().equals("")) {
             etBody.setText("");
         } else {
-            etBody.append(editPost.body);
+            etBody.append(editPost.getBody());
         }
 
         fileName = editPost.fileName;
@@ -187,7 +191,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                 newPicRef = storageRef.child("users").child(userId).child(newFileName);
                 downloadUrl = data.getData();
                 newPhotoUrl = downloadUrl.toString();
-                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
                 Picasso.with(this).load(newPhotoUrl).into(ivPreview);
             }

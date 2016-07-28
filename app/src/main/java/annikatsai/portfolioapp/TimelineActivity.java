@@ -154,7 +154,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     }
 
     @Override
-    public void deletePost(int position) {
+    public void deletePost(final int position) {
         postPosition = position;
         final int pos = position;
 
@@ -169,12 +169,12 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                         final Post post = posts.get(pos);
-                        fileName = posts.get(pos).fileName;
+                        fileName = posts.get(pos).getFileName();
                         // Toast.makeText(getApplicationContext(), "File Name: " + fileName, Toast.LENGTH_LONG).show();
                         if((fileName != null) && !(fileName.isEmpty())){
                             picRef = storageRef.child("users").child(userId).child(fileName);
                         }
-                        mDataBaseReference.child("users").child(userId).child("posts").child(post.key).removeValue(new DatabaseReference.CompletionListener() {
+                        mDataBaseReference.child("users").child(userId).child("posts").child(post.getKey()).removeValue(new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 if (databaseError != null) {
@@ -251,7 +251,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                         .child("users")
                         .child(userId)
                         .child("posts")
-                        .child(post.key)
+                        .child(post.getKey())
                         .setValue(editedPost, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
