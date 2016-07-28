@@ -154,7 +154,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     }
 
     @Override
-    public void deletePost(int position) {
+    public void deletePost(final int position) {
         postPosition = position;
         final int pos = position;
 

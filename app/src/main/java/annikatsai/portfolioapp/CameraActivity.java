@@ -1,5 +1,6 @@
 package annikatsai.portfolioapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +52,8 @@ public class CameraActivity extends AppCompatActivity {
     String fileName;
 
     private DatabaseReference mDatabase;
+    ProgressDialog pd;
+    Uri downloadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,11 @@ public class CameraActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         fileName = mDatabase.child("users").child(userId).child("fileName").push().getKey();
+
+        pd = new ProgressDialog(this);
+        pd.setTitle("Loading...");
+        pd.setMessage("Please wait.");
+        pd.setCancelable(false);
     }
 
     public void onTakeClick(View view) {
@@ -111,6 +119,7 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             if (i != null) {
                 i.putExtra("fileName", fileName);
+                i.setData(downloadUrl);
             }
             setResult(RESULT_OK, i);
         }
@@ -153,6 +162,7 @@ public class CameraActivity extends AppCompatActivity {
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(image);
+                pd.show();
 
                 /*STORAGE FIREBASE CODE: START*/
                 Uri file = Uri.fromFile(new File(photoUri.getPath()));
@@ -170,8 +180,8 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        //Toast.makeText(getApplicationContext(), "downlaodUrl: " + downloadUrl, Toast.LENGTH_SHORT).show();
+                        downloadUrl = taskSnapshot.getDownloadUrl();
+                        pd.hide();
                     }
                 });
                 /*STORAGE FIREBASE CODE: END*/
@@ -193,6 +203,7 @@ public class CameraActivity extends AppCompatActivity {
                 // Load the selected image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(image);
+                pd.show();
 
                 /*STORAGE FIREBASE CODE: START*/
                 Bitmap picture = null;
@@ -218,7 +229,8 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        downloadUrl = taskSnapshot.getDownloadUrl();
+                        pd.hide();
                     }
                 });
                 /*STORAGE FIREBASE CODE: END*/

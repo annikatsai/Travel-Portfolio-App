@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import annikatsai.portfolioapp.Models.Post;
@@ -99,6 +101,10 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                 popup.show();
             }
         });
+        if(!(post.photoUrl.isEmpty())){
+            // load image
+            Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+        }
     }
 
     @Override

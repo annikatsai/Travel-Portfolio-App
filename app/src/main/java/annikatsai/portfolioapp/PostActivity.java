@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
@@ -61,6 +64,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private String fileName;
     private StorageReference picRef;
     private String userId;
+
+    Uri downloadUrl;
+    String photoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +162,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if(fileName == null){
             fileName = "";
         }
+        if(photoUrl == null){
+            photoUrl = "";
+        }
 
         final String title = etTitle.getText().toString();
         final String body = tvBody.getText().toString();
@@ -171,7 +180,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 } else {
                     Location location;
                     location = addLocationToMap(userId);
-                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName);
+                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName, photoUrl);
                 }
                 finish();
             }
@@ -200,9 +209,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         return latlngLocation;
     }
 
-    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName) {
+    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName, String photoUrl) {
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName);
+        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName, photoUrl);
         Map<String, Object> postValues = newPost.toMap();
 
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
@@ -251,9 +260,12 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 fileName = i.getExtras().getString("fileName");
+                downloadUrl = i.getData();
+                photoUrl = downloadUrl.toString();
+                // Load the taken image into a preview
+                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+                Picasso.with(this).load(photoUrl).into(ivPreview);
                 picRef = storageRef.child("users").child(userId).child(fileName);
-                TextView tvUri = (TextView) findViewById(R.id.tvUri);
-                tvUri.setText(fileName);
             } else { // RESULT_CANCELED
                 Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
             }
@@ -288,5 +300,4 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-
 }
