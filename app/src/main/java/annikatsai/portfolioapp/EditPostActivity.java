@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -59,7 +62,10 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
 
     private String newFileName;
     private StorageReference newPicRef;
-    TextView tvUri;
+    private Uri downloadUrl;
+    private String newPhotoUrl;
+    String photoUrl;
+    //TextView tvUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +99,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         etBody = (EditText) findViewById(R.id.etBody);
         etBody.append("");
 
-        tvUri = (TextView) findViewById(R.id.tvUri);
+        //tvUri = (TextView) findViewById(R.id.tvUri);
 
         postKey = editPost.getKey();
         if (editPost.getTitle().equals("")) {
@@ -121,13 +127,14 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         if((fileName != null) && !(fileName.isEmpty())){
             picRef = storageRef.child("users").child(userId).child(fileName);
         }
-        tvUri.setText(fileName);
+        photoUrl = editPost.photoUrl;
+        //tvUri.setText(fileName);
     }
 
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName);
+        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName, newPhotoUrl);
 
         if((fileName != null) && !(fileName.isEmpty())){
             deletePicRef(picRef);
@@ -182,8 +189,12 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             if (resultCode == RESULT_OK) {
                 newFileName = data.getExtras().getString("fileName");
                 newPicRef = storageRef.child("users").child(userId).child(newFileName);
-                TextView tvUri = (TextView) findViewById(R.id.tvUri);
-                tvUri.setText(newFileName);
+                downloadUrl = data.getData();
+                newPhotoUrl = downloadUrl.toString();
+                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+                Picasso.with(this).load(photoUrl).into(ivPreview);
+                /*TextView tvUri = (TextView) findViewById(R.id.tvUri);
+                tvUri.setText(newFileName);*/
             }
         }
     }
