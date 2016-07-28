@@ -33,4 +33,7 @@
     <string name="signOut">Sign Out</string>
     <string name="share">Share</string>
     <string name="done">Done</string>
+    <string name="snackbar_add">Post Added</string>
+    <string name="snackbar_delete">Post Deleted</string>
+
 </resources>

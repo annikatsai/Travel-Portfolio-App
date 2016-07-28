@@ -49,7 +49,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     private PostsArrayAdapter postAdapter;
     private RecyclerView rvPosts;
     private Post oldPost;
-    private int postPosition;
 
     private FirebaseStorage mStorage;
     StorageReference storageRef;
@@ -102,6 +101,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 //                    postAdapter.add(post);
                     posts.add(0, post);
                     postAdapter.notifyDataSetChanged();
+// Snackbar
                 }
 
                 @Override
@@ -126,7 +126,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         ItemClickSupport.addTo(rvPosts).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                postPosition = position;
                 launchViewPost(position);
             }
         });
@@ -136,10 +135,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         Intent i = new Intent(TimelineActivity.this, ViewPostActivity.class);
         i.putExtra("post", Parcels.wrap(posts.get(position)));
         startActivity(i);
-    }
-
-    public int getPostPosition(Post post) {
-        return postPosition;
     }
 
     int REQUEST_CODE = 5;
@@ -155,7 +150,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 
     @Override
     public void deletePost(int position) {
-        postPosition = position;
         final int pos = position;
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
