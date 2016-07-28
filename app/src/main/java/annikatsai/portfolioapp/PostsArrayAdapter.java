@@ -57,7 +57,6 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
     public interface PostsArrayAdapterCallback {
         public void launchEditPost(int position);
         public void deletePost(int position);
-        public int getPostPosition(Post post);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
 
 
     @Override
-    public void onBindViewHolder(final PostsArrayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final PostsArrayAdapter.ViewHolder holder, final int position) {
         final Post post = mPosts.get(position);
 
         holder.tvTitle.setText(post.getTitle());
@@ -91,9 +90,9 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                     public boolean onMenuItemClick(MenuItem item) {
                         Toast.makeText(getContext(), "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         if (item.getTitle().toString().equals("Edit")) {
-                            callback.launchEditPost(callback.getPostPosition(post));
+                            callback.launchEditPost(position);
                         } else if (item.getTitle().toString().equals("Delete")) {
-                            callback.deletePost(callback.getPostPosition(post));
+                            callback.deletePost(position);
                         }
                         return true;
                     }

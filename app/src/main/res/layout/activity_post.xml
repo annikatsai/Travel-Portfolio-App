@@ -43,7 +43,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="168dp"
         android:inputType="textMultiLine"
         android:ems="10"
         android:background="@android:color/transparent"
@@ -77,10 +77,9 @@
         android:id="@+id/btnAdd"
         android:onClick="onAddClick"
         android:textAllCaps="false"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/fabSubmit"
         android:layout_alignLeft="@+id/fabLocation"
-        android:layout_alignStart="@+id/fabLocation"
-        android:layout_marginBottom="138dp" />
+        android:layout_alignStart="@+id/fabLocation" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -136,18 +135,6 @@
         android:layout_toStartOf="@+id/tvDate" />
 
 
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/submit"-->
-        <!--android:textAllCaps="false"-->
-        <!--android:id="@+id/btnSave"-->
-        <!--android:onClick="onSubmit"-->
-        <!--android:layout_marginBottom="10dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignRight="@+id/tvDivider"-->
-        <!--android:layout_alignEnd="@+id/tvDivider" />-->
-
     <android.support.design.widget.FloatingActionButton
         android:src="@drawable/ic_check"
         app:backgroundTint="@color/colorAccent"
@@ -173,19 +160,17 @@
         android:layout_marginLeft="43dp"
         android:layout_marginStart="43dp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"
+        android:id="@+id/tvDivider2"
+        android:layout_marginBottom="17dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/btnAdd"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
 
-<!--
-<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvUri"
-        android:textSize="14sp"
-        android:hint="@string/hintForUri"
-        android:layout_alignRight="@+id/etBody"
-        android:layout_alignEnd="@+id/etBody"
-        android:layout_alignBottom="@+id/btnAdd"
-        android:layout_toRightOf="@+id/btnAdd"
-        android:layout_toEndOf="@+id/btnAdd"
-        android:layout_alignTop="@+id/btnAdd" />
--->

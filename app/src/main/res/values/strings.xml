@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PortfolioApp</string>
     <string name="facebook_app_id">1548302398812375</string>
-    <string name="title">App Name</string>
+    <string name="title">Roam</string>
     <string name="fb_login_protocol_scheme">fb1548302398812375</string>
     <string name="welcome">Welcome to</string>
     <string name="begin">Begin</string>
@@ -33,4 +33,7 @@
     <string name="signOut">Sign Out</string>
     <string name="share">Share</string>
     <string name="done">Done</string>
+    <string name="snackbar_add">Post Added</string>
+    <string name="snackbar_delete">Post Deleted</string>
+
 </resources>

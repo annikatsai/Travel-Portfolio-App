@@ -43,7 +43,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="168dp"
         android:inputType="textMultiLine"
         android:ems="10"
         android:background="@android:color/transparent"
@@ -63,12 +63,11 @@
         android:fontFamily="sans-serif-light"
         android:hint="@string/dateHint"
         android:textSize="17sp"
-        android:layout_marginTop="19dp"
-        android:layout_below="@+id/etTitle"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_alignTop="@+id/fabDate"
         android:layout_toRightOf="@+id/fabDate"
-        android:layout_toEndOf="@+id/fabDate"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp" />
+        android:layout_toEndOf="@+id/fabDate" />
 
     <Button
         android:layout_width="wrap_content"
@@ -77,10 +76,9 @@
         android:id="@+id/btnAdd"
         android:onClick="onAddClick"
         android:textAllCaps="false"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/fabLocation"
-        android:layout_alignStart="@+id/fabLocation"
-        android:layout_marginBottom="138dp" />
+        android:layout_above="@+id/btnSave"
+        android:layout_alignLeft="@+id/etBody"
+        android:layout_alignStart="@+id/etBody" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -89,7 +87,7 @@
         android:id="@+id/tvLocation"
         android:fontFamily="sans-serif-light"
         android:textSize="17sp"
-        android:layout_above="@+id/tvDivider"
+        android:layout_alignTop="@+id/fabLocation"
         android:layout_alignLeft="@+id/tvDate"
         android:layout_alignStart="@+id/tvDate" />
 
@@ -115,7 +113,8 @@
         android:layout_height="35dp"
         android:onClick="showDatePickerDialog"
         android:id="@+id/fabDate"
-        android:layout_alignBottom="@+id/tvDate"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/etTitle"
         android:layout_alignLeft="@+id/etTitle"
         android:layout_alignStart="@+id/etTitle" />
 
@@ -130,6 +129,7 @@
         android:layout_height="35dp"
         android:id="@+id/fabLocation"
         android:onClick="selectLocation"
+        android:layout_marginTop="17dp"
         android:layout_below="@+id/fabDate"
         android:layout_alignLeft="@+id/fabDate"
         android:layout_alignStart="@+id/fabDate" />
@@ -156,19 +156,21 @@
         android:layout_toEndOf="@+id/btnAdd"
         android:layout_marginLeft="43dp"
         android:layout_marginStart="43dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"
+        android:id="@+id/tvDivider2"
+        android:layout_marginBottom="17dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/btnAdd"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
 
-<!--
-<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvUri"
-        android:textSize="14sp"
-        android:hint="@string/hintForUri"
-        android:layout_alignBottom="@+id/btnAdd"
-        android:layout_alignRight="@+id/tvDivider"
-        android:layout_alignEnd="@+id/tvDivider"
-        android:layout_toEndOf="@+id/btnAdd"
-        android:layout_alignTop="@+id/btnAdd"
-        android:layout_toRightOf="@+id/btnAdd" />
--->
+
+
+

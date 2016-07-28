@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnArrowBack"
         android:background="@drawable/ic_arrow"
+        android:backgroundTint="@android:color/white"
         android:layout_marginTop="13dp"
         android:layout_marginRight="13dp"
         android:onClick="onFinishSearch"
