@@ -51,6 +51,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private String postKey, locationKey;
     private String TAG = "PostActivity";
     private TextView tvLocation;
+    private ImageView ivPreview;
     private EditText etTitle;
     private TextView etBody;
     private TextView tvDate;
@@ -84,6 +85,14 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        ivPreview = (ImageView) findViewById(R.id.ivPreview);
+        ivPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddClick(view);
+            }
+        });
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -269,7 +278,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 downloadUrl = i.getData();
                 photoUrl = downloadUrl.toString();
                 // Load the taken image into a preview
-                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+//                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 Picasso.with(this).load(photoUrl).into(ivPreview);
                 picRef = storageRef.child("users").child(userId).child(fileName);
             } else { // RESULT_CANCELED

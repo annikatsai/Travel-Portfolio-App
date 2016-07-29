@@ -3,23 +3,19 @@ package annikatsai.portfolioapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -333,32 +329,32 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
-        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
-        EditText et = (EditText) searchView.findViewById(searchEditId);
-        et.setTextColor(Color.WHITE);
-        et.setHintTextColor(Color.WHITE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                Intent intent = new Intent(TimelineActivity.this, SearchActivity.class);
-                intent.putExtra("query", query);
-                startActivityForResult(intent, SEARCHACTIVITY_REQUESTCODE);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-
-                searchView.clearFocus();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//
+//        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
+//        EditText et = (EditText) searchView.findViewById(searchEditId);
+//        et.setTextColor(Color.WHITE);
+//        et.setHintTextColor(Color.WHITE);
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//
+//                Intent intent = new Intent(TimelineActivity.this, SearchActivity.class);
+//                intent.putExtra("query", query);
+//                startActivityForResult(intent, SEARCHACTIVITY_REQUESTCODE);
+//                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//
+//                searchView.clearFocus();
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
         return super.onCreateOptionsMenu(menu);
     }
 
