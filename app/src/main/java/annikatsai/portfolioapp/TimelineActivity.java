@@ -52,7 +52,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     private FirebaseStorage mStorage;
     StorageReference storageRef;
 
-    StorageReference picRef;
+    StorageReference picRef = null;
     String fileName = null;
 
     @Override
@@ -160,7 +160,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                         final Post post = posts.get(pos);
-                        fileName = posts.get(pos).getFileName();
+                        fileName = post.getFileName();
                         // Toast.makeText(getApplicationContext(), "File Name: " + fileName, Toast.LENGTH_LONG).show();
                         if((fileName != null) && !(fileName.isEmpty())){
                             picRef = storageRef.child("users").child(userId).child(fileName);
@@ -172,9 +172,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                     Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
                                     posts.remove(post);
-                                    postAdapter.notifyDataSetChanged();
-
-                                    if (fileName == null && !(fileName.isEmpty())) {
+                                    if (picRef != null) {
                                         // Delete the file
                                         picRef.delete().addOnSuccessListener(new OnSuccessListener() {
                                             @Override
