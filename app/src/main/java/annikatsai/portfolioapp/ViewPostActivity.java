@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -16,6 +19,7 @@ import annikatsai.portfolioapp.Models.Post;
 public class ViewPostActivity extends AppCompatActivity {
 
     private Post post;
+    private ImageView ivPreview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,12 @@ public class ViewPostActivity extends AppCompatActivity {
         tvLocation.setText(post.location);
         tvDate.setText(post.getDate());
         tvBody.setText(post.getBody());
+        ivPreview = (ImageView) findViewById(R.id.ivPreview);
+        if(post.photoUrl != null && !(post.photoUrl.isEmpty())) {
+            Picasso.with(this).load(post.photoUrl).fit().centerCrop().into(ivPreview);
+        } else {
+            Picasso.with(this).load(R.drawable.default_photo).fit().centerCrop().into(ivPreview);
+        }
     }
 
     public void onShareClick(View view) {

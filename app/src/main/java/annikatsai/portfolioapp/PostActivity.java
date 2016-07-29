@@ -68,8 +68,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private StorageReference picRef;
     private String userId;
 
-    Uri downloadUrl;
-    String photoUrl;
+    private Uri downloadUrl;
+    private String photoUrl;
+
+    private ImageView ivPlus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 onAddClick(view);
             }
         });
+        ivPlus = (ImageView) findViewById(R.id.ivPlus);
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -278,7 +281,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 downloadUrl = i.getData();
                 photoUrl = downloadUrl.toString();
                 // Load the taken image into a preview
-//                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+                ivPlus.setVisibility(View.INVISIBLE);
                 Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
                 picRef = storageRef.child("users").child(userId).child(fileName);
             } else { // RESULT_CANCELED
