@@ -54,6 +54,7 @@ public class CameraActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     ProgressDialog pd;
     Uri downloadUrl;
+    String realOrientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,12 @@ public class CameraActivity extends AppCompatActivity {
         ivPreview.setImageBitmap(bm);
 
         image = bm;
+
+        if(rotationAngle == 180 || rotationAngle == 0){
+            realOrientation = "v";
+        } else {
+            realOrientation = "h";
+        }
     }
 
     public void onSubmitClick(View view){
@@ -120,6 +127,7 @@ public class CameraActivity extends AppCompatActivity {
             if (i != null) {
                 i.putExtra("fileName", fileName);
                 i.setData(downloadUrl);
+                i.putExtra("realOrientation", realOrientation);
             }
             setResult(RESULT_OK, i);
         }
@@ -156,7 +164,6 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 photoUri = getPhotoFileUri(fileName);
-                // by this point we have the camera photo on disk
                 image = rotateBitmapOrientation(photoUri);
 
                 // Load the taken image into a preview
@@ -204,6 +211,8 @@ public class CameraActivity extends AppCompatActivity {
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(image);
                 pd.show();
+
+                realOrientation = "h";
 
                 /*STORAGE FIREBASE CODE: START*/
                 Bitmap picture = null;
@@ -306,9 +315,19 @@ public class CameraActivity extends AppCompatActivity {
         String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
         int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
         int rotationAngle = 0;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        realOrientation = "h";
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90){
+            rotationAngle = 90;
+            realOrientation = "v"; //double check this
+        }
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180){
+            rotationAngle = 180;
+            realOrientation = "h"; //double check this
+        }
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270){
+            rotationAngle = 270;
+            realOrientation = "v"; //double check this
+        }
 
         // Rotate Bitmap
         Matrix matrix = new Matrix();

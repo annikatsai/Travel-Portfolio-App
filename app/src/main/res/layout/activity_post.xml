@@ -83,7 +83,6 @@
         android:layout_alignLeft="@+id/tvDate"
         android:layout_alignStart="@+id/tvDate" />
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -109,7 +108,6 @@
         android:layout_alignBottom="@+id/tvDate"
         android:layout_alignLeft="@+id/etTitle"
         android:layout_alignStart="@+id/etTitle" />
-
 
     <android.support.design.widget.FloatingActionButton
         android:src="@drawable/ic_location"
@@ -155,7 +153,6 @@
         android:layout_toRightOf="@+id/tvDate"
         android:layout_above="@+id/etBody" />
 
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -167,6 +164,5 @@
         android:layout_above="@+id/tvLocation"
         android:layout_alignRight="@+id/etBody"
         android:layout_alignEnd="@+id/etBody" />
-
 </RelativeLayout>
 

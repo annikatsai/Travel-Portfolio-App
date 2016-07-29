@@ -70,6 +70,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
 
     ImageView ivPreview;
 
+    private String newRealOrientation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,7 +146,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName, newPhotoUrl);
+        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName, newPhotoUrl, newRealOrientation);
 
         if((fileName != null) && !(fileName.isEmpty())){
             deletePicRef(picRef);
@@ -201,6 +203,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                 newPicRef = storageRef.child("users").child(userId).child(newFileName);
                 downloadUrl = data.getData();
                 newPhotoUrl = downloadUrl.toString();
+                newRealOrientation = data.getExtras().getString("realOrientation");
                 ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
                 Picasso.with(this).load(newPhotoUrl).into(ivPreview);
             }

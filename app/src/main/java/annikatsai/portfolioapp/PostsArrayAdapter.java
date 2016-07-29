@@ -102,7 +102,13 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
         });
         if(!(post.photoUrl.isEmpty())){
             // load image
-            Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+            // Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+            // Load the taken image into a preview
+            if(post.realOrientation.equals("h")){
+                Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+            } else if(post.realOrientation.equals("v")){
+                Picasso.with(getContext()).load(post.photoUrl).rotate(90f).into(holder.ivImage);
+            }
         } else {
             Picasso.with(getContext()).load(R.drawable.default_photo).fit().centerCrop().into(holder.ivImage);
         }

@@ -73,6 +73,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
     private ImageView ivPlus;
 
+    private String realOrientation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,6 +185,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if(photoUrl == null){
             photoUrl = "";
         }
+        if(realOrientation == null){
+            realOrientation = "";
+        }
 
         final String title = etTitle.getText().toString();
         final String body = etBody.getText().toString();
@@ -198,7 +203,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 } else {
                     Location location;
                     location = addLocationToMap(userId);
-                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName, photoUrl);
+                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName, photoUrl, realOrientation);
                 }
                 finish();
             }
@@ -227,9 +232,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         return latlngLocation;
     }
 
-    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName, String photoUrl) {
+    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName, String photoUrl, String realOrientation) {
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName, photoUrl);
+        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName, photoUrl, realOrientation);
         Map<String, Object> postValues = newPost.toMap();
 
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
@@ -279,10 +284,18 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             if (resultCode == RESULT_OK) {
                 fileName = i.getExtras().getString("fileName");
                 downloadUrl = i.getData();
+
+                realOrientation = i.getExtras().getString("realOrientation");
+
                 photoUrl = downloadUrl.toString();
-                // Load the taken image into a preview
                 ivPlus.setVisibility(View.INVISIBLE);
-                Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+
+                // Load the taken image into a preview
+                if(realOrientation.equals("h")){
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+                } else if(realOrientation.equals("v")){
+                    Picasso.with(this).load(photoUrl).rotate(90f).into(ivPreview);
+                }
                 picRef = storageRef.child("users").child(userId).child(fileName);
             } else { // RESULT_CANCELED
                 Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
