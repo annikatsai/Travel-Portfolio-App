@@ -36,5 +36,9 @@
     <string name="snackbar_add">Post Added</string>
     <string name="snackbar_delete">Post Deleted</string>
     <string name="snackbar_action">Undo</string>
+    <string name="viewTimeline">Go to Timeline</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
 
 </resources>

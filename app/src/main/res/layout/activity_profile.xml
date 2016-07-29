@@ -48,8 +48,7 @@
         android:translationZ="10dp"
         android:layout_alignBottom="@+id/ivCoverPhoto"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="31dp" />
-
+        android:layout_marginBottom="31dp"/>
     <ImageView
         android:id="@+id/ivCoverPhoto"
         android:layout_width="360dp"
