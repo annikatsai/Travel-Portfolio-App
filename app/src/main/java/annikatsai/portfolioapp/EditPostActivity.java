@@ -129,6 +129,10 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             picRef = storageRef.child("users").child(userId).child(fileName);
         }
         photoUrl = editPost.photoUrl;
+        if((photoUrl != null) && !(photoUrl.isEmpty())) {
+            ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
+            Picasso.with(this).load(photoUrl).into(ivPreview);
+        }
     }
 
     public void onFinishEdit(View v) {

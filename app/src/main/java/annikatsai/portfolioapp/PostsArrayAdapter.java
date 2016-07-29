@@ -103,6 +103,8 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
         if(!(post.photoUrl.isEmpty())){
             // load image
             Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+        } else {
+            Picasso.with(getContext()).load(R.drawable.default_photo).fit().centerCrop().into(holder.ivImage);
         }
     }
 
