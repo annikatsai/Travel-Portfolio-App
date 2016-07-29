@@ -25,7 +25,6 @@
         android:id="@+id/tvTitle"
         android:textColor="#FFFFFF"
         android:textSize="70sp"
-        android:layout_marginTop="20dp"
         android:layout_below="@+id/tvWelcome"
         android:layout_centerHorizontal="true" />
 
@@ -36,8 +35,8 @@
         android:id="@+id/tvWelcome"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:layout_marginTop="60dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -48,6 +47,15 @@
         android:textAllCaps="false"
         android:layout_marginBottom="78dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@mipmap/ic_icon"
+        android:layout_marginTop="24dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
 

@@ -49,7 +49,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
-        toolbarTitle.setText("Search Results for: " + query);
+        toolbarTitle.setText("Search Results for: ");
         toolbarTitle.setTypeface(titleFont);
 
         rvSearchResults = (RecyclerView) findViewById(R.id.rvSearchResults);

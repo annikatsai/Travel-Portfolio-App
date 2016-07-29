@@ -11,12 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +100,10 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         etBody = (EditText) findViewById(R.id.etBody);
+        etBody.setScroller(new Scroller(getApplicationContext()));
+        etBody.setMaxLines(10);
+        etBody.setVerticalScrollBarEnabled(true);
+        etBody.setMovementMethod(new ScrollingMovementMethod());
         etBody.append("");
 
         ivPreview = (ImageView) findViewById(R.id.ivPreview);
