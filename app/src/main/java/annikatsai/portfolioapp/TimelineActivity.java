@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -98,20 +97,18 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     // add to adapter
                     Post post = dataSnapshot.getValue(Post.class);
-//                    postAdapter.add(post);
                     posts.add(0, post);
                     postAdapter.notifyDataSetChanged();
-// Snackbar
+                    Snackbar.make(getCurrentFocus(), R.string.snackbar_add, Snackbar.LENGTH_LONG).setAction(R.string.snackbar_action, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            deletePost(0);
+                        }
+                    }).show();
                 }
 
                 @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                    Post post = dataSnapshot.getValue(Post.class);
-//                    postAdapter.remove(oldPost);
-//                    postAdapter.add(post);
-//                    postAdapter.notifyDataSetChanged();
-                }
-
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {}
                 @Override
@@ -174,7 +171,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                 if (databaseError != null) {
                                     Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-//                                    postAdapter.remove(post);
                                     posts.remove(post);
                                     postAdapter.notifyDataSetChanged();
 
@@ -201,9 +197,10 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 if (databaseError != null) {
-                                    Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+                                    Snackbar.make(getCurrentFocus(), R.string.snackbar_delete, Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -234,9 +231,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         if (databaseError != null) {
-                            Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(TimelineActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(TimelineActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -311,9 +308,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
+                        public void onClick(DialogInterface dialogInterface, int i) {}
                     });
 
             AlertDialog alertDialog = alertDialogBuilder.create();
@@ -334,24 +329,32 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                Intent intent = new Intent(TimelineActivity.this, SearchActivity.class);
-                intent.putExtra("query", query);
-                startActivityForResult(intent, SEARCHACTIVITY_REQUESTCODE);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//
+//        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
+//        EditText et = (EditText) searchView.findViewById(searchEditId);
+//        et.setTextColor(Color.WHITE);
+//        et.setHintTextColor(Color.WHITE);
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//
+//                Intent intent = new Intent(TimelineActivity.this, SearchActivity.class);
+//                intent.putExtra("query", query);
+//                startActivityForResult(intent, SEARCHACTIVITY_REQUESTCODE);
+//                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//
+//                searchView.clearFocus();
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -2,6 +2,7 @@ package annikatsai.portfolioapp;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,7 @@ import annikatsai.portfolioapp.Models.User;
 public class ProfileActivity extends AppCompatActivity {
 
     User user;
-    Integer numPosts;       // CHANGE THIS
+    Integer numPosts;
     private DatabaseReference mDatabase;
 
     @Override
@@ -75,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,cover");
+        parameters.putString("fields", "id,name,email,cover,link");
         request.setParameters(parameters);
         request.executeAsync();
 
@@ -105,8 +106,15 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     // Loading TextViews and ImageViews
-    private void populateProfileInfo(User user) {
+    private void populateProfileInfo(final User user) {
         ImageView ivProfilePicture = (ImageView) findViewById(R.id.ivProfilePicture);
+        ivProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(user.getLink()));
+                startActivity(browserIntent);
+            }
+        });
         ImageView ivCoverPhoto = (ImageView) findViewById(R.id.ivCoverPhoto);
         ivCoverPhoto.setAlpha(0.5F);
         TextView tvName = (TextView) findViewById(R.id.tvName);

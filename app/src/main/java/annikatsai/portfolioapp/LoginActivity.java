@@ -10,7 +10,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,9 +55,17 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
+        final Animation moveIconDown, fadeOutWelcome;
+        moveIconDown = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.move_up_icon);
+        fadeOutWelcome = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_out);
+
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
-        TextView appTitle = (TextView) findViewById(R.id.tvTitle);
-        TextView welcomePrompt = (TextView) findViewById(R.id.tvWelcome);
+        final TextView appTitle = (TextView) findViewById(R.id.tvTitle);
+        final TextView welcomePrompt = (TextView) findViewById(R.id.tvWelcome);
+        welcomePrompt.setVisibility(View.VISIBLE);
+        final ImageView ivIcon = (ImageView) findViewById(R.id.ivIcon);
         appTitle.setTypeface(titleFont);
         appTitle.setText("Roam");
         welcomePrompt.setText("Welcome to");
@@ -87,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mCallbackManager = CallbackManager.Factory.create();
         mLoginButton = (LoginButton)findViewById(R.id.login_button);
-        mLoginButton.setReadPermissions("public_profile", "email");
+        mLoginButton.setReadPermissions("public_profile", "email", "user_friends");
 
         // If user already logged into Facebook, launch TimelineActivity (skip log in page)
         if (AccessToken.getCurrentAccessToken() != null) {
@@ -145,6 +156,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 fadeAway.start();
+                ivIcon.startAnimation(moveIconDown);
+                welcomePrompt.startAnimation(fadeOutWelcome);
             }
         });
     }

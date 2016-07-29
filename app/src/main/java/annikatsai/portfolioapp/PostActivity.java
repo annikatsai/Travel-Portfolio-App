@@ -11,12 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,8 +51,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private String postKey, locationKey;
     private String TAG = "PostActivity";
     private TextView tvLocation;
+    private ImageView ivPreview;
     private EditText etTitle;
-    private TextView tvBody;
+    private TextView etBody;
     private TextView tvDate;
     private DatabaseReference mDatabase;
     private java.util.Calendar c = java.util.Calendar.getInstance();
@@ -74,10 +77,22 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         setContentView(R.layout.activity_post);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
-        tvBody = (TextView) findViewById(R.id.etBody);
+        etBody = (TextView) findViewById(R.id.etBody);
+        etBody.setScroller(new Scroller(getApplicationContext()));
+        etBody.setMaxLines(10);
+        etBody.setVerticalScrollBarEnabled(true);
+        etBody.setMovementMethod(new ScrollingMovementMethod());
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        ivPreview = (ImageView) findViewById(R.id.ivPreview);
+        ivPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddClick(view);
+            }
+        });
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -150,8 +165,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         if (etTitle.getText() == null || etTitle.getText().toString().equals("")) {
             etTitle.setText("");
         }
-        if (tvBody.getText() == null || tvBody.getText().toString().equals("")) {
-            tvBody.setText("");
+        if (etBody.getText() == null || etBody.getText().toString().equals("")) {
+            etBody.setText("");
         }
         if (tvLocation.getText() == null || tvLocation.getText().toString().equals("")) {
             tvLocation.setText("");
@@ -167,7 +182,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         }
 
         final String title = etTitle.getText().toString();
-        final String body = tvBody.getText().toString();
+        final String body = etBody.getText().toString();
         final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
 
@@ -263,7 +278,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 downloadUrl = i.getData();
                 photoUrl = downloadUrl.toString();
                 // Load the taken image into a preview
-                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+//                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
                 picRef = storageRef.child("users").child(userId).child(fileName);
             } else { // RESULT_CANCELED

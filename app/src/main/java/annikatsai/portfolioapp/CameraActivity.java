@@ -79,7 +79,7 @@ public class CameraActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         fileName = mDatabase.child("users").child(userId).child("fileName").push().getKey();
 
-        pd = new ProgressDialog(this);
+        pd = new ProgressDialog(CameraActivity.this);
         pd.setTitle("Loading...");
         pd.setMessage("Please wait.");
         pd.setCancelable(false);
@@ -181,7 +181,7 @@ public class CameraActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                         downloadUrl = taskSnapshot.getDownloadUrl();
-                        pd.hide();
+                        pd.dismiss();
                     }
                 });
                 /*STORAGE FIREBASE CODE: END*/
@@ -230,7 +230,7 @@ public class CameraActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                         downloadUrl = taskSnapshot.getDownloadUrl();
-                        pd.hide();
+                        pd.dismiss();
                     }
                 });
                 /*STORAGE FIREBASE CODE: END*/

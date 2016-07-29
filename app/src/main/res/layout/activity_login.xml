@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/tumblr_n3ls052ork1r7m6voo1_500"
@@ -14,8 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:onClick="onLoginButtonClick"
         android:layout_alignTop="@+id/btnBegin"
-        android:layout_alignRight="@+id/tvTitle"
-        android:layout_alignEnd="@+id/tvTitle" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,8 +24,7 @@
         android:text="@string/title"
         android:id="@+id/tvTitle"
         android:textColor="#FFFFFF"
-        android:textSize="70sp"
-        android:layout_marginTop="20dp"
+        android:textSize="80sp"
         android:layout_below="@+id/tvWelcome"
         android:layout_centerHorizontal="true" />
 
@@ -36,9 +35,9 @@
         android:id="@+id/tvWelcome"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:layout_marginTop="60dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="89dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -48,6 +47,15 @@
         android:textAllCaps="false"
         android:layout_marginBottom="78dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivIcon"
+        android:layout_marginTop="30dp"
+        android:src="@mipmap/ic_icon"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
 
