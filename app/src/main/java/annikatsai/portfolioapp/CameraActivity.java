@@ -105,10 +105,18 @@ public class CameraActivity extends AppCompatActivity {
 
         image = bm;
 
-        if(rotationAngle == 180 || rotationAngle == 0){
-            realOrientation = "v";
-        } else {
-            realOrientation = "h";
+        if(rotationAngle == 360){
+            rotationAngle = 0;
+        }
+
+        if(rotationAngle == 180){
+            realOrientation = "v1";
+        } else if(rotationAngle == 270){
+            realOrientation = "v2";
+        } else if (rotationAngle == 90) { //double check this
+            realOrientation = "h1";
+        } else { // for zero
+            realOrientation = "h2"; //double check this
         }
     }
 
@@ -212,7 +220,7 @@ public class CameraActivity extends AppCompatActivity {
                 ivPreview.setImageBitmap(image);
                 pd.show();
 
-                realOrientation = "h";
+                realOrientation = "h1";
 
                 /*STORAGE FIREBASE CODE: START*/
                 Bitmap picture = null;
@@ -315,18 +323,18 @@ public class CameraActivity extends AppCompatActivity {
         String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
         int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
         int rotationAngle = 0;
-        realOrientation = "h";
+        realOrientation = "h1";
         if (orientation == ExifInterface.ORIENTATION_ROTATE_90){
             rotationAngle = 90;
-            realOrientation = "v"; //double check this
+            realOrientation = "v1"; //double check this
         }
         if (orientation == ExifInterface.ORIENTATION_ROTATE_180){
             rotationAngle = 180;
-            realOrientation = "h"; //double check this
+            realOrientation = "h1"; //double check this
         }
         if (orientation == ExifInterface.ORIENTATION_ROTATE_270){
             rotationAngle = 270;
-            realOrientation = "v"; //double check this
+            realOrientation = "v1"; //double check this
         }
 
         // Rotate Bitmap

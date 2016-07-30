@@ -291,10 +291,14 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 ivPlus.setVisibility(View.INVISIBLE);
 
                 // Load the taken image into a preview
-                if(realOrientation.equals("h")){
+                if(realOrientation.equals("h1")){
                     Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
-                } else if(realOrientation.equals("v")){
+                } else if(realOrientation.equals("h2")){
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
+                } else if(realOrientation.equals("v1")){
                     Picasso.with(this).load(photoUrl).rotate(90f).into(ivPreview);
+                } else{
+                    Picasso.with(this).load(photoUrl).rotate(270f).into(ivPreview);
                 }
                 picRef = storageRef.child("users").child(userId).child(fileName);
             } else { // RESULT_CANCELED
