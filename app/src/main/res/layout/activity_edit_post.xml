@@ -145,7 +145,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/etBody"
         android:layout_alignEnd="@+id/etBody"
-        android:background="#FFFFFF" />
+        android:background="@drawable/shape_button_states" />
 
     <ImageView
         android:id="@+id/ivPreview"

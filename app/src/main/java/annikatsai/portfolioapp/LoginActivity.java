@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private String TAG = "LoginActivity";
-    public static boolean firstLogin = true;   // change
+    public static boolean firstLogin = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +55,26 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
-        final Animation moveIconDown, fadeOutWelcome;
-        moveIconDown = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.move_up_icon);
-        fadeOutWelcome = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.fade_out);
+        final Animation moveIconDown, fadeOutWelcome, rotateIcon;
+        moveIconDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_up_icon);
+        fadeOutWelcome = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+        rotateIcon = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
 
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         final TextView appTitle = (TextView) findViewById(R.id.tvTitle);
         final TextView welcomePrompt = (TextView) findViewById(R.id.tvWelcome);
         welcomePrompt.setVisibility(View.VISIBLE);
         final ImageView ivIcon = (ImageView) findViewById(R.id.ivIcon);
+        ivIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ivIcon.startAnimation(rotateIcon);
+            }
+        });
         appTitle.setTypeface(titleFont);
         appTitle.setText("Roam");
         welcomePrompt.setText("Welcome to");
+
 
         // Auth state listener responds to change in user's sign-in state
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -149,14 +155,11 @@ public class LoginActivity extends AppCompatActivity {
                 fadeAway.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-//                        Animation fadeIn = new AlphaAnimation(0, 1);
-//                        fadeIn.setInterpolator(new AccelerateInterpolator());
-//                        fadeIn.setDuration(1000);
                         mLoginButton.setVisibility(View.VISIBLE);
                     }
                 });
                 fadeAway.start();
-                ivIcon.startAnimation(moveIconDown);
+                ivIcon.startAnimation(rotateIcon);
                 welcomePrompt.startAnimation(fadeOutWelcome);
             }
         });

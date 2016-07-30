@@ -3,19 +3,26 @@ package annikatsai.portfolioapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +55,8 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     private PostsArrayAdapter postAdapter;
     private RecyclerView rvPosts;
     private Post oldPost;
+    private FloatingActionButton fabAddPost;
+    Animation clickExpand, clickContract;
 
     private FirebaseStorage mStorage;
     StorageReference storageRef;
@@ -68,8 +77,12 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         rvPosts.setAdapter(postAdapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(this));
         rvPosts.setHasFixedSize(true);
+        fabAddPost = (FloatingActionButton) findViewById(R.id.fabAdd);
 
         setupViewListeners();
+
+        clickExpand = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_fade_in);
+        clickContract = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_fade_out);
 
         // Customizing toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -96,6 +109,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     // add to adapter
+                    fabAddPost.show();
                     Post post = dataSnapshot.getValue(Post.class);
                     posts.add(0, post);
                     postAdapter.notifyDataSetChanged();
@@ -117,6 +131,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 public void onCancelled(DatabaseError databaseError) {}
             });
         }
+        fabAddPost.show();
     }
 
     private void setupViewListeners() {
@@ -129,6 +144,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     }
 
     public void launchViewPost(int position) {
+        fabAddPost.hide();
         Intent i = new Intent(TimelineActivity.this, ViewPostActivity.class);
         i.putExtra("post", Parcels.wrap(posts.get(position)));
         startActivity(i);
@@ -138,6 +154,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 
     @Override
     public void launchEditPost(int position) {
+        fabAddPost.hide();
         Intent i = new Intent(TimelineActivity.this, EditPostActivity.class);
         oldPost = posts.get(position);
         i.putExtra("editPost", Parcels.wrap(posts.get(position)));
@@ -220,6 +237,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     // editing by deleting old and adding new?
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        fabAddPost.show();
         Toast.makeText(TimelineActivity.this, "Back in TimelineActivity", Toast.LENGTH_SHORT).show();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (resultCode == RESULT_OK) {
@@ -262,7 +280,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 }
 
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
-//                postAdapter.clear();
                 for (int i = 0; i < postAdapter.getItemCount(); i++) {
                     posts.remove(i);
                 }
@@ -319,9 +336,14 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         }
     }
 
+    int POST_ACTIV_REQUEST_CODE = 30;
+
     public void onPostView(View view) {
+        fabAddPost.startAnimation(clickExpand);
+        fabAddPost.startAnimation(clickContract);
+        fabAddPost.hide();
         Intent i = new Intent(this, PostActivity.class);
-        startActivity(i);
+        startActivityForResult(i, POST_ACTIV_REQUEST_CODE);
     }
 
     int SEARCHACTIVITY_REQUESTCODE = 10;
@@ -329,32 +351,32 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//
-//        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
-//        EditText et = (EditText) searchView.findViewById(searchEditId);
-//        et.setTextColor(Color.WHITE);
-//        et.setHintTextColor(Color.WHITE);
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//
-//                Intent intent = new Intent(TimelineActivity.this, SearchActivity.class);
-//                intent.putExtra("query", query);
-//                startActivityForResult(intent, SEARCHACTIVITY_REQUESTCODE);
-//                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-//
-//                searchView.clearFocus();
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
+        EditText et = (EditText) searchView.findViewById(searchEditId);
+        et.setTextColor(Color.WHITE);
+        et.setHintTextColor(Color.WHITE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Intent intent = new Intent(TimelineActivity.this, SearchActivity.class);
+                intent.putExtra("query", query);
+                startActivityForResult(intent, SEARCHACTIVITY_REQUESTCODE);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -364,6 +386,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     }
 
     public void onProfileView(MenuItem item) {
+        fabAddPost.hide();
         Intent i = new Intent(this, ProfileActivity.class);
         startActivity(i);
     }

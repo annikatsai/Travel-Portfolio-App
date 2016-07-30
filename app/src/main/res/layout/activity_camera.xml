@@ -32,7 +32,7 @@
         android:onClick="onTakeClick"
         android:text="@string/take_a_picture"
         android:textAllCaps="false"
-        android:background="@null"
+        android:background="@drawable/shape_button_states"
         style="?android:attr/borderlessButtonStyle"
         android:layout_above="@+id/ivPreview"
         android:layout_alignParentLeft="true"
@@ -48,7 +48,7 @@
         android:onClick="onUploadClick"
         android:text="@string/upload_a_picture"
         android:textAllCaps="false"
-        android:background="@null"
+        android:background="@drawable/shape_button_states"
         style="?android:attr/borderlessButtonStyle"
         android:layout_above="@+id/ivPreview"
         android:layout_alignParentRight="true"
@@ -58,23 +58,12 @@
         android:layout_toRightOf="@+id/tvVerticalDivder" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorAccent"
-        android:id="@+id/tvDivider"
-        android:layout_above="@+id/ivPreview"
-        android:layout_alignLeft="@+id/toolbar"
-        android:layout_alignStart="@+id/toolbar"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
-
-    <TextView
         android:layout_width="1dp"
         android:layout_height="50dp"
-        android:background="@color/colorAccent"
+        android:background="@android:color/transparent"
         android:id="@+id/tvVerticalDivder"
-        android:layout_above="@+id/tvDivider"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/ivPreview" />
 
     <ImageView
         android:id="@+id/ivPreview"
@@ -94,8 +83,8 @@
         android:id="@+id/fabRotate"
         android:onClick="onRotateClick"
         android:layout_below="@+id/ivPreview"
-        android:layout_alignRight="@+id/btnUpload"
-        android:layout_alignEnd="@+id/btnUpload" />
+        android:layout_alignLeft="@+id/ivPreview"
+        android:layout_alignStart="@+id/ivPreview" />
 
     <Button
         android:id="@+id/btnSave"
@@ -103,8 +92,10 @@
         android:layout_height="wrap_content"
         android:onClick="onSubmitClick"
         android:text="@string/submit"
-        android:textAllCaps="false"
+        android:background="@drawable/shape_button_states"
+        android:textAllCaps="true"
         android:layout_below="@+id/fabRotate"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/btnUpload"
+        android:layout_alignEnd="@+id/btnUpload" />
 
 </RelativeLayout>

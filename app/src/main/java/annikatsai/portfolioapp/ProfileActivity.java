@@ -76,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,cover,link");
+        parameters.putString("fields", "id,name,email,cover,link,friends");
         request.setParameters(parameters);
         request.executeAsync();
 
