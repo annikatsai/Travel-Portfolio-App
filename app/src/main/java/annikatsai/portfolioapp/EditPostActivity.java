@@ -62,16 +62,20 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private final int CAMERA_REQUEST_CODE = 13;
     private String userId;
 
-    private String newFileName;
+    private String newFileName = null;
     private StorageReference newPicRef;
     private Uri downloadUrl;
     private String newPhotoUrl;
-    String photoUrl;
+    private String photoUrl;
 
     ImageView ivPreview;
 
+    private String realOrientation;
+    private String photoType;
     private String newRealOrientation;
     private String newPhotoType;
+
+    Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +138,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         }
 
         fileName = editPost.fileName;
+        photoType = editPost.photoType;
+        realOrientation = editPost.realOrientation;
         if((fileName != null) && !(fileName.isEmpty())){
             picRef = storageRef.child("users").child(userId).child(fileName);
         }
@@ -169,12 +175,12 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName, newPhotoUrl, newRealOrientation, newPhotoType);
-
-        if((fileName != null) && !(fileName.isEmpty())){
+        if(newFileName != null && !(newFileName.isEmpty())){
             deletePicRef(picRef);
+            post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName, newPhotoUrl, newRealOrientation, newPhotoType);
+        } else {
+            post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, fileName, photoUrl, realOrientation, photoType);
         }
-
         Intent i = new Intent();
         if (code.equals("fromTimeline")) {
             i = new Intent(EditPostActivity.this, TimelineActivity.class);

@@ -104,7 +104,7 @@ android:id="@+id/vjhbrbvjdttgndihjdkhjnuteuinvfn">
     android:background="@drawable/dotted"
     android:layout_width="150dp"
     android:layout_height="150dp"
-    android:layout_alignTop="@+id/ivPlus"
+    android:layout_alignTop="@+id/ivRemove"
     android:layout_centerHorizontal="true" />
 
 
@@ -123,9 +123,9 @@ android:id="@+id/vjhbrbvjdttgndihjdkhjnuteuinvfn">
 <ImageView
     android:layout_width="150dp"
     android:layout_height="150dp"
-    android:src="@drawable/ic_add"
+    android:src="@drawable/ic_remove"
     android:padding="50dp"
-    android:id="@+id/ivPlus"
+    android:id="@+id/ivRemove"
     android:layout_below="@+id/toolbar"
     android:layout_alignLeft="@+id/ivPreview"
     android:layout_alignStart="@+id/ivPreview"
