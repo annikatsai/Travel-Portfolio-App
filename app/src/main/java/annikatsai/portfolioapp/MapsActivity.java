@@ -10,6 +10,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -58,10 +60,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                BitmapDescriptor defaultMarker =
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA);
                 Location location = dataSnapshot.getValue(Location.class);
                 if (location.latitude != 0 && location.longitude != 0) {
                     LatLng latLng = new LatLng(location.latitude, location.longitude);
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.name));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.name).icon(defaultMarker));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latLng);
                     mMap.animateCamera(cameraUpdate);

@@ -75,6 +75,7 @@
         android:fontFamily="sans-serif"
         android:textAllCaps="false"
         android:id="@+id/btnLaunchMap"
+        android:background="@drawable/shape_button_states"
         android:onClick="launchMap"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

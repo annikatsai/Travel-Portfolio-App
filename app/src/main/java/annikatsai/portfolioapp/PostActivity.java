@@ -8,12 +8,15 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -60,6 +63,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private final int REQUEST_CODE = 20;
     private Location latlngLocation;
     private String locationName;
+    private FloatingActionButton fabDate, fabLocation, fabSubmit;
 
     private FirebaseStorage mStorage;
     private StorageReference storageRef;
@@ -67,6 +71,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private String fileName;
     private StorageReference picRef;
     private String userId;
+    private Animation clickExpand, clickContract;
 
     Uri downloadUrl;
     String photoUrl;
@@ -75,6 +80,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        clickExpand = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_fade_in);
+        clickContract = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_fade_out);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etBody = (TextView) findViewById(R.id.etBody);
@@ -85,6 +93,12 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvDate = (TextView) findViewById(R.id.tvDate);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        fabDate = (FloatingActionButton) findViewById(R.id.fabDate);
+        fabLocation = (FloatingActionButton) findViewById(R.id.fabLocation);
+        fabSubmit = (FloatingActionButton) findViewById(R.id.fabSubmit);
+        fabDate.setVisibility(View.INVISIBLE);
+        fabLocation.setVisibility(View.INVISIBLE);
+        fabSubmit.setVisibility(View.INVISIBLE);
 
         ivPreview = (ImageView) findViewById(R.id.ivPreview);
         ivPreview.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +124,10 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         mStorage = FirebaseStorage.getInstance();
         storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        fabDate.show();
+        fabLocation.show();
+        fabSubmit.show();
     }
 
     public void onAddClick(View view) {
@@ -129,6 +147,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         superOnBackPressed();
+                        fabDate.hide();
+                        fabLocation.hide();
+                        fabSubmit.hide();
                         if(fileName != null) {
                             // Delete the file
                             picRef.delete().addOnSuccessListener(new OnSuccessListener() {
@@ -162,6 +183,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
     public void onSubmit(View view) {
 
+        fabSubmit.startAnimation(clickExpand);
+        fabSubmit.startAnimation(clickContract);
+
         if (etTitle.getText() == null || etTitle.getText().toString().equals("")) {
             etTitle.setText("");
         }
@@ -183,7 +207,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
         final String title = etTitle.getText().toString();
         final String body = etBody.getText().toString();
-        final String location = tvLocation.getText().toString();
         final String date = tvDate.getText().toString();
 
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -197,6 +220,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                     location = addLocationToMap(userId);
                     composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName, photoUrl);
                 }
+                setResult(RESULT_OK);
                 finish();
             }
 
@@ -205,6 +229,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 Log.w(TAG, "getUser:onCancelled", databaseError.toException());
             }
         });
+        fabDate.hide();
+        fabLocation.hide();
+        fabSubmit.hide();
     }
 
     private Location addLocationToMap(String userId) {
@@ -244,6 +271,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     public void selectLocation(View view) {
+        fabLocation.startAnimation(clickExpand);
+        fabLocation.startAnimation(clickContract);
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
@@ -256,6 +285,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent i) {
+        fabLocation.clearAnimation();
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, i);
@@ -289,6 +319,8 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
 
     // attach to an onclick handler to show the date picker
     public void showDatePickerDialog(View v) {
+        fabDate.startAnimation(clickExpand);
+        fabDate.startAnimation(clickContract);
         hideSoftKeyboard(v);
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
@@ -309,6 +341,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         String date = "" + String.valueOf(month) + "/" + String.valueOf(day)
                 + "/" + String.valueOf(getYear);
         tvDate.setText(date);
+        fabDate.clearAnimation();
     }
 
     public void hideSoftKeyboard(View view){

@@ -100,7 +100,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                 popup.show();
             }
         });
-        if(!(post.photoUrl.isEmpty())){
+        if(post.photoUrl != null && !(post.photoUrl.isEmpty())){
             // load image
             Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
         } else {

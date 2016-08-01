@@ -76,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,cover,link");
+        parameters.putString("fields", "id,name,email,cover,link,friends");
         request.setParameters(parameters);
         request.executeAsync();
 
@@ -136,5 +136,12 @@ public class ProfileActivity extends AppCompatActivity {
     public void launchMap(View view) {
         Intent i = new Intent(this, MapsActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 }
