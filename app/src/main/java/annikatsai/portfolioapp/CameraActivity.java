@@ -94,7 +94,7 @@ public class CameraActivity extends AppCompatActivity {
     public void onUploadClick(View view) {
         onPickPhoto(view);
     }
-    
+
     public void onRotateClick(View view){
         if (picRef != null) {
             Matrix matrix = new Matrix();

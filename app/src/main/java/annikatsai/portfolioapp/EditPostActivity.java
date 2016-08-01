@@ -134,11 +134,11 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         }
 
         fileName = editPost.fileName;
-        if((fileName != null) && !(fileName.isEmpty())){
+        if ((fileName != null) && !(fileName.isEmpty())) {
             picRef = storageRef.child("users").child(userId).child(fileName);
         }
         photoUrl = editPost.photoUrl;
-        if((photoUrl != null) && !(photoUrl.isEmpty())) {
+        if ((photoUrl != null) && !(photoUrl.isEmpty())) {
             ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
             // Load image
             if (editPost.photoType.equals("vertical")) {
@@ -171,8 +171,10 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         latLngLocation.setLocationKey(locationKey);
         Post post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName, newPhotoUrl, newRealOrientation, newPhotoType);
 
-        if((fileName != null) && !(fileName.isEmpty())){
-            deletePicRef(picRef);
+        if (newFileName != null && !(newFileName.isEmpty())) {
+            if ((fileName != null) && !(fileName.isEmpty())) {
+                deletePicRef(picRef);
+            }
         }
 
         Intent i = new Intent();
@@ -280,7 +282,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         superOnBackPressed();
-                        if(newFileName != null && !(newFileName.isEmpty())) {
+                        if (newFileName != null && !(newFileName.isEmpty())) {
                             deletePicRef(newPicRef);
                         }
                     }
@@ -296,12 +298,15 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         alertDialog.show();
     }
 
-    public void deletePicRef(StorageReference ref){
+    public void deletePicRef(StorageReference ref) {
         // Deletes the file
         ref.delete().addOnSuccessListener(new OnSuccessListener() {
             @Override
-            public void onSuccess(Object o) {}
-            public void onSuccess(Void aVoid) {}
+            public void onSuccess(Object o) {
+            }
+
+            public void onSuccess(Void aVoid) {
+            }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
