@@ -383,10 +383,12 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         return super.onCreateView(name, context, attrs);
     }
 
+    int PROFILE_REQUEST_CODE = 50;
+
     public void onProfileView(MenuItem item) {
         fabAddPost.hide();
         Intent i = new Intent(this, ProfileActivity.class);
-        startActivity(i);
+        startActivityForResult(i, PROFILE_REQUEST_CODE);
     }
 
     @Override

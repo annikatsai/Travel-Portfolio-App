@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,8 +23,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import annikatsai.portfolioapp.Models.User;
 
@@ -103,6 +108,26 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+
+        final ArrayList<String> friends = new ArrayList<>();
+        GraphRequestAsyncTask graphRequestAsyncTask = new GraphRequest(
+                AccessToken.getCurrentAccessToken(), "/" + user.getId() + "/friends", null,
+                HttpMethod.GET, new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse response) {
+                try {
+                    JSONArray rawName = response.getJSONObject().getJSONArray("data");
+                    JSONArray friendsList = new JSONArray(rawName.toString());
+                    for (int i = 0; i < friendsList.length(); i++) {
+                        friends.add(friendsList.getJSONObject(i).getString("name"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).executeAsync();
+
+
     }
 
     // Loading TextViews and ImageViews
@@ -136,5 +161,12 @@ public class ProfileActivity extends AppCompatActivity {
     public void launchMap(View view) {
         Intent i = new Intent(this, MapsActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 }
