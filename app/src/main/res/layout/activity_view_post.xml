@@ -69,7 +69,8 @@
         android:background="@drawable/dotted"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignTop="@+id/ivPlus"
+        android:layout_marginBottom="25dp"
+        android:layout_above="@+id/tvTitle"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -83,17 +84,6 @@
         android:layout_below="@+id/tvTitle"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/ic_add"
-        android:padding="50dp"
-        android:id="@+id/ivPlus"
-        android:layout_below="@+id/toolbar"
-        android:layout_alignLeft="@+id/ivPreview"
-        android:layout_alignStart="@+id/ivPreview"
-        android:layout_marginTop="33dp" />
 
     <TextView
         android:layout_width="match_parent"

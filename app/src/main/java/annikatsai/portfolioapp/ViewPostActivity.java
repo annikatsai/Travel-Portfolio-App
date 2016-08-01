@@ -48,8 +48,31 @@ public class ViewPostActivity extends AppCompatActivity {
         tvDate.setText(post.getDate());
         tvBody.setText(post.getBody());
         ivPreview = (ImageView) findViewById(R.id.ivPreview);
+
         if(post.photoUrl != null && !(post.photoUrl.isEmpty())) {
-            Picasso.with(this).load(post.photoUrl).fit().centerCrop().into(ivPreview);
+            // Load image
+            if (post.photoType.equals("vertical")) {
+                if (post.realOrientation.equals("left")) {
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().into(ivPreview);
+                } else if (post.realOrientation.equals("original")) {
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
+                } else if (post.realOrientation.equals("right")) {
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
+                } else { // upsideDown
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
+                }
+            }
+            if (post.photoType.equals("horizontal")) {
+                if (post.realOrientation.equals("original")) {
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().into(ivPreview);
+                } else if (post.realOrientation.equals("right")) {
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
+                } else if (post.realOrientation.equals("upsideDown")) {
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
+                } else { // left
+                    Picasso.with(this).load(post.photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
+                }
+            }
         } else {
             Picasso.with(this).load(R.drawable.default_photo).fit().centerCrop().into(ivPreview);
         }

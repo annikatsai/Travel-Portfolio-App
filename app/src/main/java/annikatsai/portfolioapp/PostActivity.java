@@ -322,27 +322,27 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 photoUrl = downloadUrl.toString();
                 ivPlus.setVisibility(View.INVISIBLE);
 
-                // Load the taken image into a preview
+                // Load image
                 if (photoType.equals("vertical")) {
                     if (realOrientation.equals("left")) {
                         Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
                     } else if (realOrientation.equals("original")) {
-                        Picasso.with(this).load(photoUrl).rotate(90f).into(ivPreview);
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
                     } else if (realOrientation.equals("right")) {
-                        Picasso.with(this).load(photoUrl).rotate(180f).into(ivPreview);
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
                     } else { // upsideDown
-                        Picasso.with(this).load(photoUrl).rotate(270f).into(ivPreview);
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
                     }
                 }
                 if (photoType.equals("horizontal")) {
                     if (realOrientation.equals("original")) {
                         Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
                     } else if (realOrientation.equals("right")) {
-                        Picasso.with(this).load(photoUrl).rotate(90f).into(ivPreview);
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
                     } else if (realOrientation.equals("upsideDown")) {
-                        Picasso.with(this).load(photoUrl).rotate(180f).into(ivPreview);
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
                     } else { // left
-                        Picasso.with(this).load(photoUrl).rotate(270f).into(ivPreview);
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
                     }
                 }
                 picRef = storageRef.child("users").child(userId).child(fileName);
