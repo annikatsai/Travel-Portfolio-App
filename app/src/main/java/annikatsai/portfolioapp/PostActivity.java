@@ -74,6 +74,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private ImageView ivPlus;
 
     private String realOrientation;
+    private String photoType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +204,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 } else {
                     Location location;
                     location = addLocationToMap(userId);
-                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName, photoUrl, realOrientation);
+                    composeNewPost(userId, title, body, location.name, location.latitude, location.longitude, date, locationKey, fileName, photoUrl, realOrientation, photoType);
                 }
                 finish();
             }
@@ -232,9 +233,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         return latlngLocation;
     }
 
-    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName, String photoUrl, String realOrientation) {
+    private void composeNewPost(String userId, String title, String body, String locationName, double latitude, double longitude, String date, String locationKey, String fileName, String photoUrl, String realOrientation, String photoType) {
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
-        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName, photoUrl, realOrientation);
+        Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName, photoUrl, realOrientation, photoType);
         Map<String, Object> postValues = newPost.toMap();
 
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
@@ -286,19 +287,33 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 downloadUrl = i.getData();
 
                 realOrientation = i.getExtras().getString("realOrientation");
+                photoType = i.getExtras().getString("photoType");
 
                 photoUrl = downloadUrl.toString();
                 ivPlus.setVisibility(View.INVISIBLE);
 
                 // Load the taken image into a preview
-                if(realOrientation.equals("h1")){
-                    Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
-                } else if(realOrientation.equals("h2")){
-                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
-                } else if(realOrientation.equals("v1")){
-                    Picasso.with(this).load(photoUrl).rotate(90f).into(ivPreview);
-                } else{
-                    Picasso.with(this).load(photoUrl).rotate(270f).into(ivPreview);
+                if (photoType.equals("vertical")) {
+                    if (realOrientation.equals("left")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+                    } else if (realOrientation.equals("original")) {
+                        Picasso.with(this).load(photoUrl).rotate(90f).into(ivPreview);
+                    } else if (realOrientation.equals("right")) {
+                        Picasso.with(this).load(photoUrl).rotate(180f).into(ivPreview);
+                    } else { // upsideDown
+                        Picasso.with(this).load(photoUrl).rotate(270f).into(ivPreview);
+                    }
+                }
+                if (photoType.equals("horizontal")) {
+                    if (realOrientation.equals("original")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+                    } else if (realOrientation.equals("right")) {
+                        Picasso.with(this).load(photoUrl).rotate(90f).into(ivPreview);
+                    } else if (realOrientation.equals("upsideDown")) {
+                        Picasso.with(this).load(photoUrl).rotate(180f).into(ivPreview);
+                    } else { // left
+                        Picasso.with(this).load(photoUrl).rotate(270f).into(ivPreview);
+                    }
                 }
                 picRef = storageRef.child("users").child(userId).child(fileName);
             } else { // RESULT_CANCELED

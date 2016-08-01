@@ -54,7 +54,8 @@ public class CameraActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     ProgressDialog pd;
     Uri downloadUrl;
-    String realOrientation;
+    String realOrientation = "original";
+    String photoType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,27 +98,25 @@ public class CameraActivity extends AppCompatActivity {
     public void onRotateClick(View view){
         Matrix matrix = new Matrix();
         matrix.postRotate(rotationAngle);
+        if(rotationAngle == 0) {
+            realOrientation = "original";
+        } else if (rotationAngle == 90) {
+            realOrientation = "right";
+        } else if(rotationAngle == 180) {
+            realOrientation = "left";
+        } else { // for 270
+            realOrientation = "upsideDown";
+        }
         rotationAngle = rotationAngle + 90;
+        if(rotationAngle == 360) {
+            rotationAngle = 0;
+        }
         Bitmap bm = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
         // Load the taken image into a preview
         ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
         ivPreview.setImageBitmap(bm);
 
         image = bm;
-
-        if(rotationAngle == 360){
-            rotationAngle = 0;
-        }
-
-        if(rotationAngle == 180){
-            realOrientation = "v1";
-        } else if(rotationAngle == 270){
-            realOrientation = "v2";
-        } else if (rotationAngle == 90) { //double check this
-            realOrientation = "h1";
-        } else { // for zero
-            realOrientation = "h2"; //double check this
-        }
     }
 
     public void onSubmitClick(View view){
@@ -136,6 +135,7 @@ public class CameraActivity extends AppCompatActivity {
                 i.putExtra("fileName", fileName);
                 i.setData(downloadUrl);
                 i.putExtra("realOrientation", realOrientation);
+                i.putExtra("photoType", photoType);
             }
             setResult(RESULT_OK, i);
         }
@@ -220,7 +220,7 @@ public class CameraActivity extends AppCompatActivity {
                 ivPreview.setImageBitmap(image);
                 pd.show();
 
-                realOrientation = "h1";
+                photoType = "horizontal";
 
                 /*STORAGE FIREBASE CODE: START*/
                 Bitmap picture = null;
@@ -323,18 +323,18 @@ public class CameraActivity extends AppCompatActivity {
         String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
         int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
         int rotationAngle = 0;
-        realOrientation = "h1";
+        photoType = "horizontal";
         if (orientation == ExifInterface.ORIENTATION_ROTATE_90){
             rotationAngle = 90;
-            realOrientation = "v1"; //double check this
+            photoType = "vertical";
         }
         if (orientation == ExifInterface.ORIENTATION_ROTATE_180){
             rotationAngle = 180;
-            realOrientation = "h1"; //double check this
+            photoType = "horizontal";
         }
         if (orientation == ExifInterface.ORIENTATION_ROTATE_270){
             rotationAngle = 270;
-            realOrientation = "v1"; //double check this
+            photoType = "vertical";
         }
 
         // Rotate Bitmap
