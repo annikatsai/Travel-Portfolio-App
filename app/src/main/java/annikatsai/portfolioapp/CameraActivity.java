@@ -54,6 +54,8 @@ public class CameraActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     ProgressDialog pd;
     Uri downloadUrl;
+    String realOrientation = "original";
+    String photoType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,19 @@ public class CameraActivity extends AppCompatActivity {
     public void onRotateClick(View view){
         Matrix matrix = new Matrix();
         matrix.postRotate(rotationAngle);
+        if(rotationAngle == 0) {
+            realOrientation = "original";
+        } else if (rotationAngle == 90) {
+            realOrientation = "right";
+        } else if(rotationAngle == 180) {
+            realOrientation = "left";
+        } else { // for 270
+            realOrientation = "upsideDown";
+        }
         rotationAngle = rotationAngle + 90;
+        if(rotationAngle == 360) {
+            rotationAngle = 0;
+        }
         Bitmap bm = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
         // Load the taken image into a preview
         ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
@@ -120,6 +134,8 @@ public class CameraActivity extends AppCompatActivity {
             if (i != null) {
                 i.putExtra("fileName", fileName);
                 i.setData(downloadUrl);
+                i.putExtra("realOrientation", realOrientation);
+                i.putExtra("photoType", photoType);
             }
             setResult(RESULT_OK, i);
         }
@@ -156,7 +172,6 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 photoUri = getPhotoFileUri(fileName);
-                // by this point we have the camera photo on disk
                 image = rotateBitmapOrientation(photoUri);
 
                 // Load the taken image into a preview
@@ -204,6 +219,8 @@ public class CameraActivity extends AppCompatActivity {
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(image);
                 pd.show();
+
+                photoType = "horizontal";
 
                 /*STORAGE FIREBASE CODE: START*/
                 Bitmap picture = null;
@@ -306,9 +323,19 @@ public class CameraActivity extends AppCompatActivity {
         String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
         int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
         int rotationAngle = 0;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        photoType = "horizontal";
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90){
+            rotationAngle = 90;
+            photoType = "vertical";
+        }
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180){
+            rotationAngle = 180;
+            photoType = "horizontal";
+        }
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270){
+            rotationAngle = 270;
+            photoType = "vertical";
+        }
 
         // Rotate Bitmap
         Matrix matrix = new Matrix();

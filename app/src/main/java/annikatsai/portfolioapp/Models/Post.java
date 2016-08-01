@@ -21,11 +21,13 @@ public class Post extends Object {
     public String locationKey;
     public String fileName;
     public String photoUrl;
+    public String realOrientation;
+    public String photoType;
 
     public Post() {
     }
 
-    public Post(String uid, String title, String body, String location, double latitude, double longitude, String date, String key, String locationKey, String fileName, String photoUrl) {
+    public Post(String uid, String title, String body, String location, double latitude, double longitude, String date, String key, String locationKey, String fileName, String photoUrl, String realOrientation, String photoType) {
         this.title = title;
         this.uid = uid;
         this.body = body;
@@ -37,6 +39,8 @@ public class Post extends Object {
         this.locationKey = locationKey;
         this.fileName = fileName;
         this.photoUrl = photoUrl;
+        this.realOrientation = realOrientation;
+        this.photoType = photoType;
     }
 
     public String getTitle() {
@@ -85,6 +89,8 @@ public class Post extends Object {
         result.put("locationKey", locationKey);
         result.put("fileName", fileName);
         result.put("photoUrl", photoUrl);
+        result.put("realOrientation", realOrientation);
+        result.put("photoType", photoType);
         return result;
     }
 }

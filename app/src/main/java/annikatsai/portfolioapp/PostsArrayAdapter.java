@@ -24,7 +24,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
     private PostsArrayAdapterCallback callback;
 
     // View lookup cache
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTitle;
         public ImageView ivImage;
         public ImageButton btnPopupMenu;
@@ -41,7 +41,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
     private Context mContext;
 
     // Constructor
-    public PostsArrayAdapter(Context context, List<Post> posts){
+    public PostsArrayAdapter(Context context, List<Post> posts) {
         mPosts = posts;
         mContext = context;
     }
@@ -56,6 +56,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
 
     public interface PostsArrayAdapterCallback {
         public void launchEditPost(int position);
+
         public void deletePost(int position);
     }
 
@@ -100,9 +101,32 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                 popup.show();
             }
         });
+
         if(post.photoUrl != null && !(post.photoUrl.isEmpty())){
             // load image
-            Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+            //Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+            if (post.photoType.equals("vertical")) {
+                if (post.realOrientation.equals("left")) {
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+                } else if (post.realOrientation.equals("original")) {
+                    Picasso.with(getContext()).load(post.photoUrl).rotate(90f).into(holder.ivImage);
+                } else if (post.realOrientation.equals("right")) {
+                    Picasso.with(getContext()).load(post.photoUrl).rotate(180f).into(holder.ivImage);
+                } else { // upsideDown
+                    Picasso.with(getContext()).load(post.photoUrl).rotate(270f).into(holder.ivImage);
+                }
+            }
+            if (post.photoType.equals("horizontal")) {
+                if (post.realOrientation.equals("original")) {
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+                } else if (post.realOrientation.equals("right")) {
+                    Picasso.with(getContext()).load(post.photoUrl).rotate(90f).into(holder.ivImage);
+                } else if (post.realOrientation.equals("upsideDown")) {
+                    Picasso.with(getContext()).load(post.photoUrl).rotate(180f).into(holder.ivImage);
+                } else { // left
+                    Picasso.with(getContext()).load(post.photoUrl).rotate(270f).into(holder.ivImage);
+                }
+            }
         } else {
             Picasso.with(getContext()).load(R.drawable.default_photo).fit().centerCrop().into(holder.ivImage);
         }
