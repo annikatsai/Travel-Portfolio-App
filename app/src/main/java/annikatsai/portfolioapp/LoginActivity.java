@@ -14,7 +14,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -34,6 +33,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hanks.htextview.HTextView;
+import com.hanks.htextview.HTextViewType;
 
 import java.util.Arrays;
 
@@ -55,15 +56,14 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
-        final Animation moveIconDown, fadeOutWelcome, rotateIcon;
-        moveIconDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_up_icon);
+        final Animation fadeOutWelcome, rotateIcon;
         fadeOutWelcome = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
         rotateIcon = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
 
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
-        final TextView appTitle = (TextView) findViewById(R.id.tvTitle);
-        final TextView welcomePrompt = (TextView) findViewById(R.id.tvWelcome);
-        welcomePrompt.setVisibility(View.VISIBLE);
+//        final TextView appTitle = (TextView) findViewById(R.id.tvTitle);
+//        final TextView welcomePrompt = (TextView) findViewById(R.id.tvWelcome);
+//        welcomePrompt.setVisibility(View.VISIBLE);
         final ImageView ivIcon = (ImageView) findViewById(R.id.ivIcon);
         ivIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,9 +71,18 @@ public class LoginActivity extends AppCompatActivity {
                 ivIcon.startAnimation(rotateIcon);
             }
         });
-        appTitle.setTypeface(titleFont);
-        appTitle.setText("Roam");
-        welcomePrompt.setText("Welcome to");
+//        appTitle.setTypeface(titleFont);
+//        appTitle.setText("Roam");
+//        welcomePrompt.setText("Welcome to");
+
+        HTextView hTitle = (HTextView) findViewById(R.id.tvTitle);
+        final HTextView hWelcome = (HTextView) findViewById(R.id.tvWelcome);
+        hTitle.setTypeface(titleFont);
+        hWelcome.setTypeface(titleFont);
+        hTitle.setAnimateType(HTextViewType.TYPER);
+        hWelcome.setAnimateType(HTextViewType.TYPER);
+        hWelcome.animateText("Welcome to");
+        hTitle.animateText("Roam");
 
 
         // Auth state listener responds to change in user's sign-in state
@@ -160,7 +169,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
                 fadeAway.start();
                 ivIcon.startAnimation(rotateIcon);
-                welcomePrompt.startAnimation(fadeOutWelcome);
+//                welcomePrompt.startAnimation(fadeOutWelcome);
+                hWelcome.startAnimation(fadeOutWelcome);
             }
         });
     }

@@ -75,16 +75,16 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:src="@drawable/ic_rotate"
-        app:fabSize="normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fabRotate"
-        android:onClick="onRotateClick"
-        android:layout_below="@+id/ivPreview"
-        android:layout_alignLeft="@+id/ivPreview"
-        android:layout_alignStart="@+id/ivPreview" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:src="@drawable/ic_rotate"-->
+        <!--app:fabSize="normal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/fabRotate"-->
+        <!--android:onClick="onRotateClick"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignLeft="@+id/ivPreview"-->
+        <!--android:layout_alignStart="@+id/ivPreview" />-->
 
     <Button
         android:id="@+id/btnSave"
@@ -94,8 +94,21 @@
         android:text="@string/submit"
         android:background="@drawable/shape_button_states"
         android:textAllCaps="true"
-        android:layout_below="@+id/fabRotate"
-        android:layout_alignRight="@+id/btnUpload"
-        android:layout_alignEnd="@+id/btnUpload" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/ivPreview"
+        android:layout_alignEnd="@+id/ivPreview"
+        android:layout_marginBottom="18dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@android:color/black"
+        android:src="@drawable/ic_rotate"
+        android:background="@drawable/shape_button_states"
+        android:id="@+id/fabRotate"
+        android:onClick="onRotateClick"
+        android:layout_alignBottom="@+id/btnSave"
+        android:layout_alignLeft="@+id/ivPreview"
+        android:layout_alignStart="@+id/ivPreview" />
 
 </RelativeLayout>

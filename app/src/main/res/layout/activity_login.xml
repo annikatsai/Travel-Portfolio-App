@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:htext="http://schemas.android.com/apk/res-auto"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,27 +20,27 @@
         android:layout_alignTop="@+id/btnBegin"
         android:layout_centerHorizontal="true" />
 
-    <TextView
+    <com.hanks.htextview.HTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/title"
         android:id="@+id/tvTitle"
         android:textColor="#FFFFFF"
         android:textSize="80sp"
-        android:layout_below="@+id/tvWelcome"
+        android:layout_alignTop="@+id/tvWelcome"
         android:layout_centerHorizontal="true" />
 
-    <TextView
+
+    <com.hanks.htextview.HTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome"
         android:id="@+id/tvWelcome"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/ivIcon"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp" />
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="wrap_content"

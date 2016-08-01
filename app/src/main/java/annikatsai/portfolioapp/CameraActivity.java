@@ -93,19 +93,21 @@ public class CameraActivity extends AppCompatActivity {
         onPickPhoto(view);
     }
 
-    public void onRotateClick(View view){
-        Matrix matrix = new Matrix();
-        matrix.postRotate(rotationAngle);
-        rotationAngle = rotationAngle + 90;
-        Bitmap bm = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
-        // Load the taken image into a preview
-        ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-        ivPreview.setImageBitmap(bm);
+    public void onRotateClick(View view) {
+        if (picRef != null) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotationAngle);
+            rotationAngle = rotationAngle + 90;
+            Bitmap bm = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+            // Load the taken image into a preview
+            ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+            ivPreview.setImageBitmap(bm);
 
-        image = bm;
+            image = bm;
+        }
     }
 
-    public void onSubmitClick(View view){
+    public void onSubmitClick(View view) {
         String activity = getIntent().getStringExtra("activity");
         Intent i = null;
         if (activity.equals("Post")) {
@@ -134,7 +136,7 @@ public class CameraActivity extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        } else{
+        } else {
             // Warns user if camera can't be opened
             Toast.makeText(getApplicationContext(), "Can't open camera.", Toast.LENGTH_SHORT).show();
         }
@@ -190,7 +192,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
 
-        if(requestCode == PICK_PHOTO_CODE){
+        if (requestCode == PICK_PHOTO_CODE) {
             if (data != null) {
                 // Gets Uri
                 photoUri = data.getData();
@@ -241,7 +243,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(photoUri != null) {
+        if (photoUri != null) {
             // Delete the file
             picRef.delete().addOnSuccessListener(new OnSuccessListener() {
                 @Override
@@ -272,7 +274,7 @@ public class CameraActivity extends AppCompatActivity {
             File mediaStorageDir = new File(
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
             // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
                 Log.d(APP_TAG, "failed to create directory");
             }
             // Return the file target for the photo based on filename
