@@ -140,7 +140,29 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         photoUrl = editPost.photoUrl;
         if((photoUrl != null) && !(photoUrl.isEmpty())) {
             ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
-            Picasso.with(this).load(photoUrl).into(ivPreview);
+            // Load image
+            if (editPost.photoType.equals("vertical")) {
+                if (editPost.realOrientation.equals("left")) {
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+                } else if (editPost.realOrientation.equals("original")) {
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
+                } else if (editPost.realOrientation.equals("right")) {
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
+                } else { // upsideDown
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
+                }
+            }
+            if (editPost.photoType.equals("horizontal")) {
+                if (editPost.realOrientation.equals("original")) {
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+                } else if (editPost.realOrientation.equals("right")) {
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
+                } else if (editPost.realOrientation.equals("upsideDown")) {
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
+                } else { // left
+                    Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
+                }
+            }
         }
     }
 

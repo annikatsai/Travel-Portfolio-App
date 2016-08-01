@@ -103,28 +103,27 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
         });
 
         if(post.photoUrl != null && !(post.photoUrl.isEmpty())){
-            // load image
-            //Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
+            // Load image
             if (post.photoType.equals("vertical")) {
                 if (post.realOrientation.equals("left")) {
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
                 } else if (post.realOrientation.equals("original")) {
-                    Picasso.with(getContext()).load(post.photoUrl).rotate(90f).into(holder.ivImage);
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(90f).into(holder.ivImage);
                 } else if (post.realOrientation.equals("right")) {
-                    Picasso.with(getContext()).load(post.photoUrl).rotate(180f).into(holder.ivImage);
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(180f).into(holder.ivImage);
                 } else { // upsideDown
-                    Picasso.with(getContext()).load(post.photoUrl).rotate(270f).into(holder.ivImage);
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(270f).into(holder.ivImage);
                 }
             }
             if (post.photoType.equals("horizontal")) {
                 if (post.realOrientation.equals("original")) {
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
                 } else if (post.realOrientation.equals("right")) {
-                    Picasso.with(getContext()).load(post.photoUrl).rotate(90f).into(holder.ivImage);
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(90f).into(holder.ivImage);
                 } else if (post.realOrientation.equals("upsideDown")) {
-                    Picasso.with(getContext()).load(post.photoUrl).rotate(180f).into(holder.ivImage);
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(180f).into(holder.ivImage);
                 } else { // left
-                    Picasso.with(getContext()).load(post.photoUrl).rotate(270f).into(holder.ivImage);
+                    Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(270f).into(holder.ivImage);
                 }
             }
         } else {
