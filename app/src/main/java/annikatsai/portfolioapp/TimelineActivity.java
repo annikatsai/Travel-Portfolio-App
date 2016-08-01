@@ -141,11 +141,13 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
         });
     }
 
+    int VIEW_POST_REQUEST_CODE = 100;
+
     public void launchViewPost(int position) {
         fabAddPost.hide();
         Intent i = new Intent(TimelineActivity.this, ViewPostActivity.class);
         i.putExtra("post", Parcels.wrap(posts.get(position)));
-        startActivity(i);
+        startActivityForResult(i, VIEW_POST_REQUEST_CODE);
     }
 
     int REQUEST_CODE = 5;

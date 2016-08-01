@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="annikatsai.portfolioapp.ViewPostActivity">
+    tools:context="annikatsai.portfolioapp.PostActivity"
+    android:id="@+id/vjhbrbvjdttgndihjdkhjnuteuinvfn">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -23,6 +24,7 @@
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_gravity="left"
             />
+
     </android.support.v7.widget.Toolbar>
 
     <TextView
@@ -33,11 +35,66 @@
         android:fontFamily="sans-serif-medium"
         android:background="@android:color/transparent"
         android:textSize="30sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvDate"
+        android:padding="5dp"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/dateHint"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:layout_below="@+id/tvTitle"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/searchLocation"
+        android:id="@+id/tvLocation"
+        android:padding="5dp"
+        android:fontFamily="sans-serif-light"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:layout_below="@+id/tvDate"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/ivPreview"
+        android:background="@drawable/dotted"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignTop="@+id/ivPlus"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"
+        android:id="@+id/tvDivider2"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="75dp"
+        android:layout_below="@+id/tvTitle"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_add"
+        android:padding="50dp"
+        android:id="@+id/ivPlus"
         android:layout_below="@+id/toolbar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignLeft="@+id/ivPreview"
+        android:layout_alignStart="@+id/ivPreview"
+        android:layout_marginTop="33dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -45,80 +102,15 @@
         android:ems="10"
         android:background="@android:color/transparent"
         android:id="@+id/tvBody"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:text="New Text"
-        android:gravity="top|left"
-        android:layout_below="@+id/tvDivider"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvDate"
+        android:layout_marginTop="23dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/bodyHint"
         android:fontFamily="sans-serif-light"
-        android:hint="@string/dateHint"
-        android:textSize="17sp"
-        android:layout_marginTop="19dp"
-        android:text="New Text"
-        android:layout_below="@+id/tvTitle"
-        android:layout_toRightOf="@+id/fabDate"
-        android:layout_toEndOf="@+id/fabDate"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/searchLocation"
-        android:id="@+id/tvLocation"
-        android:text="New Text"
-        android:fontFamily="sans-serif-light"
-        android:textSize="17sp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/fabDate"
-        android:layout_alignLeft="@+id/tvDate"
-        android:layout_alignStart="@+id/tvDate" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/colorAccent"
-        android:id="@+id/tvDivider"
-        android:layout_below="@+id/fabLocation"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:src="@drawable/ic_date"
-        android:scaleType="fitCenter"
-        android:tint="@android:color/white"
-        app:backgroundTint="@color/colorAccent"
-        app:fabSize="mini"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/fabDate"
-        android:layout_alignBottom="@+id/tvDate"
-        android:layout_alignLeft="@+id/tvTitle"
-        android:layout_alignStart="@+id/tvTitle" />
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:src="@drawable/ic_location"
-        app:backgroundTint="@color/colorAccent"
-        android:tint="@android:color/white"
-        android:scaleType="fitCenter"
-        app:fabSize="mini"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/fabLocation"
-        android:layout_alignBottom="@+id/tvLocation"
-        android:layout_alignLeft="@+id/fabDate"
-        android:layout_alignStart="@+id/fabDate" />
+        android:gravity="center"
+        android:layout_below="@+id/tvDivider2"
+        android:layout_centerHorizontal="true"
+        android:textSize="17sp" />
 
     <ImageButton
         android:layout_width="wrap_content"

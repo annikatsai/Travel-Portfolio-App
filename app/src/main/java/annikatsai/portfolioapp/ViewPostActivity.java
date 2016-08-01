@@ -49,7 +49,7 @@ public class ViewPostActivity extends AppCompatActivity {
         Intent shareIntent = new Intent();
         String title = post.getTitle();
         String body = post.getBody();
-        if (!post.getFileName().equals("") || post.getFileName() != null) {
+        if (post.getFileName() != null && !post.getFileName().equals("")) {
             Uri pictureUri = Uri.parse(post.getFileName());
             shareIntent.putExtra(Intent.EXTRA_STREAM, pictureUri);
         }
@@ -60,5 +60,12 @@ public class ViewPostActivity extends AppCompatActivity {
         shareIntent.setType("image/*");
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(shareIntent, "Share"));
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
+        super.onBackPressed();
     }
 }
