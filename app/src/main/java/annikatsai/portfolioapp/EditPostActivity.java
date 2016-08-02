@@ -76,6 +76,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private String newPhotoType;
 
     Post post;
+    Boolean trash = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,11 +141,11 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         fileName = editPost.fileName;
         photoType = editPost.photoType;
         realOrientation = editPost.realOrientation;
-        if((fileName != null) && !(fileName.isEmpty())){
+        if ((fileName != null) && !(fileName.isEmpty())) {
             picRef = storageRef.child("users").child(userId).child(fileName);
         }
         photoUrl = editPost.photoUrl;
-        if((photoUrl != null) && !(photoUrl.isEmpty())) {
+        if ((photoUrl != null) && !(photoUrl.isEmpty())) {
             ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
             // Load image
             if (editPost.photoType.equals("vertical")) {
@@ -175,12 +176,21 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     public void onFinishEdit(View v) {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         latLngLocation.setLocationKey(locationKey);
-        if(newFileName != null && !(newFileName.isEmpty())){
-            deletePicRef(picRef);
+        if (newFileName != null && !(newFileName.isEmpty())) {
+            if (fileName != null && !(fileName.isEmpty())) {
+                deletePicRef(picRef);
+            }
             post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, newFileName, newPhotoUrl, newRealOrientation, newPhotoType);
-        } else {
+        } else if (fileName != null && !(fileName.isEmpty())) {
             post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, fileName, photoUrl, realOrientation, photoType);
+        } else {
+            post = new Post(userId, etTitle.getText().toString(), etBody.getText().toString(), latLngLocation.name, latLngLocation.latitude, latLngLocation.longitude, tvDate.getText().toString(), postKey, locationKey, "", "", "", "");
         }
+
+        if(trash == true){
+            deletePicRef(picRef);
+        }
+
         Intent i = new Intent();
         if (code.equals("fromTimeline")) {
             i = new Intent(EditPostActivity.this, TimelineActivity.class);
@@ -234,8 +244,30 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                 newPhotoUrl = downloadUrl.toString();
                 newRealOrientation = data.getExtras().getString("realOrientation");
                 newPhotoType = data.getExtras().getString("photoType");
-                ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
-                Picasso.with(this).load(newPhotoUrl).into(ivPreview);
+                ivPreview.setImageResource(android.R.color.transparent);
+                // Load image
+                if (editPost.photoType.equals("vertical")) {
+                    if (editPost.realOrientation.equals("left")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+                    } else if (editPost.realOrientation.equals("original")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
+                    } else if (editPost.realOrientation.equals("right")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
+                    } else { // upsideDown
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
+                    }
+                }
+                if (editPost.photoType.equals("horizontal")) {
+                    if (editPost.realOrientation.equals("original")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().into(ivPreview);
+                    } else if (editPost.realOrientation.equals("right")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(90f).into(ivPreview);
+                    } else if (editPost.realOrientation.equals("upsideDown")) {
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(180f).into(ivPreview);
+                    } else { // left
+                        Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
+                    }
+                }
             }
         }
     }
@@ -286,8 +318,11 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         superOnBackPressed();
-                        if(newFileName != null && !(newFileName.isEmpty())) {
+                        if (newFileName != null && !(newFileName.isEmpty())) {
                             deletePicRef(newPicRef);
+                        }
+                        if (fileName != null && !(fileName.isEmpty())){
+                            Toast.makeText(EditPostActivity.this, "Don't delete pifRef!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -302,12 +337,15 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         alertDialog.show();
     }
 
-    public void deletePicRef(StorageReference ref){
+    public void deletePicRef(StorageReference ref) {
         // Deletes the file
         ref.delete().addOnSuccessListener(new OnSuccessListener() {
             @Override
-            public void onSuccess(Object o) {}
-            public void onSuccess(Void aVoid) {}
+            public void onSuccess(Object o) {
+            }
+
+            public void onSuccess(Void aVoid) {
+            }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -315,6 +353,13 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                 Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void onRemoveClick(View view) {
+        //deletePicRef(picRef);
+        trash = true;
+        fileName = "";
+        ivPreview.setImageResource(android.R.color.transparent);
     }
 
     public void superOnBackPressed() {

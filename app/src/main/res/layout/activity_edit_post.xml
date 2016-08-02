@@ -1,166 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-tools:context="annikatsai.portfolioapp.PostActivity"
-android:id="@+id/vjhbrbvjdttgndihjdkhjnuteuinvfn">
-
-<android.support.v7.widget.Toolbar
-    android:id="@+id/toolbar"
-    android:minHeight="?attr/actionBarSize"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vjhbrbvjdttgndihjdkhjnuteuinvfn"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:titleTextColor="@android:color/white"
-    android:background="@color/colorPrimary">
+    android:layout_height="match_parent"
+    tools:context="annikatsai.portfolioapp.PostActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="@android:color/white">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/etTitle"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivPreview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:hint="@string/titleHint"
+        android:singleLine="true"
+        android:textSize="30sp" />
 
     <TextView
-        android:id="@+id/toolbar_title"
+        android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="@android:color/white"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        android:layout_gravity="left"
-        />
+        android:layout_alignBottom="@+id/fabDate"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:hint="@string/dateHint"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:textSize="17sp" />
 
-</android.support.v7.widget.Toolbar>
-
-<EditText
-    android:layout_width="230dp"
-    android:layout_height="wrap_content"
-    android:id="@+id/etTitle"
-    android:layout_marginTop="10dp"
-    android:singleLine="true"
-    android:fontFamily="sans-serif-medium"
-    android:background="@android:color/transparent"
-    android:hint="@string/titleHint"
-    android:textSize="30sp"
-    android:gravity="center"
-    android:layout_below="@+id/ivPreview"
-    android:layout_centerHorizontal="true" />
-
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/tvDate"
-    android:padding="5dp"
-    android:fontFamily="sans-serif-light"
-    android:hint="@string/dateHint"
-    android:textSize="17sp"
-    android:gravity="center"
-    android:layout_alignBottom="@+id/fabDate"
-    android:layout_centerHorizontal="true"
-    android:textColor="#000000" />
-
-<TextView
-    android:layout_width="175dp"
-    android:layout_height="wrap_content"
-    android:hint="@string/searchLocation"
-    android:id="@+id/tvLocation"
-    android:padding="5dp"
-    android:fontFamily="sans-serif-light"
-    android:textSize="17sp"
-    android:layout_alignBottom="@+id/fabLocation"
-    android:layout_centerHorizontal="true"
-    android:gravity="center"
-    android:textColor="#000000" />
+    <TextView
+        android:id="@+id/tvLocation"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fabLocation"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:hint="@string/searchLocation"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:textSize="17sp" />
 
 
-<android.support.design.widget.FloatingActionButton
-    android:src="@drawable/ic_date"
-    android:scaleType="fitCenter"
-    android:tint="@android:color/white"
-    app:backgroundTint="@color/colorAccent"
-    app:fabSize="mini"
-    android:layout_width="35dp"
-    android:layout_height="35dp"
-    android:onClick="showDatePickerDialog"
-    android:id="@+id/fabDate"
-    android:layout_marginTop="16dp"
-    android:layout_below="@+id/etTitle"
-    android:layout_toLeftOf="@+id/tvDate"
-    android:layout_toStartOf="@+id/tvDate" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabDate"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/etTitle"
+        android:layout_marginTop="16dp"
+        android:layout_toLeftOf="@+id/tvDate"
+        android:layout_toStartOf="@+id/tvDate"
+        android:onClick="showDatePickerDialog"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_date"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="mini" />
 
 
-<android.support.design.widget.FloatingActionButton
-    android:src="@drawable/ic_location"
-    app:backgroundTint="@color/colorAccent"
-    android:tint="@android:color/white"
-    android:scaleType="fitCenter"
-    app:fabSize="mini"
-    android:layout_width="35dp"
-    android:layout_height="35dp"
-    android:id="@+id/fabLocation"
-    android:onClick="selectLocation"
-    android:layout_marginTop="16dp"
-    android:layout_below="@+id/fabDate"
-    android:layout_alignLeft="@+id/fabDate"
-    android:layout_alignStart="@+id/fabDate" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabLocation"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignLeft="@+id/fabDate"
+        android:layout_alignStart="@+id/fabDate"
+        android:layout_below="@+id/fabDate"
+        android:layout_marginTop="16dp"
+        android:onClick="selectLocation"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_location"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="mini" />
 
-<ImageView
-    android:id="@+id/ivPreview"
-    android:background="@drawable/dotted"
-    android:layout_width="150dp"
-    android:layout_height="150dp"
-    android:layout_alignTop="@+id/ivRemove"
-    android:layout_centerHorizontal="true" />
+    <ImageView
+        android:id="@+id/ivPreview"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/dotted" />
 
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="@color/colorAccent"
-    android:id="@+id/tvDivider2"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:layout_below="@+id/tvLocation"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_marginTop="16dp" />
+    <TextView
+        android:id="@+id/tvDivider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvLocation"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorAccent" />
 
-<ImageView
-    android:layout_width="150dp"
-    android:layout_height="150dp"
-    android:src="@drawable/ic_remove"
-    android:padding="50dp"
-    android:id="@+id/ivRemove"
-    android:layout_below="@+id/toolbar"
-    android:layout_alignLeft="@+id/ivPreview"
-    android:layout_alignStart="@+id/ivPreview"
-    android:layout_marginTop="33dp" />
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/etBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fabSubmit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvLocation"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="37dp"
+        android:background="@android:color/transparent"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:gravity="top|left"
+        android:hint="@string/bodyHint"
+        android:inputType="textMultiLine" />
 
-<android.support.design.widget.TextInputEditText
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10"
-    android:background="@android:color/transparent"
-    android:fontFamily="sans-serif-light"
-    android:id="@+id/etBody"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:inputType="textMultiLine"
-    android:hint="@string/bodyHint"
-    android:gravity="top|left"
-    android:layout_below="@+id/tvLocation"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_marginTop="37dp"
-    android:layout_above="@+id/fabSubmit" />
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/etBody"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/etBody"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_button_states"
+        android:onClick="onFinishEdit"
+        android:text="@string/save"
+        android:textAllCaps="true" />
 
-<Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/save"
-    android:textAllCaps="true"
-    android:id="@+id/btnSave"
-    android:onClick="onFinishEdit"
-    android:layout_marginBottom="10dp"
-    android:layout_alignParentBottom="true"
-    android:layout_alignRight="@+id/etBody"
-    android:layout_alignEnd="@+id/etBody"
-    android:background="@drawable/shape_button_states" />
+    <ImageButton
+        android:id="@+id/ibtnRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivPreview"
+        android:layout_toEndOf="@+id/ivPreview"
+        android:layout_toRightOf="@+id/ivPreview"
+        android:background="@drawable/ic_remove"
+        android:onClick="onRemoveClick" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibtnPlus"
+        android:layout_below="@+id/ibtnRemove"
+        android:layout_toRightOf="@+id/ivPreview"
+        android:layout_toEndOf="@+id/ivPreview"
+        android:background="@drawable/ic_add"
+        android:onClick="onAddClick"/>
 
 </RelativeLayout>
 
