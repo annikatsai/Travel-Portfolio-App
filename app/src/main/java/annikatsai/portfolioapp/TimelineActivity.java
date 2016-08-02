@@ -280,7 +280,6 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 if(post.fileName == null){
                     fileName = "";
                 }
-
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 for (int i = 0; i < postAdapter.getItemCount(); i++) {
                     posts.remove(i);
