@@ -54,6 +54,7 @@ public class CameraActivity extends AppCompatActivity {
     Uri downloadUrl;
     String realOrientation = "original";
     String photoType;
+    int spot = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,18 +93,16 @@ public class CameraActivity extends AppCompatActivity {
         if (picRef != null) {
             Matrix matrix = new Matrix();
             matrix.postRotate(rotationAngle);
-            if (rotationAngle == 0) {
+            spot ++;
+            if (spot == 1) {
                 realOrientation = "original";
-            } else if (rotationAngle == 90) {
+            } else if (spot == 2) {
                 realOrientation = "right";
-            } else if (rotationAngle == 180) {
-                realOrientation = "left";
-            } else { // for 270
+            } else if (spot == 3) {
                 realOrientation = "upsideDown";
-            }
-            rotationAngle = rotationAngle + 90;
-            if (rotationAngle == 360) {
-                rotationAngle = 0;
+            } else { // for spot 4
+                realOrientation = "left";
+                spot = 0;
             }
             Bitmap bm = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
             // Load the taken image into a preview
