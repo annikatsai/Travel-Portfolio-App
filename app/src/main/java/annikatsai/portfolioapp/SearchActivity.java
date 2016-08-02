@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.hanks.htextview.HTextView;
+import com.hanks.htextview.HTextViewType;
 
 import org.parceler.Parcels;
 
@@ -51,6 +53,10 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
         Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         toolbarTitle.setText("Search Results for: ");
         toolbarTitle.setTypeface(titleFont);
+        HTextView searchQuery = (HTextView) findViewById(R.id.search_query);
+        searchQuery.setAnimateType(HTextViewType.TYPER);
+        searchQuery.animateText(query);
+
 
         rvSearchResults = (RecyclerView) findViewById(R.id.rvSearchResults);
         postsArrayAdapter = new PostsArrayAdapter(this, posts);

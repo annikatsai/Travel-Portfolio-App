@@ -105,11 +105,9 @@
         android:id="@+id/ivPreview"
         android:layout_width="175dp"
         android:layout_height="175dp"
-        android:background="@drawable/dotted"
-        android:layout_below="@+id/toolbar"
-        android:layout_alignRight="@+id/tvDate"
-        android:layout_alignEnd="@+id/tvDate"
-        android:layout_marginTop="57dp" />
+        android:layout_alignTop="@+id/ivPlus"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/dotted" />
 
 
     <TextView
@@ -123,6 +121,17 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorAccent" />
+
+    <ImageView
+        android:id="@+id/ivPlus"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_alignLeft="@+id/ivPreview"
+        android:layout_alignStart="@+id/ivPreview"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="33dp"
+        android:padding="65dp"
+        android:src="@drawable/ic_add" />
 
     <android.support.design.widget.TextInputEditText
         android:id="@+id/etBody"
@@ -165,15 +174,15 @@
         android:background="@drawable/ic_remove"
         android:onClick="onRemoveClick" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ibtnPlus"
-        android:layout_below="@+id/ibtnRemove"
-        android:layout_toRightOf="@+id/ivPreview"
-        android:layout_toEndOf="@+id/ivPreview"
-        android:background="@drawable/ic_add"
-        android:onClick="onAddClick"/>
+    <!--<ImageButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/ibtnPlus"-->
+        <!--android:layout_below="@+id/ibtnRemove"-->
+        <!--android:layout_toRightOf="@+id/ivPreview"-->
+        <!--android:layout_toEndOf="@+id/ivPreview"-->
+        <!--android:background="@drawable/ic_add"-->
+        <!--android:onClick="onAddClick"/>-->
 
 </RelativeLayout>
 

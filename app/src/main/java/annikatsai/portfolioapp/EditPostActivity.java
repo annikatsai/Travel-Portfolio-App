@@ -68,7 +68,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     private String newPhotoUrl;
     private String photoUrl;
 
-    ImageView ivPreview;
+    ImageView ivPreview, ivPlus;
 
     private String realOrientation;
     private String photoType;
@@ -114,7 +114,14 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         etBody.setMovementMethod(new ScrollingMovementMethod());
         etBody.append("");
 
+        ivPlus = (ImageView) findViewById(R.id.ivPlus);
         ivPreview = (ImageView) findViewById(R.id.ivPreview);
+        ivPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddClick(view);
+            }
+        });
 
         postKey = editPost.getKey();
         if (editPost.getTitle().equals("")) {
@@ -148,6 +155,8 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         if ((photoUrl != null) && !(photoUrl.isEmpty())) {
             ivPreview.setImageResource(android.R.color.transparent); //clear out the old image for a recycled view
             loadImage(photoUrl);
+            ivPreview.setBackgroundResource(0);
+            ivPlus.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -316,29 +325,32 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         trash = true;
         fileName = "";
         ivPreview.setImageResource(android.R.color.transparent);
+        ivPlus.setVisibility(View.VISIBLE);
     }
 
     public void loadImage(String url){
-        if (editPost.photoType.equals("vertical")) {
-            if (editPost.realOrientation.equals("left")) {
-                Picasso.with(this).load(url).fit().centerCrop().into(ivPreview);
-            } else if (editPost.realOrientation.equals("original")) {
-                Picasso.with(this).load(url).fit().centerCrop().rotate(90f).into(ivPreview);
-            } else if (editPost.realOrientation.equals("right")) {
-                Picasso.with(this).load(url).fit().centerCrop().rotate(180f).into(ivPreview);
-            } else { // upsideDown
-                Picasso.with(this).load(url).fit().centerCrop().rotate(270f).into(ivPreview);
+        if (url != null && !(url.isEmpty())) {
+            if (editPost.photoType.equals("vertical")) {
+                if (editPost.realOrientation.equals("left")) {
+                    Picasso.with(this).load(url).fit().centerCrop().into(ivPreview);
+                } else if (editPost.realOrientation.equals("original")) {
+                    Picasso.with(this).load(url).fit().centerCrop().rotate(90f).into(ivPreview);
+                } else if (editPost.realOrientation.equals("right")) {
+                    Picasso.with(this).load(url).fit().centerCrop().rotate(180f).into(ivPreview);
+                } else { // upsideDown
+                    Picasso.with(this).load(url).fit().centerCrop().rotate(270f).into(ivPreview);
+                }
             }
-        }
-        if (editPost.photoType.equals("horizontal")) {
-            if (editPost.realOrientation.equals("original")) {
-                Picasso.with(this).load(url).fit().centerCrop().into(ivPreview);
-            } else if (editPost.realOrientation.equals("right")) {
-                Picasso.with(this).load(url).fit().centerCrop().rotate(90f).into(ivPreview);
-            } else if (editPost.realOrientation.equals("upsideDown")) {
-                Picasso.with(this).load(url).fit().centerCrop().rotate(180f).into(ivPreview);
-            } else { // left
-                Picasso.with(this).load(url).fit().centerCrop().rotate(270f).into(ivPreview);
+            if (editPost.photoType.equals("horizontal")) {
+                if (editPost.realOrientation.equals("original")) {
+                    Picasso.with(this).load(url).fit().centerCrop().into(ivPreview);
+                } else if (editPost.realOrientation.equals("right")) {
+                    Picasso.with(this).load(url).fit().centerCrop().rotate(90f).into(ivPreview);
+                } else if (editPost.realOrientation.equals("upsideDown")) {
+                    Picasso.with(this).load(url).fit().centerCrop().rotate(180f).into(ivPreview);
+                } else { // left
+                    Picasso.with(this).load(url).fit().centerCrop().rotate(270f).into(ivPreview);
+                }
             }
         }
     }

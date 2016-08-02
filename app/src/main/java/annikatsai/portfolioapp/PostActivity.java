@@ -264,7 +264,6 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         postKey = mDatabase.child("users").child(userId).child("posts").push().getKey();
         Post newPost = new Post(userId, title, body, locationName, latitude, longitude, date, postKey, locationKey, fileName, photoUrl, realOrientation, photoType);
         Map<String, Object> postValues = newPost.toMap();
-
         mDatabase.child("users").child(userId).child("posts").child(postKey).updateChildren(postValues, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -275,6 +274,20 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 }
             }
         });
+        if (fileName !=  null && !fileName.isEmpty()) {
+            latlngLocation.setPhoto(fileName, photoUrl, realOrientation, photoType);
+            Map<String, Object> locationValues = latlngLocation.locationToMap();
+            mDatabase.child("users").child(userId).child("locations").child(locationKey).setValue(locationValues, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
@@ -346,6 +359,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                     }
                 }
                 picRef = storageRef.child("users").child(userId).child(fileName);
+                ivPreview.setBackgroundResource(0);
             } else { // RESULT_CANCELED
                 Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
             }

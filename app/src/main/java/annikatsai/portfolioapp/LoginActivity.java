@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "User not null", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if (firstLogin) {
-                        User u = new User(user.getUid(), user.getDisplayName(), user.getEmail());
+                        User u = new User(user.getUid(), user.getEmail(), user.getDisplayName());
                         mDatabase.child("users").child(user.getUid()).setValue(u);
                         firstLogin = false;
                     }
