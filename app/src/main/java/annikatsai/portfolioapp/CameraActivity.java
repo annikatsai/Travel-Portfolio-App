@@ -76,7 +76,7 @@ public class CameraActivity extends AppCompatActivity {
 
         pd = new ProgressDialog(CameraActivity.this);
         pd.setTitle("Loading...");
-        pd.setMessage("Please wait.");
+        pd.setMessage("Uploading image to database");
         pd.setCancelable(false);
     }
 

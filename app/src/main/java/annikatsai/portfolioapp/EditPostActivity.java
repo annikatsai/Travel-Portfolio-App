@@ -157,6 +157,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                     Picasso.with(this).load(photoUrl).fit().centerCrop().rotate(270f).into(ivPreview);
                 }
             }
+            ivPreview.setBackgroundResource(0);
         }
     }
 

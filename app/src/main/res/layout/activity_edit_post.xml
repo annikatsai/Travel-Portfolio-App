@@ -103,8 +103,8 @@
 
     <ImageView
         android:id="@+id/ivPreview"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
         android:layout_alignTop="@+id/ivPlus"
         android:layout_centerHorizontal="true"
         android:background="@drawable/dotted" />
@@ -124,13 +124,13 @@
 
     <ImageView
         android:id="@+id/ivPlus"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
         android:layout_alignLeft="@+id/ivPreview"
         android:layout_alignStart="@+id/ivPreview"
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="33dp"
-        android:padding="50dp"
+        android:padding="65dp"
         android:src="@drawable/ic_add" />
 
     <android.support.design.widget.TextInputEditText
