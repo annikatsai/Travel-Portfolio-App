@@ -1,6 +1,9 @@
 package annikatsai.portfolioapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.view.animation.BounceInterpolator;
@@ -23,6 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import annikatsai.portfolioapp.Models.Location;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -40,6 +47,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     /**
@@ -60,12 +70,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                BitmapDescriptor defaultMarker =
-                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA);
                 Location location = dataSnapshot.getValue(Location.class);
+
+                URL url;
+                Bitmap image = null;
+                Bitmap bitmap = null;
+                try {
+                    url = new URL(location.photoUrl);
+                    double scalingFactor = 0.05;
+                    image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    int newWidth = (int) (image.getWidth() * scalingFactor);
+                    int newHeight = (int) (image.getHeight() * scalingFactor);
+                    bitmap = Bitmap.createScaledBitmap(image, newWidth, newHeight, true);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                BitmapDescriptor iconMarker;
+                if (location.photoUrl == null || location.fileName == null) {
+                    iconMarker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA);
+                } else {
+                    iconMarker = BitmapDescriptorFactory.fromBitmap(bitmap);
+                }
+
                 if (location.latitude != 0 && location.longitude != 0) {
                     LatLng latLng = new LatLng(location.latitude, location.longitude);
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.name).icon(defaultMarker));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.name).icon(iconMarker));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latLng);
                     mMap.animateCamera(cameraUpdate);

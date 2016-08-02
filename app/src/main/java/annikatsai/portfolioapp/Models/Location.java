@@ -18,6 +18,10 @@ public class Location extends Object {
     public double longitude;
     public LatLng latLngLocation;
     public String locationKey;
+    public String fileName;
+    public String photoUrl;
+    public String realOrientation;
+    public String photoType;
 
     public Location(LatLng loc, String name) {
         this.latLngLocation = loc;
@@ -26,6 +30,17 @@ public class Location extends Object {
             this.longitude = latLngLocation.longitude;
         }
         this.name = name;
+        this.realOrientation = null;
+        this.fileName = null;
+        this.photoUrl = null;
+        this.photoType = null;
+    }
+
+    public void setPhoto(String fileName, String photoUrl, String realOrientation, String photoType) {
+        this.fileName = fileName;
+        this.photoUrl = photoUrl;
+        this.realOrientation = realOrientation;
+        this.photoType = photoType;
     }
 
     public String getLocationKey() {
@@ -51,6 +66,10 @@ public class Location extends Object {
         result.put("latitude", latitude);
         result.put("longitude", longitude);
         result.put("locationKey", locationKey);
+        result.put("realOrientation", realOrientation);
+        result.put("fileName", fileName);
+        result.put("photoUrl", photoUrl);
+        result.put("photoType", photoType);
         return result;
     }
 }

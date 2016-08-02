@@ -274,6 +274,20 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 }
             }
         });
+        if (fileName !=  null && !fileName.isEmpty()) {
+            latlngLocation.setPhoto(fileName, photoUrl, realOrientation, photoType);
+            Map<String, Object> locationValues = latlngLocation.locationToMap();
+            mDatabase.child("users").child(userId).child("locations").child(locationKey).setValue(locationValues, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
