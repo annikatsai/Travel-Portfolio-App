@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:htext="http://schemas.android.com/apk/res-auto"
     tools:context="annikatsai.portfolioapp.CameraActivity">
 
     <android.support.v7.widget.Toolbar
@@ -14,11 +15,13 @@
         app:titleTextColor="@android:color/white"
         android:background="@color/colorPrimary">
 
-        <TextView
+        <com.hanks.htextview.HTextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="@string/choose_a_picture"
+            htext:animateType="typer"
+            htext:fontAsset="fonts/Pacifico.ttf"
             android:textColor="@android:color/white"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_gravity="left"
@@ -109,6 +112,7 @@
         android:onClick="onRotateClick"
         android:layout_alignBottom="@+id/btnSave"
         android:layout_alignLeft="@+id/ivPreview"
-        android:layout_alignStart="@+id/ivPreview" />
+        android:layout_alignStart="@+id/ivPreview"
+        android:layout_alignTop="@+id/btnSave" />
 
 </RelativeLayout>

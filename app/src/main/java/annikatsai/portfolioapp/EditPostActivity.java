@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -79,14 +78,9 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         setContentView(R.layout.activity_edit_post);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
-
-        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
-        toolbarTitle.setText("Edit Post");
-        toolbarTitle.setTypeface(titleFont);
 
         mStorage = FirebaseStorage.getInstance();
         storageRef = mStorage.getReferenceFromUrl("gs://travel-portfolio-app.appspot.com");

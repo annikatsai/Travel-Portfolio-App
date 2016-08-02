@@ -1,7 +1,6 @@
 package annikatsai.portfolioapp;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,14 +26,9 @@ public class ViewPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_post);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
-
-        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
-        toolbarTitle.setText("View Post");
-        toolbarTitle.setTypeface(titleFont);
 
         post = Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
