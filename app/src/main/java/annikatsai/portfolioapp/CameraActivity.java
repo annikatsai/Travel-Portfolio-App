@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Typeface;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,14 +62,9 @@ public class CameraActivity extends AppCompatActivity {
 
         // Customizing Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
-
-        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
-        toolbarTitle.setText("Choose a Picture");
-        toolbarTitle.setTypeface(titleFont);
 
         // Create an instance of FirebaseStorage
         mStorage = FirebaseStorage.getInstance();
@@ -94,7 +87,7 @@ public class CameraActivity extends AppCompatActivity {
     public void onUploadClick(View view) {
         onPickPhoto(view);
     }
-    
+
     public void onRotateClick(View view){
         if (picRef != null) {
             Matrix matrix = new Matrix();

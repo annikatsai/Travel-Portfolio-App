@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -84,13 +86,15 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 
         // Customizing toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
-//        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
-//        toolbarTitle.setText("Roam");
-//        toolbarTitle.setTypeface(titleFont);
+        Typeface titleFont = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle("Roam");
+        collapsingToolbar.setCollapsedTitleTypeface(titleFont);
+        collapsingToolbar.setExpandedTitleTypeface(titleFont);
+        collapsingToolbar.setExpandedTitleGravity(R.attr.buttonGravity);
 
         mDataBaseReference = FirebaseDatabase.getInstance().getReference();
 

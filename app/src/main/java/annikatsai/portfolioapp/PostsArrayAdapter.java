@@ -28,12 +28,14 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
         public TextView tvTitle;
         public ImageView ivImage;
         public ImageButton btnPopupMenu;
+        public TextView tvDate;
 
         public ViewHolder(final View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
             btnPopupMenu = (ImageButton) itemView.findViewById(R.id.btnPopupMenu);
+            tvDate = (TextView) itemView.findViewById(R.id.tvDate);
         }
     }
 
@@ -77,6 +79,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
         final Post post = mPosts.get(position);
 
         holder.tvTitle.setText(post.getTitle());
+        holder.tvDate.setText(post.getDate());
         holder.ivImage.setImageResource(0);
         holder.btnPopupMenu.setOnClickListener(new View.OnClickListener() {
             @Override
