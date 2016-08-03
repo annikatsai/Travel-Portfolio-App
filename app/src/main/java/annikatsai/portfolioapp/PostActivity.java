@@ -81,6 +81,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     private String realOrientation;
     private String photoType;
 
+    Boolean trash = false;
+    Boolean camera = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,6 +221,15 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         final String body = etBody.getText().toString();
         final String date = tvDate.getText().toString();
 
+        if(trash == true && camera == false){
+            deletePicRef(picRef);
+            fileName = "";
+            realOrientation = "";
+            photoType = "";
+            photoUrl = "";
+            picRef = null;
+        }
+
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -326,6 +338,15 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
         }
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                if(picRef != null && trash == true){
+                    deletePicRef(picRef);
+                    fileName = "";
+                    realOrientation = "";
+                    photoType = "";
+                    photoUrl = "";
+                    picRef = null;
+                    camera = true;
+                }
                 fileName = i.getExtras().getString("fileName");
                 downloadUrl = i.getData();
 
@@ -396,5 +417,31 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
     public void hideSoftKeyboard(View view){
         InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void deletePicRef(StorageReference ref) {
+        // Deletes the file
+        ref.delete().addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+            }
+
+            public void onSuccess(Void aVoid) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void onRemoveClick(View view) {
+        trash = true;
+        fileName = "";
+        ivPreview.setImageResource(android.R.color.transparent);
+        ivPreview.setBackgroundResource(R.drawable.dotted);
+        ivPlus.setVisibility(View.VISIBLE);
     }
 }
