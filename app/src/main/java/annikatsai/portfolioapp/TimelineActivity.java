@@ -278,6 +278,19 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                 postAdapter.notifyDataSetChanged();
                 if(post.fileName == null){
                     fileName = "";
+                } else {
+                    loc.setPhoto(post.fileName, post.photoUrl, post.realOrientation, post.photoType);
+                    Map<String, Object> locationValues = loc.locationToMap();
+                    mDataBaseReference.child("users").child(userId).child("locations").child(post.locationKey).setValue(locationValues, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null) {
+//                        Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                            } else {
+//                        Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
                 for (int i = 0; i < postAdapter.getItemCount(); i++) {

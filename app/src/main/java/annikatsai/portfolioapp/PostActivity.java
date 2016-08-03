@@ -431,7 +431,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Uh-oh, an error occurred!
-                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
             }
         });
     }
