@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -139,11 +138,11 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast.makeText(SearchActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SearchActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
                     posts.remove(post);
                     postsArrayAdapter.notifyDataSetChanged();
-                    Toast.makeText(SearchActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SearchActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -151,9 +150,9 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast.makeText(SearchActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SearchActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(SearchActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SearchActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -162,7 +161,7 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
     // editing by deleting old and adding new
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(SearchActivity.this, "Back in SearchActivity", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(SearchActivity.this, "Back in SearchActivity", Toast.LENGTH_SHORT).show();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             final Post post = Parcels.unwrap(data.getParcelableExtra("editPost"));
@@ -177,13 +176,13 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             if (databaseError != null) {
-                                Toast.makeText(SearchActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(SearchActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                             } else {
                                 posts.remove(oldPost);
                                 posts.add(post);
                                 postsArrayAdapter.notifyDataSetChanged();
-                                Toast.makeText(SearchActivity.this, post.getTitle(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(SearchActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(SearchActivity.this, post.getTitle(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(SearchActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -191,9 +190,9 @@ public class SearchActivity extends AppCompatActivity implements PostsArrayAdapt
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
-                        Toast.makeText(SearchActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SearchActivity.this, "Location could not be changed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(SearchActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SearchActivity.this, "Location successfully changed", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

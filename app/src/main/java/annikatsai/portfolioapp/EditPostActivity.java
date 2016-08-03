@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Scroller;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -292,7 +291,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                             deletePicRef(newPicRef);
                         }
                         if (fileName != null && !(fileName.isEmpty())){
-                            Toast.makeText(EditPostActivity.this, "Don't delete pifRef!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(EditPostActivity.this, "Don't delete pifRef!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -320,7 +319,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Uh-oh, an error occurred!
-                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -190,7 +189,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 if (databaseError != null) {
-                                    Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
                                     posts.remove(post);
                                     if (picRef != null) {
@@ -203,12 +202,12 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                                             @Override
                                             public void onFailure(@NonNull Exception exception) {
                                                 // Uh-oh, an error occurred!
-                                                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+//                                                Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                     }
                                     postAdapter.notifyDataSetChanged();
-                                    Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -216,9 +215,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 if (databaseError != null) {
-                                    //Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    //Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
                                     Snackbar.make(getCurrentFocus(), R.string.snackbar_delete, Snackbar.LENGTH_LONG).show();
                                 }
                             }
@@ -240,7 +239,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         fabAddPost.show();
-        Toast.makeText(TimelineActivity.this, "Back in TimelineActivity", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(TimelineActivity.this, "Back in TimelineActivity", Toast.LENGTH_SHORT).show();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
@@ -267,9 +266,9 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 if (databaseError != null) {
-                                    Toast.makeText(TimelineActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(TimelineActivity.this, "Data could not be changed. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(TimelineActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(TimelineActivity.this, "Data successfully changed", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

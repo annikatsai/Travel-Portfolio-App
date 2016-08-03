@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -92,7 +91,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(getContext(), "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         if (item.getTitle().toString().equals("Edit")) {
                             callback.launchEditPost(position);
                         } else if (item.getTitle().toString().equals("Delete")) {
@@ -115,6 +114,7 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(90f).into(holder.ivImage);
                 } else if (post.realOrientation.equals("right")) {
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(180f).into(holder.ivImage);
+
                 } else { // upsideDown
                     // test orientation display stretch image
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(270f).into(holder.ivImage);

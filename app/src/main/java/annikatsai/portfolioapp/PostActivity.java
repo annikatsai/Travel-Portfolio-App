@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Scroller;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -169,7 +168,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
                                     // Uh-oh, an error occurred!
-                                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
+//                                    Toast.makeText(getApplicationContext(), "Error deleting pic from database", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
@@ -235,7 +234,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user == null) {
-                    Toast.makeText(PostActivity.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PostActivity.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
                 } else {
                     Location location;
                     location = addLocationToMap(userId);
@@ -263,9 +262,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -280,9 +279,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast.makeText(PostActivity.this, "Data could not be saved. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PostActivity.this, "Data could not be saved. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PostActivity.this, "Data successfully saved", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PostActivity.this, "Data successfully saved", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -293,9 +292,9 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
-                        Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PostActivity.this, "Location save failed" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PostActivity.this, "Location save success", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -382,7 +381,7 @@ public class PostActivity extends AppCompatActivity implements DatePickerDialog.
                 picRef = storageRef.child("users").child(userId).child(fileName);
                 ivPreview.setBackgroundResource(0);
             } else { // RESULT_CANCELED
-                Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Picture wasn't selected!", Toast.LENGTH_SHORT).show();
             }
         }
     }
