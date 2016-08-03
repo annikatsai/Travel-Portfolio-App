@@ -167,4 +167,14 @@
         android:layout_above="@+id/fabSubmit"
         android:textColor="#000000" />
 
+    <ImageButton
+        android:id="@+id/ibtnRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivPreview"
+        android:layout_toEndOf="@+id/ivPreview"
+        android:layout_toRightOf="@+id/ivPreview"
+        android:background="@drawable/ic_remove"
+        android:onClick="onRemoveClick" />
+
 </RelativeLayout>

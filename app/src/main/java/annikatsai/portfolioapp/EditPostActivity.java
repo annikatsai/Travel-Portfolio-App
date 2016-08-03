@@ -326,7 +326,6 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
     }
 
     public void onRemoveClick(View view) {
-        //deletePicRef(picRef);
         trash = true;
         fileName = "";
         ivPreview.setImageResource(android.R.color.transparent);
