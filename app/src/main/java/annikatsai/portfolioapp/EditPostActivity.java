@@ -232,7 +232,12 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
                 newRealOrientation = data.getExtras().getString("realOrientation");
                 newPhotoType = data.getExtras().getString("photoType");
                 ivPreview.setImageResource(android.R.color.transparent);
+                editPost.photoUrl = newPhotoUrl;
+                editPost.realOrientation = newRealOrientation;
+                editPost.photoType = newPhotoType;
                 loadImage(newPhotoUrl);
+                ivPreview.setBackgroundResource(0);
+                ivPlus.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -325,6 +330,7 @@ public class EditPostActivity extends AppCompatActivity implements DatePickerDia
         trash = true;
         fileName = "";
         ivPreview.setImageResource(android.R.color.transparent);
+        ivPreview.setBackgroundResource(R.drawable.dotted);
         ivPlus.setVisibility(View.VISIBLE);
     }
 
