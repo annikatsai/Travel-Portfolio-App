@@ -77,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Bitmap bitmap = null;
                 try {
                     url = new URL(location.photoUrl);
-                    double scalingFactor = 0.05;
+                    double scalingFactor = 0.2;
                     image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     int newWidth = (int) (image.getWidth() * scalingFactor);
                     int newHeight = (int) (image.getHeight() * scalingFactor);
