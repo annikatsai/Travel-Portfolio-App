@@ -111,10 +111,12 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                 if (post.realOrientation.equals("left")) {
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
                 } else if (post.realOrientation.equals("original")) {
+                    // test orientation display stretch image
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(90f).into(holder.ivImage);
                 } else if (post.realOrientation.equals("right")) {
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(180f).into(holder.ivImage);
                 } else { // upsideDown
+                    // test orientation display stretch image
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(270f).into(holder.ivImage);
                 }
             }
@@ -122,10 +124,12 @@ public class PostsArrayAdapter extends RecyclerView.Adapter<PostsArrayAdapter.Vi
                 if (post.realOrientation.equals("original")) {
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().into(holder.ivImage);
                 } else if (post.realOrientation.equals("right")) {
+                    // test orientation display stretch image
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(90f).into(holder.ivImage);
                 } else if (post.realOrientation.equals("upsideDown")) {
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(180f).into(holder.ivImage);
                 } else { // left
+                    // test orientation display stretch image
                     Picasso.with(getContext()).load(post.photoUrl).fit().centerCrop().rotate(270f).into(holder.ivImage);
                 }
             }
