@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -114,12 +113,12 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                     Post post = dataSnapshot.getValue(Post.class);
                     posts.add(0, post);
                     postAdapter.notifyDataSetChanged();
-                    Snackbar.make(getCurrentFocus(), R.string.snackbar_add, Snackbar.LENGTH_LONG).setAction(R.string.snackbar_action, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            deletePost(0);
-                        }
-                    }).show();
+//                    Snackbar.make(getCurrentFocus(), R.string.snackbar_add, Snackbar.LENGTH_LONG).setAction(R.string.snackbar_action, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            deletePost(0);
+//                        }
+//                    }).show();
                 }
 
                 @Override
@@ -218,7 +217,7 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
 //                                    Toast.makeText(TimelineActivity.this, "Data could not be deleted. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
 //                                    Toast.makeText(TimelineActivity.this, "Data successfully deleted", Toast.LENGTH_SHORT).show();
-                                    Snackbar.make(getCurrentFocus(), R.string.snackbar_delete, Snackbar.LENGTH_LONG).show();
+//                                    Snackbar.make(getCurrentFocus(), R.string.snackbar_delete, Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -293,16 +292,13 @@ public class TimelineActivity extends AppCompatActivity implements PostsArrayAda
                     });
                 }
             } else if (requestCode == SEARCHACTIVITY_REQUESTCODE) {
-                for (int i = 0; i < postAdapter.getItemCount(); i++) {
-                    posts.remove(i);
-                }
+                posts.clear();
                 Query searchQuery = mDataBaseReference.child("users").child(userId).child("posts").orderByKey();
                 searchQuery.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Post post = dataSnapshot.getValue(Post.class);
-//                        postAdapter.add(post);
-                        posts.add(post);
+                        posts.add(0, post);
                         postAdapter.notifyDataSetChanged();
                     }
 
